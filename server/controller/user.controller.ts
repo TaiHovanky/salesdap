@@ -41,10 +41,10 @@ export const registerUser = async (req: any, res: any) => {
       password: hashedPassword,
       organizationId
     };
-    const userInsert = await User.insert(user);
-    const newUser = {...userInsert.raw[0], ...user};
-    console.log('new user', newUser, userInsert)
-    req.session.user = newUser;
+    // const userInsert = await User.insert(user);
+    // const newUser = {...userInsert.raw[0], ...user};
+    console.log('new user', user)
+    req.session.user = user;
     res.send({ user });
   } catch(err) {
     if (err.code === '23505') {
