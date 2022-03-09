@@ -7,7 +7,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { connect } from 'react-redux';
 
-import { changeStep } from '../../state/actions/step-progress'
+import UploadDocumentButton from '../upload-document-button';
+import { changeStep } from '../../state/actions/step-progress';
 
 const steps = ['Upload document', 'View duplicates'];
 
@@ -66,6 +67,7 @@ const HorizontalLinearStepper = ({ dispatch, activeStep }: any) => {
       ) : (
         <React.Fragment>
           <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
+          <UploadDocumentButton />
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Button
               color="inherit"

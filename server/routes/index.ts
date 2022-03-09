@@ -1,5 +1,6 @@
 import { registerUser, loginUser } from '../controller/user.controller';
 import { getOrganizations, createOrganization } from '../controller/organization.controller';
+import { uploadFile } from '../controller/file.controller';
 import express from 'express';
 const router = express.Router();
 
@@ -22,5 +23,9 @@ router.post('/api/v1/organization', (req: any, res: any) => {
 router.get('/api/v1/organization', (req: any, res: any) => {
   getOrganizations(req, res);
 });
+
+router.post('/api/v1/uploadfile', (req: any) => {
+  uploadFile(req);
+})
 
 export default router;
