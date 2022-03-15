@@ -17,7 +17,7 @@ const UploadDocumentButton = () => {
     const formData = new FormData();
     if (selectedFile && selectedFile.name) {
       formData.append(
-        "myFile",
+        "sales_file",
         selectedFile,
         selectedFile.name
       );
@@ -29,7 +29,7 @@ const UploadDocumentButton = () => {
 
   return (
     <Box sx={{ m: 1 }}>
-      <input type="file" onChange={handleFileSelection} />
+      <input type="file" onChange={handleFileSelection} name="sales_file" />
       <Fab
         variant="extended"
         color="primary"

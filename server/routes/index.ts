@@ -1,3 +1,6 @@
+import multer from 'multer';
+const upload = multer({ dest: 'uploads/' });
+
 import { registerUser, loginUser } from '../controller/user.controller';
 import { getOrganizations, createOrganization } from '../controller/organization.controller';
 import { uploadFile } from '../controller/file.controller';
@@ -24,7 +27,7 @@ router.get('/api/v1/organization', (req: any, res: any) => {
   getOrganizations(req, res);
 });
 
-router.post('/api/v1/uploadfile', (req: any) => {
+router.post('/api/v1/uploadfile', upload.single('sales_file'), (req: any) => {
   uploadFile(req);
 })
 
