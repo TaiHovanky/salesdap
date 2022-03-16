@@ -4,6 +4,7 @@ node_modules/
 build/
 tmp/
 temp/
+uploads/
 package-lock.json
 .env
 dist
