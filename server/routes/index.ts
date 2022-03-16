@@ -27,8 +27,8 @@ router.get('/api/v1/organization', (req: any, res: any) => {
   getOrganizations(req, res);
 });
 
-router.post('/api/v1/uploadfile', upload.single('sales_file'), (req: any) => {
-  uploadFile(req);
+router.post('/api/v1/uploadfile', upload.single('sales_file'), (req: any, res: any) => {
+  uploadFile(req, res);
 })
 
 export default router;

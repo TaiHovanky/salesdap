@@ -7,17 +7,14 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { connect } from 'react-redux';
 
-import UploadDocumentButton from '../upload-document-button';
+import UploadDocumentForm from '../upload-document-form';
+import DuplicatesTable from '../duplicates-table';
 import { changeStep } from '../../state/actions/step-progress';
 
 const steps = ['Upload document', 'View duplicates'];
 
 const HorizontalLinearStepper = ({ dispatch, activeStep }: any) => {
   // const [activeStep, setActiveStep] = React.useState(0);
-
-  const isStepOptional = (step: number) => {
-    return step === 1;
-  };
 
   const handleNext = () => {
     // setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -42,11 +39,6 @@ const HorizontalLinearStepper = ({ dispatch, activeStep }: any) => {
           const labelProps: {
             optional?: React.ReactNode;
           } = {};
-          if (isStepOptional(index)) {
-            labelProps.optional = (
-              <Typography variant="caption">Optional</Typography>
-            );
-          }
           return (
             <Step key={label} {...stepProps}>
               <StepLabel {...labelProps}>{label}</StepLabel>
@@ -54,11 +46,10 @@ const HorizontalLinearStepper = ({ dispatch, activeStep }: any) => {
           );
         })}
       </Stepper>
-      {activeStep === steps.length ? (
+      {activeStep === steps.length - 1 ? (
         <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
-          </Typography>
+          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
+          <DuplicatesTable />
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
             <Button onClick={handleReset}>Reset</Button>
@@ -67,7 +58,7 @@ const HorizontalLinearStepper = ({ dispatch, activeStep }: any) => {
       ) : (
         <React.Fragment>
           <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-          <UploadDocumentButton />
+          <UploadDocumentForm handleNext={handleNext} />
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Button
               color="inherit"
