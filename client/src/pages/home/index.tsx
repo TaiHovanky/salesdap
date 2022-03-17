@@ -1,11 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Stepper from '../../components/stepper';
+import NavBar from '../../components/nav-bar';
+
 
 const Home = ({ dispatch, loading, document, hasErrors, stepProgress}: any) => {
   return (
     <>
-      <h3>salesdap</h3>
+      <NavBar />
       <Stepper />
     </>
   );

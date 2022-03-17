@@ -1,10 +1,12 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import {
+  Box,
+  Stepper,
+  Step,
+  StepLabel,
+  Button,
+  Container
+} from '@mui/material';
 import { connect } from 'react-redux';
 
 import UploadDocumentForm from '../upload-document-form';
@@ -32,7 +34,7 @@ const HorizontalLinearStepper = ({ dispatch, activeStep }: any) => {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', height: '83.5vh', marginTop: '3.5vh' }}>
       <Stepper activeStep={activeStep}>
         {steps.map((label, index) => {
           const stepProps: { completed?: boolean } = {};
@@ -48,7 +50,6 @@ const HorizontalLinearStepper = ({ dispatch, activeStep }: any) => {
       </Stepper>
       {activeStep === steps.length - 1 ? (
         <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
           <DuplicatesTable />
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
@@ -57,8 +58,9 @@ const HorizontalLinearStepper = ({ dispatch, activeStep }: any) => {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-          <UploadDocumentForm handleNext={handleNext} />
+          <Container>
+            <UploadDocumentForm handleNext={handleNext} />
+          </Container>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Button
               color="inherit"

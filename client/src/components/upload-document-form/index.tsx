@@ -1,7 +1,14 @@
 import React, { useState, ChangeEvent } from 'react';
 import axios from 'axios';
-import UploadIcon from '@mui/icons-material/Upload';
-import { Box, Fab, TextField, Typography, CircularProgress, Backdrop } from '@mui/material';
+import { Upload, AttachFile } from '@mui/icons-material';
+import {
+  Fab,
+  TextField,
+  Typography,
+  CircularProgress,
+  Backdrop,
+  Grid,
+} from '@mui/material';
 import { connect } from 'react-redux';
 import { uploadDocument, uploadDocumentSuccess, uploadDocumentFailure } from '../../state/actions/upload-document';
 
@@ -38,38 +45,64 @@ const UploadDocumentForm = ({ dispatch, loading, handleNext }: any) => {
   };
 
   return (
-    <>
-      {!loading ? <Box sx={{ m: 1 }}>
-        <div>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            What column do you want to find duplicate values for?
-          </Typography>
-          <TextField
-            id="standard-basic"
-            label="Column Name"
-            variant="standard"
-            onChange={handleColumnFieldChange}
-            value={queryColumn}
-          />
-        </div>
-        <div>
-          <input type="file" onChange={handleFileSelection} name="sales_file" />
+    <Grid
+      container
+      spacing={2}
+      justifyContent="center"
+      alignItems="center"
+      sx={{ height: '100%' }}
+    >
+      {!loading ? <>
+        <Grid
+          item
+          container
+          xs={4}
+          p={0}
+          sx={{ height: '100%' }}
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+            <Typography sx={{ mt: 2, mb: 1 }}>
+              What column do you want duplicate values for?
+            </Typography>
+            <TextField
+              id="standard-basic"
+              label="Column Name"
+              variant="standard"
+              onChange={handleColumnFieldChange}
+              value={queryColumn}
+            />
+          
           <Fab
             variant="extended"
             color="primary"
             aria-label="add"
             onClick={handleUpload}
           >
-            <UploadIcon sx={{ mr: 1 }} />
+            <AttachFile sx={{ mr: 1 }} />
+            <label>
+              Select File
+              <input type="file" className="file-input" onChange={handleFileSelection} name="sales_file" />
+            </label>
+          </Fab>
+          <Fab
+            variant="extended"
+            color="primary"
+            aria-label="add"
+            onClick={handleUpload}
+          >
+            <Upload sx={{ mr: 1 }} />
             Upload
           </Fab>
-        </div>
-      </Box> :
+          
+        </Grid>
+      </> :
       <Backdrop open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
       }
-    </>
+    </Grid>
   );
 }
 
