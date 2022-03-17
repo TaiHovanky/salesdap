@@ -4,7 +4,6 @@ import { Upload, AttachFile } from '@mui/icons-material';
 import {
   Fab,
   TextField,
-  Typography,
   CircularProgress,
   Backdrop,
   Grid,
@@ -63,21 +62,22 @@ const UploadDocumentForm = ({ dispatch, loading, handleNext }: any) => {
           justifyContent="center"
           alignItems="center"
         >
-            <Typography sx={{ mt: 2, mb: 1 }}>
+            {/* <Typography sx={{ mt: 2, mb: 1 }}>
               What column do you want duplicate values for?
-            </Typography>
+            </Typography> */}
             <TextField
               id="standard-basic"
-              label="Column Name"
+              label="What column do you want duplicate values for?"
               variant="standard"
+              sx={{ width: '100%' }}
               onChange={handleColumnFieldChange}
               value={queryColumn}
             />
           
           <Fab
             variant="extended"
-            color="primary"
             aria-label="add"
+            sx={{ marginTop: '2rem' }}
             onClick={handleUpload}
           >
             <AttachFile sx={{ mr: 1 }} />
@@ -90,6 +90,7 @@ const UploadDocumentForm = ({ dispatch, loading, handleNext }: any) => {
             variant="extended"
             color="primary"
             aria-label="add"
+            sx={{ marginTop: '2rem' }}
             onClick={handleUpload}
           >
             <Upload sx={{ mr: 1 }} />

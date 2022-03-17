@@ -34,7 +34,7 @@ const HorizontalLinearStepper = ({ dispatch, activeStep }: any) => {
   };
 
   return (
-    <Box sx={{ width: '100%', height: '83.5vh', marginTop: '3.5vh' }}>
+    <Box sx={{ width: '100%', height: '80vh', marginTop: '3.5vh' }}>
       <Stepper activeStep={activeStep}>
         {steps.map((label, index) => {
           const stepProps: { completed?: boolean } = {};
@@ -58,7 +58,7 @@ const HorizontalLinearStepper = ({ dispatch, activeStep }: any) => {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <Container>
+          <Container sx={{ height: '100%' }}>
             <UploadDocumentForm handleNext={handleNext} />
           </Container>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
