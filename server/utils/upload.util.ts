@@ -17,14 +17,24 @@ export const createJSONFromWorksheet = (req: any): Array<any> => {
 
 export const findDuplicates = (salesData: Array<any>, columnName: string): Array<any> => {
   const valueHash: any = {};
-  const result: Array<any> = [];
+  let result: Array<any> = [];
   salesData.forEach((row: any) => {
-    const parsedRow: any = row;
-    if (!valueHash.hasOwnProperty([parsedRow[columnName]])) {
-      valueHash[parsedRow[columnName]] = parsedRow[columnName];
-    } else {
-      result.push(parsedRow);
+    const cellValue: string = row[columnName];
+    if (cellValue) {
+      const sanitizedCellValue: string = cellValue.toLowerCase().trim();
+      if (!valueHash.hasOwnProperty(sanitizedCellValue)) {
+        valueHash[sanitizedCellValue] = [row];
+      } else {
+        valueHash[sanitizedCellValue].push(row);
+      }
     }
   });
+  const valueHashKeys: Array<string> = Array.from(Object.keys(valueHash));
+  valueHashKeys.forEach((key: string) => {
+    if (valueHash[key].length > 1) {
+      result = [...result, ...valueHash[key]];
+    }
+  });
+  console.log('result', result);
   return result;
 } 

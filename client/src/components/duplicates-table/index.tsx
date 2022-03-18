@@ -28,6 +28,6 @@ const DuplicatesTable = ({ documentData }: any) => {
 
 const mapStateToProps = (state: any) => ({
   documentData: state.document.documentData
-})
+});
 
 export default connect(mapStateToProps)(DuplicatesTable);

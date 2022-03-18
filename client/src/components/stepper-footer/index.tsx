@@ -4,6 +4,7 @@ import {
   Button,
 } from '@mui/material';
 import { connect } from 'react-redux';
+
 import { changeStep } from '../../state/actions/step-progress';
 
 interface StepFooterProps {

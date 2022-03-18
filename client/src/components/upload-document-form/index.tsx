@@ -45,17 +45,24 @@ const UploadDocumentForm = ({
 }: UploadDocumentFormProps) => {
   const inputFileRef: any = useRef( null );
 
-  const handleColumnFieldChange = (e: ChangeEvent<HTMLInputElement>) => {
-    dispatch(changeColumn(e.target.value));
+  /**
+   * As the user types in the Column field, update its value
+   * @param event
+   */
+  const handleColumnFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
+    dispatch(changeColumn(event.target.value));
   };
 
+  /**
+   * When the user selects a document, validate the file type
+   * @param event 
+   */
   const handleFileSelection = (event: any) => {
-    console.log('file selected', event.target.files[0]);
-    const document = event && event.target && event.target.files ?
+    const document: any = event && event.target && event.target.files ?
       event.target.files[0] :
       null;
     dispatch(selectDocument(document));
-    const isValidDocType = document && document.name ?
+    const isValidDocType: boolean = document && document.name ?
       checkIsValidFileType(document.name) : false;
 
     if (isValidDocType) {
@@ -65,6 +72,11 @@ const UploadDocumentForm = ({
     }
   };
 
+  /**
+   * Puts the selected file and column name into a FormData instance,
+   * sends it to the server, and then changes to the next step where
+   * the duplicates will be displayed
+   */
   const handleUpload = () => {
     const formData = new FormData();
     if (selectedDocument && selectedDocument.name) {
@@ -85,7 +97,10 @@ const UploadDocumentForm = ({
     }
   };
 
-  const onBtnClick = () => {
+  /**
+   * Triggers the clicking of the hidden input (type=file) button
+   */
+  const handleFileSelectionBtnClick = () => {
     /*Collecting node-element and performing click*/
     if (inputFileRef && inputFileRef.current) {
       inputFileRef.current.click();
@@ -111,8 +126,9 @@ const UploadDocumentForm = ({
         alignItems="center"
       >
         <TextField
+          required
           id="standard-basic"
-          label="What column do you want duplicate values for?"
+          label="Column to find ducplicate values in"
           variant="standard"
           sx={{ width: '100%' }}
           onChange={handleColumnFieldChange}
@@ -122,7 +138,7 @@ const UploadDocumentForm = ({
           variant="extended"
           aria-label="add"
           sx={{ marginTop: '2.5rem' }}
-          onClick={onBtnClick}
+          onClick={handleFileSelectionBtnClick}
         >
           <AttachFile sx={{ mr: 1 }} />
           Select File

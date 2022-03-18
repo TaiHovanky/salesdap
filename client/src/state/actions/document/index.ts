@@ -32,7 +32,7 @@ export const changeColumn = (value: string) => ({
 
 export const validateDocumentTypeFailure = () => ({
   type: VALIDATE_DOCUMENT_TYPE_FAILURE,
-  payload: 'Invalid file type'
+  payload: 'Invalid file type. Only .xls, .xlsx, or .csv files can be processed.'
 });
 
 export const validateDocumentTypeSuccess = () => ({
