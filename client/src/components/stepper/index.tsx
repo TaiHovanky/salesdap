@@ -4,82 +4,50 @@ import {
   Stepper,
   Step,
   StepLabel,
-  Button,
+  // Button,
   Container
 } from '@mui/material';
 import { connect } from 'react-redux';
 
 import UploadDocumentForm from '../upload-document-form';
 import DuplicatesTable from '../duplicates-table';
-import { changeStep } from '../../state/actions/step-progress';
+import StepperFooter from '../stepper-footer';
 
 const steps = ['Upload document', 'View duplicates'];
 
-const HorizontalLinearStepper = ({ dispatch, activeStep }: any) => {
-  // const [activeStep, setActiveStep] = React.useState(0);
-
-  const handleNext = () => {
-    // setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    dispatch(changeStep(activeStep += 1));
-  };
-
-  const handleBack = () => {
-    // setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    dispatch(changeStep(activeStep -= 1));
-  };
-
-  const handleReset = () => {
-    // setActiveStep(0);
-    dispatch(changeStep(0));
-  };
-
+const HorizontalLinearStepper = ({ activeStep }: any) => {
   return (
-    <Box sx={{ width: '100%', height: '83vh', marginTop: '3.5vh' }}>
-      <Stepper activeStep={activeStep} sx={{ marginLeft: '25%', marginRight: '25%'}}>
-        {steps.map((label, index) => {
-          const stepProps: { completed?: boolean } = {};
-          const labelProps: {
-            optional?: React.ReactNode;
-          } = {};
-          return (
-            <Step key={label} {...stepProps}>
-              <StepLabel {...labelProps}>{label}</StepLabel>
-            </Step>
-          );
-        })}
-      </Stepper>
-      {activeStep === steps.length - 1 ? (
-        <React.Fragment>
-          <Container sx={{ height: '94%' }}>
-            <DuplicatesTable />
-          </Container>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Box sx={{ flex: '1 1 auto' }} />
-            <Button onClick={handleReset}>Reset</Button>
-          </Box>
-        </React.Fragment>
-      ) : (
-        <React.Fragment>
-          <Container sx={{ height: '100%' }}>
-            <UploadDocumentForm handleNext={handleNext} />
-          </Container>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2, margin: '0 24px' }}>
-            <Button
-              color="inherit"
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              sx={{ mr: 1 }}
-            >
-              Back
-            </Button>
-            <Box sx={{ flex: '1 1 auto' }} />
-            <Button onClick={handleNext}>
-              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-            </Button>
-          </Box>
-        </React.Fragment>
-      )}
-    </Box>
+    <>
+      <Box sx={{ width: '100%', height: '80vh', marginTop: '3.5vh' }}>
+        <Stepper activeStep={activeStep} sx={{ marginLeft: '25%', marginRight: '25%'}}>
+          {steps.map((label: string) => {
+            const stepProps: { completed?: boolean } = {};
+            const labelProps: {
+              optional?: React.ReactNode;
+            } = {};
+            return (
+              <Step key={label} {...stepProps}>
+                <StepLabel {...labelProps}>{label}</StepLabel>
+              </Step>
+            );
+          })}
+        </Stepper>
+        {activeStep === steps.length - 1 ? (
+          <React.Fragment>
+            <Container sx={{ height: '100%' }}>
+              <DuplicatesTable />
+            </Container>
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <Container sx={{ height: '100%' }}>
+              <UploadDocumentForm />
+            </Container>
+          </React.Fragment>
+        )}
+      </Box>
+      <StepperFooter steps={steps} />
+    </>
   );
 }
 

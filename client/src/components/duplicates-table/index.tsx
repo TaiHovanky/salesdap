@@ -21,7 +21,7 @@ const DuplicatesTable = ({ documentData }: any) => {
     <DataGrid
       rows={rows}
       columns={columns}
-      sx={{ height: '95%', width: '100%', marginTop: '3rem' }}
+      sx={{ height: '90%', width: '100%', marginTop: '3rem' }}
     />
   );
 }
