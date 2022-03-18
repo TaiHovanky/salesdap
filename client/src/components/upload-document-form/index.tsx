@@ -62,18 +62,14 @@ const UploadDocumentForm = ({ dispatch, loading, handleNext }: any) => {
           justifyContent="center"
           alignItems="center"
         >
-            {/* <Typography sx={{ mt: 2, mb: 1 }}>
-              What column do you want duplicate values for?
-            </Typography> */}
-            <TextField
-              id="standard-basic"
-              label="What column do you want duplicate values for?"
-              variant="standard"
-              sx={{ width: '100%' }}
-              onChange={handleColumnFieldChange}
-              value={queryColumn}
-            />
-          
+          <TextField
+            id="standard-basic"
+            label="What column do you want duplicate values for?"
+            variant="standard"
+            sx={{ width: '100%' }}
+            onChange={handleColumnFieldChange}
+            value={queryColumn}
+          />
           <Fab
             variant="extended"
             aria-label="add"
@@ -96,7 +92,6 @@ const UploadDocumentForm = ({ dispatch, loading, handleNext }: any) => {
             <Upload sx={{ mr: 1 }} />
             Upload
           </Fab>
-          
         </Grid>
       </> :
       <Backdrop open={loading}>

@@ -34,8 +34,8 @@ const HorizontalLinearStepper = ({ dispatch, activeStep }: any) => {
   };
 
   return (
-    <Box sx={{ width: '100%', height: '80vh', marginTop: '3.5vh' }}>
-      <Stepper activeStep={activeStep}>
+    <Box sx={{ width: '100%', height: '83vh', marginTop: '3.5vh' }}>
+      <Stepper activeStep={activeStep} sx={{ marginLeft: '25%', marginRight: '25%'}}>
         {steps.map((label, index) => {
           const stepProps: { completed?: boolean } = {};
           const labelProps: {
@@ -50,7 +50,9 @@ const HorizontalLinearStepper = ({ dispatch, activeStep }: any) => {
       </Stepper>
       {activeStep === steps.length - 1 ? (
         <React.Fragment>
-          <DuplicatesTable />
+          <Container sx={{ height: '94%' }}>
+            <DuplicatesTable />
+          </Container>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
             <Button onClick={handleReset}>Reset</Button>
@@ -61,7 +63,7 @@ const HorizontalLinearStepper = ({ dispatch, activeStep }: any) => {
           <Container sx={{ height: '100%' }}>
             <UploadDocumentForm handleNext={handleNext} />
           </Container>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2, margin: '0 24px' }}>
             <Button
               color="inherit"
               disabled={activeStep === 0}
