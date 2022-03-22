@@ -7,13 +7,13 @@ import { connect } from 'react-redux';
 
 import { changeStep } from '../../state/actions/step-progress';
 
-interface StepFooterProps {
+interface StepperFooterProps {
   steps: Array<string>;
   activeStep: number;
   dispatch: any;
 }
 
-const StepFooter = ({ steps, activeStep, dispatch }: StepFooterProps) => {
+const StepperFooter = ({ steps, activeStep, dispatch }: StepperFooterProps) => {
   const handleNext = () => {
     dispatch(changeStep(activeStep += 1));
   };
@@ -56,4 +56,4 @@ const mapStateToProps = (state: any) => ({
   activeStep: state.stepProgress.step
 });
 
-export default connect(mapStateToProps)(StepFooter);
+export default connect(mapStateToProps)(StepperFooter);
