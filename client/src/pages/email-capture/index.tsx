@@ -5,8 +5,12 @@ import {
   Grid,
   Typography,
   TextField,
-  Fab
+  Fab,
+  AppBar,
+  Toolbar,
+  IconButton
 } from '@mui/material';
+import { Close } from '@mui/icons-material';
 
 interface EmailCaptureProps {
   onClose: any;
@@ -34,7 +38,19 @@ const EmailCapture = ({ onClose }: EmailCaptureProps) => {
   }
 
   return (
-    <Box sx={{ width: '100%', height: '80vh', marginTop: '3.5vh' }}>
+    <Box sx={{ width: '100%', height: '100%', padding: '0 0 3rem 0' }}>
+      <AppBar sx={{ position: 'relative', marginBottom: '3rem' }}>
+        <Toolbar>
+          <IconButton
+            edge="end"
+            color="inherit"
+            onClick={onClose}
+            aria-label="close"
+          >
+            <Close />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
       <Grid
         container
         spacing={2}
@@ -53,7 +69,7 @@ const EmailCapture = ({ onClose }: EmailCaptureProps) => {
           alignItems="center"
         >
           <form>
-            <Typography variant="h5">Get on the waitlist for Salesdap</Typography>
+            <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Get on the waitlist for Salesdap</Typography>
             <TextField
               label="email address"
               variant="standard"
