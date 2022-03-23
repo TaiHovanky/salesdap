@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@mui/material';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import NavBar from '../../components/nav-bar';
 
 const Login = () => {
@@ -62,8 +62,8 @@ const Login = () => {
             justifyContent="center"
             alignItems="center"
           >
-            <Typography variant="h5">Register</Typography>
-            <Typography variant="subtitle1">Sign up for Salesdap</Typography>
+            <Typography variant="h5">Login</Typography>
+            <Typography variant="subtitle1">Sign in to Salesdap</Typography>
             <TextField
               required
               id="standard-basic"
@@ -90,6 +90,9 @@ const Login = () => {
             >
               Submit
             </Fab>
+            <Typography sx={{ marginTop: '2rem' }}>
+              Don't have an account? <Link to="/register">Sign up</Link>
+            </Typography>
           </Grid>
         </Grid>
       </Box>

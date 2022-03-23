@@ -5,6 +5,7 @@ const upload = multer({ dest: 'uploads/' });
 import { uploadFile } from '../controller/file.controller';
 import { saveEmail } from '../controller/email.controller';
 import { registerUser } from '../controller/register.controller';
+import { loginUser } from '../controller/login.controller';
 
 const router = express.Router();
 

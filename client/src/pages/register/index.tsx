@@ -11,7 +11,7 @@ import {
   AlertTitle
 } from '@mui/material';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import NavBar from '../../components/nav-bar';
 
 const Register = () => {
@@ -94,6 +94,9 @@ const Register = () => {
             >
               Submit
             </Fab>
+            <Typography sx={{ marginTop: '2rem' }}>
+              Alread have an account? <Link to="/">Sign in</Link>
+            </Typography>
           </Grid>
         </Grid>
       </Box>
