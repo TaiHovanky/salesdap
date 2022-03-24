@@ -13,25 +13,19 @@ import {
 import axios from 'axios';
 import { useHistory, Link } from 'react-router-dom';
 import NavBar from '../../components/nav-bar';
+import { FormField, useFormField } from '../../hooks';
 
 const Register = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const email: FormField = useFormField('', 'email');
+  const password: FormField = useFormField('', 'password');
+  const confirmPassword: FormField = useFormField('', 'password');
   const history = useHistory();
-
-  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  }
-
-  const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value)
-  };
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
     const formData = new FormData();
-    formData.append('email', email);
-    formData.append('password', password);
+    formData.append('email', email.value);
+    formData.append('password', password.value);
     const config = {
       headers: {
         'Content-Type': 'multipart/form-data'
@@ -72,19 +66,32 @@ const Register = () => {
               required
               id="standard-basic"
               label="Email"
+              name="email"
               variant="standard"
               sx={{ width: '100%' }}
-              value={email}
-              onChange={handleEmailChange}
+              {...email}
             />
             <TextField
               required
               id="standard-basic"
               label="Password"
+              name="password"
               variant="standard"
+              type="password"
               sx={{ width: '100%' }}
-              value={password}
-              onChange={handlePasswordChange}
+              {...password}
+            />
+            <TextField
+              required
+              id="standard-basic"
+              label="Confirm Password"
+              name="confirm-password"
+              variant="standard"
+              type="password"
+              sx={{ width: '100%' }}
+              value={confirmPassword.value}
+              error={confirmPassword.error}
+              onChange={(event) => { confirmPassword.onChange(event, password.value)}}
             />
             <Fab
               variant="extended"

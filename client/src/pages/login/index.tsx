@@ -9,25 +9,18 @@ import {
 import axios from 'axios';
 import { useHistory, Link } from 'react-router-dom';
 import NavBar from '../../components/nav-bar';
+import { FormField, useFormField } from '../../hooks';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const email: FormField = useFormField('', 'email');
+  const password: FormField = useFormField('', 'password');
   const history = useHistory();
-
-  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  }
-
-  const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value)
-  };
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
     const formData = new FormData();
-    formData.append('email', email);
-    formData.append('password', password);
+    formData.append('email', email.value);
+    formData.append('password', password.value);
     const config = {
       headers: {
         'Content-Type': 'multipart/form-data'
@@ -70,17 +63,16 @@ const Login = () => {
               label="Email"
               variant="standard"
               sx={{ width: '100%' }}
-              value={email}
-              onChange={handleEmailChange}
+              {...email}
             />
             <TextField
               required
               id="standard-basic"
               label="Password"
               variant="standard"
+              type="password"
               sx={{ width: '100%' }}
-              value={password}
-              onChange={handlePasswordChange}
+              {...password}
             />
             <Fab
               variant="extended"
