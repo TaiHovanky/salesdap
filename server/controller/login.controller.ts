@@ -1,7 +1,7 @@
 import { compare } from 'bcryptjs';
 import db from '../db';
 
-export const loginUser = async (req: any, res: any) => {
+export const loginUser = async (req: any) => {
   const { email, password } = req.body;
   try {
     const users: Array<any> = await db('users').select().where({ email })
@@ -12,8 +12,11 @@ export const loginUser = async (req: any, res: any) => {
         req.session.user = users[0];
         return { user: users[0] };
       }
+      return { user: null };
     }
+    return { user: null };
   } catch (err: any) {
     console.log('login err', err);
+    return { user: null};
   }
 }
