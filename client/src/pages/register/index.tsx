@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Fab,
@@ -8,36 +8,76 @@ import {
   Grid,
   Typography,
   Alert,
-  AlertTitle
 } from '@mui/material';
 import axios from 'axios';
 import { useHistory, Link } from 'react-router-dom';
+import { useFormik } from 'formik';
 import NavBar from '../../components/nav-bar';
-import { FormField, useFormField } from '../../hooks';
 
 const Register = () => {
-  const email: FormField = useFormField('', 'email');
-  const password: FormField = useFormField('', 'password');
-  const confirmPassword: FormField = useFormField('', 'password');
+  const [loading, setLoading] = useState(false);
+  const [registrationError, setRegistrationError] = useState('');
+
+  const validate = (values: any) => {
+    const errors: any = {};
+    if (!values.password) {
+      errors.password = 'Required';
+    } else if (values.password.length < 8) {
+      errors.password = 'Must be 8 characters or more';
+    }
+  
+    if (!values.confirmPassword) {
+      errors.confirmPassword = 'Required';
+    } else if (values.confirmPassword !== values.password) {
+      errors.confirmPassword = 'Must match password';
+    }
+  
+    if (!values.email) {
+      errors.email = 'Required';
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+      errors.email = 'Invalid email address';
+    }
+  
+    return errors;
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+      confirmPassword: ''
+    },
+    validate,
+    onSubmit: (values: any) => {
+      const formData = new FormData();
+      formData.append('email', values.email);
+      formData.append('password', values.password);
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      };
+      setLoading(true);
+      axios.post('http://localhost:3001/api/v1/register', formData, config)
+        .then(() => {
+          setLoading(false);
+          setRegistrationError('');
+          history.push('/home');
+        })
+        .catch((err: any) => {
+          console.log('err', err);
+          setLoading(false);
+          setRegistrationError('Registration failed. Please try again.')
+        });
+    },
+  });
+
   const history = useHistory();
 
-  const handleSubmit = (event: any) => {
-    event.preventDefault();
-    const formData = new FormData();
-    formData.append('email', email.value);
-    formData.append('password', password.value);
-    const config = {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    };
-    axios.post('http://localhost:3001/api/v1/register', formData, config)
-      .then((data) => {
-        console.log('register', data);
-        history.push('/home');
-      })
-      .catch((err: any) => console.log('err', err));
-  }
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit } = formik;
+
+  const isSubmitButtonDisabled = !!errors.email || !!errors.password || !!errors.confirmPassword
+    || !values.email || !values.password || !values.confirmPassword;
 
   return (
     <>
@@ -60,53 +100,96 @@ const Register = () => {
             justifyContent="center"
             alignItems="center"
           >
-            <Typography variant="h5">Register</Typography>
-            <Typography variant="subtitle1">Sign up for Salesdap</Typography>
-            <TextField
-              required
-              id="standard-basic"
-              label="Email"
-              name="email"
-              variant="standard"
-              sx={{ width: '100%' }}
-              {...email}
-            />
-            <TextField
-              required
-              id="standard-basic"
-              label="Password"
-              name="password"
-              variant="standard"
-              type="password"
-              sx={{ width: '100%' }}
-              {...password}
-            />
-            <TextField
-              required
-              id="standard-basic"
-              label="Confirm Password"
-              name="confirm-password"
-              variant="standard"
-              type="password"
-              sx={{ width: '100%' }}
-              value={confirmPassword.value}
-              error={confirmPassword.error}
-              onChange={(event) => { confirmPassword.onChange(event, password.value)}}
-            />
-            <Fab
-              variant="extended"
-              aria-label="add"
-              sx={{ marginTop: '2.5rem' }}
-              onClick={handleSubmit}
-            >
-              Submit
-            </Fab>
+            <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Register</Typography>
+            <form onSubmit={handleSubmit}>
+              <TextField
+                required
+                id="standard-basic"
+                label="Email"
+                name="email"
+                variant="standard"
+                sx={{ width: '100%', marginBottom: '1.5rem' }}
+                error={touched.email && !!errors.email}
+                helperText={errors.email ? errors.email : null}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.email}
+              />
+              <TextField
+                required
+                id="standard-basic"
+                label="Password"
+                name="password"
+                variant="standard"
+                type="password"
+                sx={{ width: '100%', marginBottom: '1.5rem' }}
+                error={touched.password && !!errors.password}
+                helperText={errors.password ? errors.password : null}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.password}
+              />
+              <TextField
+                required
+                id="standard-basic"
+                label="Confirm Password"
+                name="confirmPassword"
+                variant="standard"
+                type="password"
+                sx={{ width: '100%' }}
+                error={touched.confirmPassword && !!errors.confirmPassword}
+                helperText={errors.confirmPassword ? errors.confirmPassword : null}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.confirmPassword}
+              />
+              <Grid
+                container
+                spacing={2}
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Grid
+                  item
+                  container
+                  xs={4}
+                  p={0}
+                  direction="column"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Fab
+                    variant="extended"
+                    aria-label="add"
+                    sx={{ marginTop: '2.5rem', marginLeft: 'auto', marginRight: 'auto' }}
+                    type="submit"
+                    disabled={isSubmitButtonDisabled}
+                  >
+                    Submit
+                  </Fab>
+
+                  {!!registrationError &&
+                    <Alert
+                      severity="error"
+                      variant="standard"
+                      sx={{ marginTop: '2rem', borderRadius: '10px', width: '100%' }}
+                    >
+                      {registrationError}
+                    </Alert>
+                  }
+                </Grid>
+              </Grid>
+            </form>
             <Typography sx={{ marginTop: '2rem' }}>
-              Alread have an account? <Link to="/">Sign in</Link>
+              Already have an account? <Link to="/">Sign in</Link>
             </Typography>
           </Grid>
         </Grid>
       </Box>
+
+      <Backdrop open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </>
   );
 };

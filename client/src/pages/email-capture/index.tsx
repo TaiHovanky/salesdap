@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import {
   Box,
@@ -8,34 +8,60 @@ import {
   Fab,
   AppBar,
   Toolbar,
-  IconButton
+  IconButton,
+  Alert,
+  CircularProgress,
+  Backdrop,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
+import { useFormik } from 'formik';
 
 interface EmailCaptureProps {
   onClose: any;
 }
 
 const EmailCapture = ({ onClose }: EmailCaptureProps) => {
-  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [emailCaptureError, setEmailCaptureError] = useState('');
 
-  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  }
+  const validate = (values: any) => {
+    const errors: any = {};
 
-  const handleSubmit = (event: any) => {
-    event.preventDefault();
-    const formData = new FormData();
-    formData.append('email', email);
-    const config = {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    };
-    onClose();
-    axios.post('http://localhost:3001/api/v1/email', formData, config)
-      .catch((err: any) => console.log('email err', err));
-  }
+    if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+      errors.email = 'Invalid email address';
+    }
+  
+    return errors;
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      email: ''
+    },
+    validate,
+    onSubmit: (values: any) => {
+      const formData = new FormData();
+      formData.append('email', values.email);
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      };
+      setLoading(true);
+      axios.post('http://localhost:3001/api/v1/email', formData, config)
+        .then(() => {
+          setLoading(false);
+          onClose();
+        })
+        .catch((err: any) => {
+          console.log('email err', err);
+          setLoading(false);
+          setEmailCaptureError('Waitlist registration failed. Please try again.');
+        });
+    }
+  });
+
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit } = formik;
 
   return (
     <Box sx={{ width: '100%', height: '100%', padding: '0 0 3rem 0' }}>
@@ -53,7 +79,7 @@ const EmailCapture = ({ onClose }: EmailCaptureProps) => {
       </AppBar>
       <Grid
         container
-        spacing={2}
+        spacing={3}
         justifyContent="center"
         alignItems="center"
         sx={{ height: '100%', width: '100%' }}
@@ -68,27 +94,43 @@ const EmailCapture = ({ onClose }: EmailCaptureProps) => {
           justifyContent="center"
           alignItems="center"
         >
-          <form>
-            <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Get on the waitlist for Salesdap</Typography>
+          <form onSubmit={handleSubmit}>
+            <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Join the waitlist for Salesdap</Typography>
             <TextField
               label="email address"
               variant="standard"
+              name="email"
               sx={{ width: '100%' }}
-              value={email}
-              onChange={handleEmailChange}
+              error={touched.email && !!errors.email}
+              helperText={errors.email ? errors.email : null}
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.email}
             />
             <Fab
               variant="extended"
               aria-label="add"
               sx={{ marginTop: '2.5rem' }}
               type="submit"
-              onClick={handleSubmit}
             >
               submit
             </Fab>
+            {!!emailCaptureError &&
+              <Alert
+                severity="error"
+                variant="standard"
+                sx={{ marginTop: '2rem', borderRadius: '10px', width: '100%' }}
+              >
+                {emailCaptureError}
+              </Alert>
+            }
           </form>
         </Grid>
       </Grid>
+
+      <Backdrop open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </Box>
   );
 }
