@@ -4,7 +4,7 @@ import {
   Stepper,
   Step,
   StepLabel,
-  Container
+  Container,
 } from '@mui/material';
 import { connect } from 'react-redux';
 
@@ -14,7 +14,9 @@ import StepperFooter from '../stepper-footer';
 
 const steps = ['Upload document', 'View duplicates'];
 
-const HorizontalLinearStepper = ({ activeStep }: any) => {
+const HorizontalLinearStepper = ({
+  activeStep
+}: any) => {
   return (
     <>
       <Box sx={{ width: '100%', height: '80vh', marginTop: '3.5vh' }}>
@@ -51,7 +53,7 @@ const HorizontalLinearStepper = ({ activeStep }: any) => {
 }
 
 const mapStateToProps = (state: any) => ({
-  activeStep: state.stepProgress.step
+  activeStep: state.stepProgress.step,
 });
 
 export default connect(mapStateToProps)(HorizontalLinearStepper);

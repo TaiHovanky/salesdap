@@ -1,35 +1,32 @@
-import React, { ChangeEvent, useRef } from 'react';
-import axios from 'axios';
-import { Upload, AttachFile } from '@mui/icons-material';
+import * as React from 'react';
 import {
-  Fab,
-  TextField,
-  CircularProgress,
-  Backdrop,
-  Grid,
-  Typography,
   Alert,
-  AlertTitle
+  Backdrop,
+  CircularProgress,
+  Grid,
+  Fab
 } from '@mui/material';
+import axios from 'axios';
+import { Upload } from '@mui/icons-material';
 import { connect } from 'react-redux';
+import UploadDocumentColumn from '../upload-document-column';
 import {
   uploadDocument,
   uploadDocumentSuccess,
   uploadDocumentFailure,
-  selectDocument,
-  changeColumn,
-  validateDocumentTypeSuccess,
-  validateDocumentTypeFailure
 } from '../../state/actions/document';
 import { changeStep } from '../../state/actions/step-progress';
-import { checkIsValidFileType } from '../../utils/validate-file-type';
 
 interface UploadDocumentFormProps {
   dispatch: any;
   loading: boolean;
   activeStep: number;
-  column: string;
-  selectedDocument: any;
+  selectedDocument1: any;
+  selectedDocument2: any;
+  comparisonColumn1: string;
+  comparisonColumn2: string;
+  resultColumns1: string;
+  resultColumns2: string;
   errorMessage: string;
   hasError: boolean;
 }
@@ -38,40 +35,15 @@ const UploadDocumentForm = ({
   dispatch,
   loading,
   activeStep,
-  selectedDocument,
-  column,
+  selectedDocument1,
+  selectedDocument2,
+  comparisonColumn1,
+  comparisonColumn2,
+  resultColumns1,
+  resultColumns2,
   errorMessage,
-  hasError
+  hasError,
 }: UploadDocumentFormProps) => {
-  const inputFileRef: any = useRef( null );
-
-  /**
-   * As the user types in the Column field, update its value
-   * @param event
-   */
-  const handleColumnFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
-    dispatch(changeColumn(event.target.value));
-  };
-
-  /**
-   * When the user selects a document, validate the file type
-   * @param event 
-   */
-  const handleFileSelection = (event: any) => {
-    const document: any = event && event.target && event.target.files ?
-      event.target.files[0] :
-      null;
-    dispatch(selectDocument(document));
-    const isValidDocType: boolean = document && document.name ?
-      checkIsValidFileType(document.name) : false;
-
-    if (isValidDocType) {
-      dispatch(validateDocumentTypeSuccess());
-    } else {
-      dispatch(validateDocumentTypeFailure());
-    }
-  };
-
   /**
    * Puts the selected file and column name into a FormData instance,
    * sends it to the server, and then changes to the next step where
@@ -79,13 +51,26 @@ const UploadDocumentForm = ({
    */
   const handleUpload = () => {
     const formData = new FormData();
-    if (selectedDocument && selectedDocument.name) {
+    if (
+      selectedDocument1 &&
+      selectedDocument1.name &&
+      selectedDocument2 &&
+      selectedDocument2.name
+    ) {
       formData.append(
-        "sales_file",
-        selectedDocument,
-        selectedDocument.name
+        "sales_file1",
+        selectedDocument1,
+        selectedDocument1.name
       );
-      formData.append('columnName', column);
+      formData.append(
+        "sales_file2",
+        selectedDocument2,
+        selectedDocument2.name
+      );
+      formData.append('comparisonColumn1', comparisonColumn1);
+      formData.append('comparisonColumn2', comparisonColumn2);
+      formData.append('resultColumns1', resultColumns1);
+      formData.append('resultColumns2', resultColumns2);
 
       dispatch(uploadDocument());
       axios.post('http://localhost:3001/api/v1/uploadfile', formData)
@@ -97,100 +82,106 @@ const UploadDocumentForm = ({
     }
   };
 
-  /**
-   * Triggers the clicking of the hidden input (type=file) button
-   */
-  const handleFileSelectionBtnClick = () => {
-    /*Collecting node-element and performing click*/
-    if (inputFileRef && inputFileRef.current) {
-      inputFileRef.current.click();
-    }
-  }
-
   return (
-    <Grid
-      container
-      spacing={2}
-      justifyContent="center"
-      alignItems="center"
-      sx={{ height: '100%' }}
-    >
+    <>
       <Grid
-        item
         container
-        xs={4}
-        p={0}
-        sx={{ height: '100%' }}
-        direction="column"
-        justifyContent="center"
+        spacing={2}
+        justifyContent="space-around"
+        alignItems="center"
+        sx={{ height: '80%' }}
+      >
+        <Grid
+          item
+          container
+          xs={4}
+          p={0}
+          sx={{ height: '100%' }}
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <UploadDocumentColumn
+            comparisonColumn={comparisonColumn1}
+            index={0}
+            resultColumns={resultColumns1}
+            selectedDocument={selectedDocument1}
+          />
+        </Grid>
+        <Grid
+          item
+          container
+          xs={4}
+          p={0}
+          sx={{ height: '100%' }}
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <UploadDocumentColumn
+            comparisonColumn={comparisonColumn2}
+            index={1}
+            resultColumns={resultColumns2}
+            selectedDocument={selectedDocument2}
+          />
+        </Grid>
+      </Grid>
+      <Grid
+        container
+        spacing={2}
+        justifyContent="space-around"
         alignItems="center"
       >
-        <TextField
-          required
-          id="standard-basic"
-          label="Column to find ducplicate values in"
-          variant="standard"
-          sx={{ width: '100%' }}
-          onChange={handleColumnFieldChange}
-          value={column}
-        />
-        <Fab
-          variant="extended"
-          aria-label="add"
-          sx={{ marginTop: '2.5rem' }}
-          onClick={handleFileSelectionBtnClick}
+        <Grid
+          item
+          container
+          xs={4}
+          p={0}
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
         >
-          <AttachFile sx={{ mr: 1 }} />
-          Select File
-        </Fab>
-        <input
-          type="file"
-          ref={inputFileRef}
-          className="file-input"
-          onChange={handleFileSelection}
-          name="sales_file"
-        />
-        {selectedDocument && selectedDocument.name &&
-          <Typography variant="subtitle1" sx={{ margin: '1rem 0 0' }}>
-            {selectedDocument.name}
-          </Typography>
-        }
-        <Fab
-          variant="extended"
-          color="primary"
-          aria-label="add"
-          sx={{ marginTop: '2rem' }}
-          onClick={handleUpload}
-        >
-          <Upload sx={{ mr: 1 }} />
-          Upload
-        </Fab>
-        {hasError &&
-          <Alert
-            severity="error"
-            variant="standard"
-            sx={{ marginTop: '2rem', borderRadius: '10px', width: '100%' }}
+          <Fab
+            variant="extended"
+            color="primary"
+            aria-label="add"
+            sx={{ marginTop: '2rem' }}
+            onClick={handleUpload}
           >
-            <AlertTitle>Error</AlertTitle>
-            {errorMessage}
-          </Alert>
-        }
+            <Upload sx={{ mr: 1 }} />
+            Upload and Compare
+          </Fab>
+        </Grid>
       </Grid>
+
+      {hasError &&
+        <Alert
+          severity="error"
+          variant="standard"
+          sx={{ marginTop: '2rem', borderRadius: '10px', width: '100%' }}
+        >
+          {errorMessage}
+        </Alert>
+      }
 
       <Backdrop open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
-    </Grid>
+    </>
   );
-}
+};
 
 const mapStateToProps = (state: any) => ({
   activeStep: state.stepProgress.step,
-  column: state.document.column,
+  selectedDocument1: state.document.selectedDocument1,
+  selectedDocument2: state.document.selectedDocument2,
+  comparisonColumn1: state.document.comparisonColumn1,
+  comparisonColumn2: state.document.comparisonColumn2,
+  resultColumns1: state.document.resultColumns1,
+  resultColumns2: state.document.resultColumns2,
   errorMessage: state.document.errorMessage,
   hasError: state.document.hasError,
   loading: state.document.loading,
-  selectedDocument: state.document.selectedDocument
 });
 
 export default connect(mapStateToProps)(UploadDocumentForm);

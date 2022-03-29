@@ -2,7 +2,8 @@ export const UPLOAD_DOCUMENT = 'UPLOAD_DOCUMENT';
 export const UPLOAD_DOCUMENT_SUCCESS = 'UPLOAD_DOCUMENT_SUCCESS';
 export const UPLOAD_DOCUMENT_FAILURE = 'UPLOAD_DOCUMENT_FAILURE';
 export const SELECT_DOCUMENT = 'SELECT_DOCUMENT';
-export const CHANGE_COLUMN = 'CHANGE_COLUMN';
+export const CHANGE_COMPARISON_COLUMN = 'CHANGE_COMPARISON_COLUMN';
+export const CHANGE_RESULT_COLUMNS = 'CHANGE_RESULT_COLUMNS';
 export const VALIDATE_DOCUMENT_TYPE_FAILURE = 'VALIDATE_DOCUMENT_TYPE_FAILURE';
 export const VALIDATE_DOCUMENT_TYPE_SUCCESS = 'VALIDATE_DOCUMENT_TYPE_SUCCESS';
 
@@ -20,14 +21,22 @@ export const uploadDocumentFailure = (errorMessage: any) => ({
   payload: errorMessage
 });
 
-export const selectDocument = (document: any) => ({
+export const selectDocument = (document: any, index: number) => ({
   type: SELECT_DOCUMENT,
-  payload: document
+  payload: document,
+  index
 });
 
-export const changeColumn = (value: string) => ({
-  type: CHANGE_COLUMN,
-  payload: value
+export const changeComparisonColumn = (value: string, index: number) => ({
+  type: CHANGE_COMPARISON_COLUMN,
+  payload: value,
+  index
+});
+
+export const changeResultColumns = (value: string, index: number) => ({
+  type: CHANGE_RESULT_COLUMNS,
+  payload: value,
+  index
 });
 
 export const validateDocumentTypeFailure = () => ({
