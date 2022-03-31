@@ -3,7 +3,6 @@ import db from '../db';
 
 export const loginUser = async (req: any, res: any) => {
   const { email, password } = req.body;
-  console.log('login user', email, password);
 
   try {
     const users: Array<any> = await db('users').select().where({ email })

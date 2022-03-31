@@ -50,7 +50,6 @@ const Login = () => {
       axios.post('http://localhost:3001/api/v1/login', formData, config)
         .then((data) => {
           setLoading(false);
-          console.log('data', data)
           history.push('/home');
         })
         .catch((err: any) => {
