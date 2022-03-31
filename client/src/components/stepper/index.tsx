@@ -14,7 +14,11 @@ import StepperFooter from '../stepper-footer';
 
 const steps = ['Upload document', 'View duplicates'];
 
-const HorizontalLinearStepper = ({ activeStep }: any) => {
+interface Props {
+  activeStep: number;
+}
+
+const HorizontalLinearStepper = ({ activeStep }: Props) => {
   return (
     <>
       <Box sx={{ width: '100%', height: '80vh', marginTop: '3.5vh' }}>

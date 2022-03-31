@@ -2,8 +2,13 @@ import * as XLSX from 'xlsx';
 /* load 'fs' for readFile and writeFile support */
 import * as fs from 'fs';
 
-export const createJSONFromWorksheet = (req: any): Array<any> => {
-  const fileBuffer = fs.readFileSync(req.file.path);
+/**
+ * Use xlsx to convert the spreadsheet to a JavaScript array of objects
+ * @param file File in Multer
+ * @returns Array of objects that represent rows in the spreadsheet
+ */
+export const createJSONFromWorksheet = (file: any): Array<any> => {
+  const fileBuffer = fs.readFileSync(file.path);
   const workbook: XLSX.WorkBook = XLSX.read(fileBuffer);
   const sheetName: string = workbook.SheetNames[0];
   const worksheet: XLSX.WorkSheet | null = workbook && workbook.Sheets ?
@@ -15,26 +20,119 @@ export const createJSONFromWorksheet = (req: any): Array<any> => {
   return [];
 };
 
-export const findDuplicates = (salesData: Array<any>, columnName: string): Array<any> => {
+/**
+ * Loop through spreadsheet data and use comparison columns to find duplicate values. If
+ * a duplicate value is found, both rows from each spreadsheet are added to the results.
+ * @param {Array<any>} salesData1 Spreadsheet data in the form of an array
+ * @param {Array<any>} salesData2 Spreadsheet data in the form of an array
+ * @param {string} comparisonColumn1 Column that will be compared to comparisonColumn2
+ * @param {string} comparisonColumn2 
+ * @returns List of rows with duplicate data in the comparison columns
+ */
+export const findDuplicates = (
+  salesData1: Array<any>,
+  salesData2: Array<any>,
+  comparisonColumn1: string,
+  comparisonColumn2: string
+): Array<any> => {
   const valueHash: any = {};
-  let result: Array<any> = [];
+  let resultsList: Array<any> = [];
+
+  loopThroughSpreadsheet(
+    salesData1,
+    comparisonColumn1,
+    valueHash,
+    resultsList,
+    addCellValueToHash
+  );
+  loopThroughSpreadsheet(
+    salesData2,
+    comparisonColumn2,
+    valueHash,
+    resultsList,
+    checkForDuplicates
+  );
+
+  return resultsList;
+} 
+
+/**
+ * Loop through each row in spreadsheet while examining the cell in the comparison column
+ * and execute a callback on that cell
+ * @param {Array<any>} salesData Spreadsheet data
+ * @param {string} comparisonColumn Column that we want cell values for
+ * @param {any} valueHash Object containing cell value as key, spreadsheet row as value
+ * @param {Array<any>} resultsList List of rows that contain duplicate values
+ * @param callback Function that updates results in some way
+ */
+const loopThroughSpreadsheet = (
+  salesData: Array<any>,
+  comparisonColumn: string,
+  valueHash: any,
+  resultsList: Array<any>,
+  callback: any
+): void => {
   salesData.forEach((row: any) => {
-    const cellValue: string = row[columnName];
+    const cellValue: string = row[comparisonColumn];
     if (cellValue) {
       const sanitizedCellValue: string = cellValue.toLowerCase().trim();
-      if (!valueHash.hasOwnProperty(sanitizedCellValue)) {
-        valueHash[sanitizedCellValue] = [row];
-      } else {
-        valueHash[sanitizedCellValue].push(row);
-      }
+      callback(sanitizedCellValue, valueHash, row, resultsList);
     }
   });
-  const valueHashKeys: Array<string> = Array.from(Object.keys(valueHash));
-  valueHashKeys.forEach((key: string) => {
-    if (valueHash[key].length > 1) {
-      result = [...result, ...valueHash[key]];
-    }
+}
+
+/**
+ * Update the value hash
+ * @param {string} cellValue Cell in the row/column
+ * @param {any} valueHash Object containing cell value as key, spreadsheet row as value
+ * @param {any} row Object that represents a row in the spreadsheet
+ */
+const addCellValueToHash = (cellValue: string, valueHash: any, row: any): void => {
+  if (!valueHash.hasOwnProperty(cellValue)) {
+    valueHash[cellValue] = row;
+  }
+}
+
+/**
+ * Compare the cell with the valueHash to see if there's a match with the data from the
+ * other spreadsheet
+ * @param {string} cellValue Cell in the row/column
+ * @param {any} valueHash Object containing cell value as key, spreadsheet row as value
+ * @param {any} row Object that represents a row in the spreadsheet
+ * @param {Array<any>} resultsList List of rows that contain duplicate values
+ */
+const checkForDuplicates = (
+  cellValue: string,
+  valueHash: any,
+  row: any,
+  resultsList: Array<any>,
+): void => {
+  if (valueHash[cellValue]) {
+    resultsList.push(valueHash[cellValue])
+    resultsList.push(row);
+  }
+}
+
+/**
+ * Create an array of objects that contain the desired columns from each spreadsheet.
+ * @param duplicatesList List of rows that have a duplicate cell value in the comparison columns
+ * @param resultColumns1 Columns from the 1st spreadsheet that user wants to see in results
+ * @param resultColumns2 Columns from the 2nd spreadsheet that user wants to see in results
+ * @returns Array of objects that contains properties for desired columns
+ */
+export const displayRelevantColumns = (
+  duplicatesList: Array<any>,
+  resultColumns1: string,
+  resultColumns2: string
+): Array<any> => {
+  const result: Array<any> = [];
+  const resColArr1: Array<string> = resultColumns1.split(',');
+  const resColArr2: Array<string> = resultColumns2.split(',');
+  const columns: Array<string> = [...resColArr1, ...resColArr2];
+
+  duplicatesList.forEach((item: any) => {
+    const row = columns.reduce((rowObj, col) => ({ ...rowObj, [col]: item[col] || null }), {});
+    result.push(row);
   });
-  console.log('result', result);
   return result;
-} 
+}
