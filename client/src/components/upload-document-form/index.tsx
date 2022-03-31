@@ -128,7 +128,6 @@ const UploadDocumentForm = ({
       </Grid>
       <Grid
         container
-        spacing={2}
         justifyContent="space-around"
         alignItems="center"
       >
@@ -136,7 +135,6 @@ const UploadDocumentForm = ({
           item
           container
           xs={4}
-          p={0}
           direction="column"
           justifyContent="center"
           alignItems="center"

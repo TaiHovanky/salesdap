@@ -18,11 +18,15 @@ const DuplicatesTable = ({ documentData }: any) => {
     id: index
   }));
   return (
-    <DataGrid
-      rows={rows}
-      columns={columns}
-      sx={{ height: '90%', width: '100%', marginTop: '3rem' }}
-    />
+    <div style={{ display: 'flex', height: '100%' }}>
+      <div style={{ flexGrow: 1 }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          sx={{ height: '90%', width: '100%', marginTop: '3rem' }}
+        />
+      </div>
+    </div>
   );
 }
 

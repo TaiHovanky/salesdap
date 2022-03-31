@@ -4,6 +4,7 @@ import {
   Fab,
   TextField,
   Typography,
+  Grid
 } from '@mui/material';
 import { connect } from 'react-redux';
 import {
@@ -94,31 +95,50 @@ const UploadDocumentColumn = ({
         label="Columns that you want to see in results"
         helperText="Separate values with a comma"
         variant="standard"
-        sx={{ width: '100%' }}
+        sx={{ width: '100%', marginTop: '2rem' }}
         onChange={handleResultColumnFieldChange}
         value={resultColumns}
       />
-      <Fab
-        variant="extended"
-        aria-label="add"
-        sx={{ marginTop: '2.5rem' }}
-        onClick={handleFileSelectionBtnClick}
+      <Grid
+        container
+        spacing={2}
+        justifyContent="center"
+        alignItems="center"
+        sx={{ height: '80%' }}
       >
-        <AttachFile sx={{ mr: 1 }} />
-        Select File
-      </Fab>
-      <input
-        type="file"
-        ref={inputFileRef}
-        className="file-input"
-        onChange={validateFileSelection}
-        name="sales_file"
-      />
-      {selectedDocument && selectedDocument.name &&
-        <Typography variant="subtitle1" sx={{ margin: '1rem 0 0' }}>
-          {selectedDocument.name}
-        </Typography>
-      }
+        <Grid
+          item
+          container
+          xs={6}
+          p={0}
+          sx={{ height: '100%' }}
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Fab
+            variant="extended"
+            aria-label="add"
+            sx={{ marginTop: '2.5rem' }}
+            onClick={handleFileSelectionBtnClick}
+          >
+            <AttachFile sx={{ mr: 1 }} />
+            Select File
+          </Fab>
+          <input
+            type="file"
+            ref={inputFileRef}
+            className="file-input"
+            onChange={validateFileSelection}
+            name="sales_file"
+          />
+          {selectedDocument && selectedDocument.name &&
+            <Typography variant="subtitle1" sx={{ margin: '1rem 0 0' }}>
+              {selectedDocument.name}
+            </Typography>
+          }
+        </Grid>
+      </Grid>
     </form>
   );
 }
