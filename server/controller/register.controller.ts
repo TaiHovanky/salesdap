@@ -3,14 +3,26 @@ import bcrypt from 'bcryptjs';
 import db from '../db';
 
 export const registerUser = async (req: any, res: any) => {
-  const { email, password } = req.body;
+  const {
+    email,
+    password,
+    firstname,
+    lastname,
+    company
+  } = req.body;
   const hashedPassword = await bcrypt.hash(password, 12);
   const newUser = {
     userid: uuidv4(),
     email,
-    password: hashedPassword
+    password: hashedPassword,
+    firstname,
+    lastname,
+    company
   };
   db('users').insert(newUser)
-    .then(() => res.status(200).send())
+    .then(() => {
+      req.session.user = newUser;
+      return res.status(200).json({ email, firstname, lastname, company });
+    })
     .catch((err: any) => console.log('register err', err));
 };

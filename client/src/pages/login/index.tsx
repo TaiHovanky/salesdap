@@ -12,11 +12,14 @@ import {
 import axios from 'axios';
 import { useHistory, Link } from 'react-router-dom';
 import { useFormik } from 'formik';
+import { connect } from 'react-redux';
 import NavBar from '../../components/nav-bar';
+import { updateUser } from '../../state/actions/user';
 
-const Login = () => {
+const Login = ({ dispatch }: any) => {
   const [loading, setLoading] = useState(false);
   const [loginError, setLoginError] = useState('');
+  const history = useHistory();
 
   const validate = (values: any) => {
     const errors: any = {};
@@ -48,8 +51,10 @@ const Login = () => {
       };
       setLoading(true);
       axios.post('http://localhost:3001/api/v1/login', formData, config)
-        .then((data) => {
+        .then((res: any) => {
           setLoading(false);
+          dispatch(updateUser(res.data));
+          console.log('res data', res.data);
           history.push('/home');
         })
         .catch((err: any) => {
@@ -59,8 +64,6 @@ const Login = () => {
         });
     },
   });
-
-  const history = useHistory();
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = formik;
 
@@ -145,7 +148,7 @@ const Login = () => {
               </Grid>
             </form>
             <Typography sx={{ marginTop: '2rem' }}>
-              Don't have an account?  <Link to="/">Sign up</Link>
+              Don't have an account?  <Link to="/register">Sign up</Link>
             </Typography>
 
             {!!loginError &&
@@ -168,4 +171,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default connect()(Login);

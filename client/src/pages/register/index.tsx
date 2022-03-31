@@ -12,11 +12,14 @@ import {
 import axios from 'axios';
 import { useHistory, Link } from 'react-router-dom';
 import { useFormik } from 'formik';
+import { connect } from 'react-redux';
 import NavBar from '../../components/nav-bar';
+import { updateUser } from '../../state/actions/user';
 
-const Register = () => {
+const Register = ({ dispatch }: any) => {
   const [loading, setLoading] = useState(false);
   const [registrationError, setRegistrationError] = useState('');
+  const history = useHistory();
 
   const validate = (values: any) => {
     const errors: any = {};
@@ -45,13 +48,19 @@ const Register = () => {
     initialValues: {
       email: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      firstName: '',
+      lastName: '',
+      company: ''
     },
     validate,
     onSubmit: (values: any) => {
       const formData = new FormData();
       formData.append('email', values.email);
       formData.append('password', values.password);
+      formData.append('firstname', values.firstName);
+      formData.append('lastname', values.lastName);
+      formData.append('company', values.company);
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -59,9 +68,10 @@ const Register = () => {
       };
       setLoading(true);
       axios.post('http://localhost:3001/api/v1/register', formData, config)
-        .then(() => {
+        .then((res) => {
           setLoading(false);
           setRegistrationError('');
+          dispatch(updateUser(res.data));
           history.push('/home');
         })
         .catch((err: any) => {
@@ -71,8 +81,6 @@ const Register = () => {
         });
     },
   });
-
-  const history = useHistory();
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = formik;
 
@@ -136,12 +144,42 @@ const Register = () => {
                 name="confirmPassword"
                 variant="standard"
                 type="password"
-                sx={{ width: '100%' }}
+                sx={{ width: '100%', marginBottom: '1.5rem' }}
                 error={touched.confirmPassword && !!errors.confirmPassword}
                 helperText={errors.confirmPassword ? errors.confirmPassword : null}
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.confirmPassword}
+              />
+              <TextField
+                id="standard-basic"
+                label="First Name"
+                name="firstName"
+                variant="standard"
+                sx={{ width: '100%', marginBottom: '1.5rem' }}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.firstName}
+              />
+              <TextField
+                id="standard-basic"
+                label="Last Name"
+                name="lastName"
+                variant="standard"
+                sx={{ width: '100%', marginBottom: '1.5rem' }}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.lastName}
+              />
+              <TextField
+                id="standard-basic"
+                label="Company"
+                name="company"
+                variant="standard"
+                sx={{ width: '100%' }}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.company}
               />
               <Grid
                 container
@@ -194,4 +232,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default connect()(Register);

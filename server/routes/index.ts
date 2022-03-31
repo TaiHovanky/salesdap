@@ -6,6 +6,7 @@ import { uploadAndCompareFiles } from '../controller/file.controller';
 import { saveEmail } from '../controller/email.controller';
 import { registerUser } from '../controller/register.controller';
 import { loginUser } from '../controller/login.controller';
+import { logoutUser } from '../controller/logout.controller';
 
 const router = express.Router();
 
@@ -15,6 +16,10 @@ router.post('/api/v1/register', upload.none(), (req: any, res: any) => {
 
 router.post('/api/v1/login', upload.none(), (req: any, res: any) => {
   loginUser(req, res);
+});
+
+router.post('/api/v1/logout', (req: any, res: any) => {
+  logoutUser(req, res);
 });
 
 router.post(
