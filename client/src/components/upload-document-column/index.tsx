@@ -1,10 +1,13 @@
 import React, { ChangeEvent, useRef } from 'react';
+import axios from 'axios';
 import { AttachFile } from '@mui/icons-material';
 import {
   Fab,
   TextField,
   Typography,
-  Grid
+  Grid,
+  Switch,
+  FormControlLabel
 } from '@mui/material';
 import { connect } from 'react-redux';
 import {
@@ -12,8 +15,12 @@ import {
   changeComparisonColumn,
   changeResultColumns,
   validateDocumentTypeSuccess,
-  validateDocumentTypeFailure
+  validateDocumentTypeFailure,
+  pinFile,
+  pinFileFailure,
+  pinFileSuccess
 } from '../../state/actions/document';
+import { UserState } from '../../state/reducers/user';
 import { checkIsValidFileType } from '../../utils/validate-file-type';
 
 interface UploadDocumentColumnProps {
@@ -21,7 +28,9 @@ interface UploadDocumentColumnProps {
   selectedDocument: any;
   comparisonColumn: string;
   resultColumns: string;
+  isFilePinned: boolean;
   index: number;
+  user: UserState;
 }
 
 const UploadDocumentColumn = ({
@@ -29,7 +38,9 @@ const UploadDocumentColumn = ({
   selectedDocument,
   comparisonColumn,
   resultColumns,
-  index
+  isFilePinned,
+  index,
+  user
 }: UploadDocumentColumnProps) => {
   const inputFileRef: any = useRef( null );
 
@@ -75,6 +86,35 @@ const UploadDocumentColumn = ({
     /*Collecting node-element and performing click*/
     if (inputFileRef&& inputFileRef.current) {
       inputFileRef.current.click();
+    }
+  }
+
+  const handleFilePinning = () => {
+    if (index === 0) {
+      dispatch(pinFile());
+      const formData = new FormData();
+      if (
+        selectedDocument &&
+        selectedDocument.name
+      ) {
+        formData.append(
+          'sales_file',
+          selectedDocument,
+          selectedDocument.name
+        );
+        formData.append(
+          'email',
+          user.email
+        );
+      }
+      axios.post('http://localhost:3001/api/v1/pinfile', formData)
+        .then((data) => {
+          pinFileSuccess(selectedDocument.name);
+        })
+        .catch((err) => {
+          console.log(err);
+          pinFileFailure();
+        });
     }
   }
 
@@ -137,6 +177,12 @@ const UploadDocumentColumn = ({
               {selectedDocument.name}
             </Typography>
           }
+          {index === 0 && <FormControlLabel
+            control={
+              <Switch checked={isFilePinned} onChange={handleFilePinning} name="pinFile" />
+            }
+            label="Pin file for later use?"
+          />}
         </Grid>
       </Grid>
     </form>
@@ -145,6 +191,8 @@ const UploadDocumentColumn = ({
 
 const mapStateToProps = (state: any) => ({
   activeStep: state.stepProgress.step,
+  isFilePinned: state.document.isFilePinned,
+  user: state.user
 });
 
 export default connect(mapStateToProps)(UploadDocumentColumn);

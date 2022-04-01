@@ -6,7 +6,10 @@ import {
   CHANGE_COMPARISON_COLUMN,
   CHANGE_RESULT_COLUMNS,
   VALIDATE_DOCUMENT_TYPE_FAILURE,
-  VALIDATE_DOCUMENT_TYPE_SUCCESS
+  VALIDATE_DOCUMENT_TYPE_SUCCESS,
+  PIN_FILE,
+  PIN_FILE_FAILURE,
+  PIN_FILE_SUCCESS
 } from '../../actions/document';
 
 interface DocumentState {
@@ -17,6 +20,7 @@ interface DocumentState {
   comparisonColumn2: string;
   resultColumns1: string;
   resultColumns2: string;
+  isFilePinned: boolean;
   loading: boolean;
   hasError: boolean;
   errorMessage: string;
@@ -30,6 +34,7 @@ const initialState: DocumentState = {
   comparisonColumn2: '',
   resultColumns1: '',
   resultColumns2: '',
+  isFilePinned: false,
   loading: false,
   hasError: false,
   errorMessage: ''
@@ -62,6 +67,23 @@ export const documentReducer = (state = initialState, action: any) => {
         errorMessage: action.payload
       };
     case VALIDATE_DOCUMENT_TYPE_SUCCESS:
+      return {
+        ...state,
+        hasError: false,
+        errorMessage: ''
+      };
+    case PIN_FILE:
+      return {
+        ...state,
+        isFilePinned: !state.isFilePinned
+      };
+    case PIN_FILE_FAILURE:
+      return {
+        ...state,
+        hasError: true,
+        errorMessage: action.payload
+      };
+    case PIN_FILE_SUCCESS:
       return {
         ...state,
         hasError: false,

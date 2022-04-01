@@ -138,7 +138,9 @@ export const displayRelevantColumns = (
   return result;
 }
 
-export const storePinnedFile = (filename: string, fileContent: any) => new Promise((resolve, reject) => {
+export const storePinnedFile = (file: any) => new Promise((resolve, reject) => {
+  const fileBuffer = fs.readFileSync(file.path);
+
   const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -146,24 +148,16 @@ export const storePinnedFile = (filename: string, fileContent: any) => new Promi
 
   const params: any = {
     Bucket: process.env.AWS_BUCKET_NAME,
-    Key: `${filename}`,
-    Body: fileContent
+    Key: `${file.originalname}`,
+    Body: fileBuffer
   };
 
   s3.upload(params, (err: any, data: any) => {
     if (err) {
       return reject(err)
     }
-    console.log('successfully pinned file');
     return resolve(data.location);
   });
-});
-
-const streamToString = (stream: any) => new Promise((resolve, reject) => {
-  const chunks: Array<any> = [];
-  stream.on('data', (chunk: any) => chunks.push(chunk));
-  stream.on('error', reject);
-  stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
 });
 
 export const readPinnedFile = (filename: string) => new Promise((resolve, reject) => {
@@ -181,9 +175,6 @@ export const readPinnedFile = (filename: string) => new Promise((resolve, reject
     if (err) {
       return reject(err)
     }
-    console.log('successfully read file');
-    const { Body } = data; 
-
-    return resolve(streamToString(Body));
+    return resolve(data.Body);
   });
 });

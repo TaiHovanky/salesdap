@@ -6,6 +6,9 @@ export const CHANGE_COMPARISON_COLUMN = 'CHANGE_COMPARISON_COLUMN';
 export const CHANGE_RESULT_COLUMNS = 'CHANGE_RESULT_COLUMNS';
 export const VALIDATE_DOCUMENT_TYPE_FAILURE = 'VALIDATE_DOCUMENT_TYPE_FAILURE';
 export const VALIDATE_DOCUMENT_TYPE_SUCCESS = 'VALIDATE_DOCUMENT_TYPE_SUCCESS';
+export const PIN_FILE = 'PIN_FILE';
+export const PIN_FILE_FAILURE = 'PIN_FILE_FAILURE';
+export const PIN_FILE_SUCCESS = 'PIN_FILE_SUCCESS';
 
 export const uploadDocument = () => ({
   type: UPLOAD_DOCUMENT
@@ -46,4 +49,18 @@ export const validateDocumentTypeFailure = () => ({
 
 export const validateDocumentTypeSuccess = () => ({
   type: VALIDATE_DOCUMENT_TYPE_SUCCESS
+});
+
+export const pinFile = () => ({
+  type: PIN_FILE
+});
+
+export const pinFileFailure = () => ({
+  type: PIN_FILE_FAILURE,
+  payload: 'Failed to pin file'
+});
+
+export const pinFileSuccess = (filename: string) => ({
+  type: PIN_FILE_SUCCESS,
+  payload: filename
 });

@@ -54,7 +54,6 @@ const Login = ({ dispatch }: any) => {
         .then((res: any) => {
           setLoading(false);
           dispatch(updateUser(res.data));
-          console.log('res data', res.data);
           history.push('/home');
         })
         .catch((err: any) => {
