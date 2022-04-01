@@ -5,7 +5,9 @@ export const uploadAndCompareFiles = (req: any, res: any) => {
     comparisonColumn1,
     comparisonColumn2,
     resultColumns1,
-    resultColumns2
+    resultColumns2,
+    // isPinningFile,
+    // isUsingPinnedFile
   } = req.body;
   /* Convert the uploaded spreadsheets into JSON objects that can be processed */
   const salesData1: Array<any> = createJSONFromWorksheet(req.files.sales_file1[0]);

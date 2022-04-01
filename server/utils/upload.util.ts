@@ -1,6 +1,7 @@
 import * as XLSX from 'xlsx';
 /* load 'fs' for readFile and writeFile support */
 import * as fs from 'fs';
+import AWS from 'aws-sdk';
 
 /**
  * Use xlsx to convert the spreadsheet to a JavaScript array of objects
@@ -136,3 +137,53 @@ export const displayRelevantColumns = (
   });
   return result;
 }
+
+export const storePinnedFile = (filename: string, fileContent: any) => new Promise((resolve, reject) => {
+  const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  });
+
+  const params: any = {
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: `${filename}`,
+    Body: fileContent
+  };
+
+  s3.upload(params, (err: any, data: any) => {
+    if (err) {
+      return reject(err)
+    }
+    console.log('successfully pinned file');
+    return resolve(data.location);
+  });
+});
+
+const streamToString = (stream: any) => new Promise((resolve, reject) => {
+  const chunks: Array<any> = [];
+  stream.on('data', (chunk: any) => chunks.push(chunk));
+  stream.on('error', reject);
+  stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+});
+
+export const readPinnedFile = (filename: string) => new Promise((resolve, reject) => {
+  const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  });
+
+  const params: any = {
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: `${filename}`,
+  };
+
+  s3.getObject(params, (err, data) => {
+    if (err) {
+      return reject(err)
+    }
+    console.log('successfully read file');
+    const { Body } = data; 
+
+    return resolve(streamToString(Body));
+  });
+});
