@@ -7,7 +7,8 @@ import {
   Typography,
   IconButton,
   Menu,
-  MenuItem
+  MenuItem,
+  Button
 } from '@mui/material';
 import { Handshake, AccountCircle } from '@mui/icons-material';
 import { Link, useHistory } from 'react-router-dom';
@@ -39,7 +40,7 @@ const NavBar = ({ user }: NavBarProps) => {
       .catch((err) => console.log('logout err', err));
   }
 
-  const handleHomeIconClick = () => {
+  const handleHomeClick = () => {
     history.push('/home');
   }
 
@@ -53,13 +54,15 @@ const NavBar = ({ user }: NavBarProps) => {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            onClick={handleHomeIconClick}
+            onClick={handleHomeClick}
           >
             <Handshake />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Salesdap
-          </Typography>
+          <Button variant="text" onClick={handleHomeClick}>
+            <Typography variant="h6" sx={{ flexGrow: 1, color: 'white' }}>
+              Salesdap
+            </Typography>
+          </Button>
 
           {user && user.email && <div>
             <IconButton

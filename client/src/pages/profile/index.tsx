@@ -1,17 +1,19 @@
 import React from 'react';
 import {
   Box,
-  Fab,
-  TextField,
-  CircularProgress,
-  Backdrop,
   Grid,
   Typography,
-  Alert,
+  Paper
 } from '@mui/material';
+import { connect } from 'react-redux';
 import NavBar from '../../components/nav-bar';
+import { UserState } from '../../state/reducers/user';
 
-const Profile = () => {
+interface Props {
+  user: UserState
+}
+
+const Profile = ({ user }: Props) => {
   return (
     <>
       <NavBar />
@@ -26,14 +28,19 @@ const Profile = () => {
           <Grid
             item
             container
-            xs={4}
+            xs={8}
             p={0}
             sx={{ height: '100%' }}
             direction="column"
-            justifyContent="center"
+            justifyContent="start"
             alignItems="center"
           >
-            <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Profile</Typography>
+            <Paper elevation={3} sx={{ width: '100%', padding: '3rem 0 3rem 3rem', marginTop: '3rem' }}>
+              <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Profile</Typography>
+              <Typography variant="subtitle1" sx={{ marginBottom: '2rem' }}>Name: {user.firstname} {user.lastname}</Typography>
+              <Typography variant="subtitle1" sx={{ marginBottom: '2rem' }}>Email: {user.email}</Typography>
+              <Typography variant="subtitle1" sx={{ marginBottom: '2rem' }}>Company: {user.company}</Typography>
+            </Paper>
           </Grid>
         </Grid>
       </Box>
@@ -41,4 +48,8 @@ const Profile = () => {
   );
 }
 
-export default Profile;
+const mapStateToProps = (state: any) => ({
+  user: state.user
+});
+
+export default connect(mapStateToProps)(Profile);
