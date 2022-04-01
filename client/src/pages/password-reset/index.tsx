@@ -10,25 +10,27 @@ import {
   Alert,
 } from '@mui/material';
 import axios from 'axios';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { connect } from 'react-redux';
 import NavBar from '../../components/nav-bar';
-import { updateUser } from '../../state/actions/user';
 
-const Login = ({ dispatch }: any) => {
+const PasswordReset = ({ dispatch }: any) => {
   const [loading, setLoading] = useState(false);
-  const [loginError, setLoginError] = useState('');
+  const [passwordResetError, setPasswordResetError] = useState('');
   const history = useHistory();
 
   const validate = (values: any) => {
     const errors: any = {};
     if (!values.password) {
       errors.password = 'Required';
+    } else if (values.password.length < 8) {
+      errors.password = 'Must be 8 characters or more';
     }
   
-    if (!values.email) {
-      errors.email = 'Required';
+    if (!values.confirmPassword) {
+      errors.confirmPassword = 'Required';
+    } else if (values.confirmPassword !== values.password) {
+      errors.confirmPassword = 'Must match password';
     }
   
     return errors;
@@ -36,13 +38,12 @@ const Login = ({ dispatch }: any) => {
 
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: ''
+      password: '',
+      confirmPassword: '',
     },
     validate,
     onSubmit: (values: any) => {
       const formData = new FormData();
-      formData.append('email', values.email);
       formData.append('password', values.password);
       const config = {
         headers: {
@@ -50,25 +51,24 @@ const Login = ({ dispatch }: any) => {
         }
       };
       setLoading(true);
-      axios.post('http://localhost:3001/api/v1/login', formData, config)
-        .then((res: any) => {
+      axios.post('http://localhost:3001/api/v1/reset-password', formData, config)
+        .then((res) => {
           setLoading(false);
-          dispatch(updateUser(res.data));
-          console.log('res data', res.data);
-          history.push('/home');
+          setPasswordResetError('');
+          history.push('/login');
         })
         .catch((err: any) => {
           console.log('err', err);
           setLoading(false);
-          setLoginError('Wrong email or password');
+          setPasswordResetError('Password reset failed. Please try again.')
         });
     },
   });
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = formik;
 
-  const isSubmitButtonDisabled = !!errors.email || !!errors.password ||
-    !values.email || !values.password;
+  const isSubmitButtonDisabled = !!errors.password || !!errors.confirmPassword
+    || !values.password || !values.confirmPassword;
 
   return (
     <>
@@ -91,21 +91,8 @@ const Login = ({ dispatch }: any) => {
             justifyContent="center"
             alignItems="center"
           >
-            <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Login</Typography>
+            <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Reset your password</Typography>
             <form onSubmit={handleSubmit}>
-              <TextField
-                required
-                id="standard-basic"
-                label="Email"
-                name="email"
-                variant="standard"
-                sx={{ width: '100%', marginBottom: '1.5rem' }}
-                error={touched.email && !!errors.email}
-                helperText={errors.email ? errors.email : null}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.email}
-              />
               <TextField
                 required
                 id="standard-basic"
@@ -120,6 +107,20 @@ const Login = ({ dispatch }: any) => {
                 onChange={handleChange}
                 value={values.password}
               />
+              <TextField
+                required
+                id="standard-basic"
+                label="Confirm Password"
+                name="confirmPassword"
+                variant="standard"
+                type="password"
+                sx={{ width: '100%', marginBottom: '1.5rem' }}
+                error={touched.confirmPassword && !!errors.confirmPassword}
+                helperText={errors.confirmPassword ? errors.confirmPassword : null}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.confirmPassword}
+              />
               <Grid
                 container
                 spacing={2}
@@ -129,7 +130,7 @@ const Login = ({ dispatch }: any) => {
                 <Grid
                   item
                   container
-                  xs={4}
+                  xs={8}
                   p={0}
                   direction="column"
                   justifyContent="center"
@@ -142,27 +143,21 @@ const Login = ({ dispatch }: any) => {
                     type="submit"
                     disabled={isSubmitButtonDisabled}
                   >
-                    Submit
+                    Reset Password
                   </Fab>
+
+                  {!!passwordResetError &&
+                    <Alert
+                      severity="error"
+                      variant="standard"
+                      sx={{ marginTop: '2rem', borderRadius: '10px', width: '100%' }}
+                    >
+                      {passwordResetError}
+                    </Alert>
+                  }
                 </Grid>
               </Grid>
             </form>
-            <Typography sx={{ marginTop: '2rem' }}>
-              Don't have an account?  <Link to="/register">Sign up now!</Link>
-            </Typography>
-            <Typography sx={{ marginTop: '0.5rem' }}>
-              Forgot your password?  <Link to="/password-reset">Reset your password</Link>
-            </Typography>
-
-            {!!loginError &&
-              <Alert
-                severity="error"
-                variant="standard"
-                sx={{ marginTop: '2rem', borderRadius: '10px', width: '100%' }}
-              >
-                {loginError}
-              </Alert>
-            }
           </Grid>
         </Grid>
       </Box>
@@ -174,4 +169,4 @@ const Login = ({ dispatch }: any) => {
   );
 };
 
-export default connect()(Login);
+export default PasswordReset;

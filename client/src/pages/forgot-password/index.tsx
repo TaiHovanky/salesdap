@@ -10,22 +10,17 @@ import {
   Alert,
 } from '@mui/material';
 import axios from 'axios';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { connect } from 'react-redux';
 import NavBar from '../../components/nav-bar';
-import { updateUser } from '../../state/actions/user';
 
-const Login = ({ dispatch }: any) => {
+const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
-  const [loginError, setLoginError] = useState('');
+  const [forgotPasswordError, setForgotPasswordError] = useState('');
   const history = useHistory();
 
   const validate = (values: any) => {
     const errors: any = {};
-    if (!values.password) {
-      errors.password = 'Required';
-    }
   
     if (!values.email) {
       errors.email = 'Required';
@@ -37,38 +32,34 @@ const Login = ({ dispatch }: any) => {
   const formik = useFormik({
     initialValues: {
       email: '',
-      password: ''
     },
     validate,
     onSubmit: (values: any) => {
       const formData = new FormData();
       formData.append('email', values.email);
-      formData.append('password', values.password);
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       };
       setLoading(true);
-      axios.post('http://localhost:3001/api/v1/login', formData, config)
+      axios.post('http://localhost:3001/api/v1/forgotpassword', formData, config)
         .then((res: any) => {
           setLoading(false);
-          dispatch(updateUser(res.data));
-          console.log('res data', res.data);
+          setForgotPasswordError('');
           history.push('/home');
         })
         .catch((err: any) => {
           console.log('err', err);
           setLoading(false);
-          setLoginError('Wrong email or password');
+          setForgotPasswordError('Wrong email or password');
         });
     },
   });
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = formik;
 
-  const isSubmitButtonDisabled = !!errors.email || !!errors.password ||
-    !values.email || !values.password;
+  const isSubmitButtonDisabled = !!errors.email || !values.email;
 
   return (
     <>
@@ -91,7 +82,10 @@ const Login = ({ dispatch }: any) => {
             justifyContent="center"
             alignItems="center"
           >
-            <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Login</Typography>
+            <Typography variant="h5" sx={{ marginBottom: '0.5rem' }}>Forgot my password</Typography>
+            <Typography variant="subtitle1" sx={{ marginBottom: '2rem' }}>
+              Enter your email, and then you'll receive a verification code at that address. Use that code to reset your password.
+            </Typography>
             <form onSubmit={handleSubmit}>
               <TextField
                 required
@@ -106,20 +100,6 @@ const Login = ({ dispatch }: any) => {
                 onChange={handleChange}
                 value={values.email}
               />
-              <TextField
-                required
-                id="standard-basic"
-                label="Password"
-                name="password"
-                variant="standard"
-                type="password"
-                sx={{ width: '100%', marginBottom: '1.5rem' }}
-                error={touched.password && !!errors.password}
-                helperText={errors.password ? errors.password : null}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.password}
-              />
               <Grid
                 container
                 spacing={2}
@@ -129,7 +109,7 @@ const Login = ({ dispatch }: any) => {
                 <Grid
                   item
                   container
-                  xs={4}
+                  xs={12}
                   p={0}
                   direction="column"
                   justifyContent="center"
@@ -142,25 +122,19 @@ const Login = ({ dispatch }: any) => {
                     type="submit"
                     disabled={isSubmitButtonDisabled}
                   >
-                    Submit
+                    Send Password Reset Email
                   </Fab>
                 </Grid>
               </Grid>
             </form>
-            <Typography sx={{ marginTop: '2rem' }}>
-              Don't have an account?  <Link to="/register">Sign up now!</Link>
-            </Typography>
-            <Typography sx={{ marginTop: '0.5rem' }}>
-              Forgot your password?  <Link to="/password-reset">Reset your password</Link>
-            </Typography>
 
-            {!!loginError &&
+            {!!forgotPasswordError &&
               <Alert
                 severity="error"
                 variant="standard"
                 sx={{ marginTop: '2rem', borderRadius: '10px', width: '100%' }}
               >
-                {loginError}
+                {forgotPasswordError}
               </Alert>
             }
           </Grid>
@@ -174,4 +148,4 @@ const Login = ({ dispatch }: any) => {
   );
 };
 
-export default connect()(Login);
+export default ForgotPassword;
