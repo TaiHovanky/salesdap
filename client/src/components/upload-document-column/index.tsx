@@ -83,7 +83,7 @@ const UploadDocumentColumn = ({
       <TextField
         required
         id="standard-basic"
-        label="Column to find ducplicate values in"
+        label="Column to find duplicate values in"
         variant="standard"
         sx={{ width: '100%' }}
         onChange={handleComparisonColumnFieldChange}
@@ -92,7 +92,7 @@ const UploadDocumentColumn = ({
       <TextField
         required
         id="standard-basic"
-        label="Columns that you want to see in results"
+        label="Columns that you want to see in results table"
         helperText="Separate values with a comma"
         variant="standard"
         sx={{ width: '100%', marginTop: '2rem' }}

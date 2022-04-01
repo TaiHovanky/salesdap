@@ -44,6 +44,7 @@ const UploadDocumentForm = ({
   errorMessage,
   hasError,
 }: UploadDocumentFormProps) => {
+
   /**
    * Puts the selected file and column name into a FormData instance,
    * sends it to the server, and then changes to the next step where

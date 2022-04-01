@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Fab,
@@ -10,19 +10,29 @@ import {
   Alert,
 } from '@mui/material';
 import axios from 'axios';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { connect } from 'react-redux';
 import NavBar from '../../components/nav-bar';
-import { updateUser } from '../../state/actions/user';
 
-const Register = ({ dispatch }: any) => {
+const PasswordReset = () => {
   const [loading, setLoading] = useState(false);
-  const [registrationError, setRegistrationError] = useState('');
+  const [passwordResetError, setPasswordResetError] = useState('');
   const history = useHistory();
+  const params: any = useParams();
+
+  useEffect(() => {
+    axios.post('http://localhost:3001/api/v1/resetpassword', { token: params.token })
+      .catch((err) => {
+        history.push('/login');
+      });
+  }, [params, history]);
 
   const validate = (values: any) => {
     const errors: any = {};
+    if (!values.email) {
+      errors.email = 'Required';
+    }
+
     if (!values.password) {
       errors.password = 'Required';
     } else if (values.password.length < 8) {
@@ -35,12 +45,6 @@ const Register = ({ dispatch }: any) => {
       errors.confirmPassword = 'Must match password';
     }
   
-    if (!values.email) {
-      errors.email = 'Required';
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-      errors.email = 'Invalid email address';
-    }
-  
     return errors;
   };
 
@@ -49,35 +53,27 @@ const Register = ({ dispatch }: any) => {
       email: '',
       password: '',
       confirmPassword: '',
-      firstName: '',
-      lastName: '',
-      company: ''
     },
     validate,
     onSubmit: (values: any) => {
       const formData = new FormData();
       formData.append('email', values.email);
       formData.append('password', values.password);
-      formData.append('firstname', values.firstName);
-      formData.append('lastname', values.lastName);
-      formData.append('company', values.company);
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       };
       setLoading(true);
-      axios.post('http://localhost:3001/api/v1/register', formData, config)
+      axios.post('http://localhost:3001/api/v1/updatepassword', formData, config)
         .then((res) => {
           setLoading(false);
-          setRegistrationError('');
-          dispatch(updateUser(res.data));
-          history.push('/home');
+          setPasswordResetError('');
+          history.push('/login');
         })
         .catch((err: any) => {
-          console.log('err', err);
           setLoading(false);
-          setRegistrationError('Registration failed. Please try again.')
+          setPasswordResetError('Password reset failed. Please try again.')
         });
     },
   });
@@ -108,7 +104,7 @@ const Register = ({ dispatch }: any) => {
             justifyContent="center"
             alignItems="center"
           >
-            <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Register</Typography>
+            <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Reset your password</Typography>
             <form onSubmit={handleSubmit}>
               <TextField
                 required
@@ -151,36 +147,6 @@ const Register = ({ dispatch }: any) => {
                 onChange={handleChange}
                 value={values.confirmPassword}
               />
-              <TextField
-                id="standard-basic"
-                label="First Name"
-                name="firstName"
-                variant="standard"
-                sx={{ width: '100%', marginBottom: '1.5rem' }}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.firstName}
-              />
-              <TextField
-                id="standard-basic"
-                label="Last Name"
-                name="lastName"
-                variant="standard"
-                sx={{ width: '100%', marginBottom: '1.5rem' }}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.lastName}
-              />
-              <TextField
-                id="standard-basic"
-                label="Company"
-                name="company"
-                variant="standard"
-                sx={{ width: '100%' }}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.company}
-              />
               <Grid
                 container
                 spacing={2}
@@ -190,7 +156,7 @@ const Register = ({ dispatch }: any) => {
                 <Grid
                   item
                   container
-                  xs={4}
+                  xs={8}
                   p={0}
                   direction="column"
                   justifyContent="center"
@@ -203,24 +169,21 @@ const Register = ({ dispatch }: any) => {
                     type="submit"
                     disabled={isSubmitButtonDisabled}
                   >
-                    Submit
+                    Reset Password
                   </Fab>
 
-                  {!!registrationError &&
+                  {!!passwordResetError &&
                     <Alert
                       severity="error"
                       variant="standard"
                       sx={{ marginTop: '2rem', borderRadius: '10px', width: '100%' }}
                     >
-                      {registrationError}
+                      {passwordResetError}
                     </Alert>
                   }
                 </Grid>
               </Grid>
             </form>
-            <Typography sx={{ marginTop: '2rem' }}>
-              Already have an account? <Link to="/">Sign in</Link>
-            </Typography>
           </Grid>
         </Grid>
       </Box>
@@ -232,4 +195,4 @@ const Register = ({ dispatch }: any) => {
   );
 };
 
-export default connect()(Register);
+export default PasswordReset;
