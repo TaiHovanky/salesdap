@@ -35,14 +35,24 @@ export const forgotPassword = async (req: any, res: any) => {
       
       // send mail with defined transport object
       let info = await transporter.sendMail(mailOptions);
+
+      if (info && info !== '0') {
+        console.log("Message sent: %s", info.messageId);
+        const data = {
+          passwordtoken: token,
+          passwordtoken_expiration: new Date(Date.now() + 3600000)
+        };
+        db('users').update(data).where({ email })
+          .then(() => {
+            return res.status(200).json('Password reset email was sent');
+          });
+      }
       
-      console.log("Message sent: %s", info.messageId);
-      res.status(200).json('password reset email sent');
     } else {
       return res.status(401).send('Invalid email');
     }
   } catch(err) {
-    console.log('login err', err);
-    return res.status(401).send();
+    console.log('password reset err', err);
+    return res.status(401).send('Password reset email failed to send');
   }
 }

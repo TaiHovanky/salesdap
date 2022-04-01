@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Fab,
@@ -10,17 +10,29 @@ import {
   Alert,
 } from '@mui/material';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useFormik } from 'formik';
 import NavBar from '../../components/nav-bar';
 
-const PasswordReset = ({ dispatch }: any) => {
+const PasswordReset = () => {
   const [loading, setLoading] = useState(false);
   const [passwordResetError, setPasswordResetError] = useState('');
   const history = useHistory();
+  const params: any = useParams();
+
+  useEffect(() => {
+    axios.post('http://localhost:3001/api/v1/resetpassword', { token: params.token })
+      .catch((err) => {
+        history.push('/login');
+      });
+  }, [params, history]);
 
   const validate = (values: any) => {
     const errors: any = {};
+    if (!values.email) {
+      errors.email = 'Required';
+    }
+
     if (!values.password) {
       errors.password = 'Required';
     } else if (values.password.length < 8) {
@@ -38,12 +50,14 @@ const PasswordReset = ({ dispatch }: any) => {
 
   const formik = useFormik({
     initialValues: {
+      email: '',
       password: '',
       confirmPassword: '',
     },
     validate,
     onSubmit: (values: any) => {
       const formData = new FormData();
+      formData.append('email', values.email);
       formData.append('password', values.password);
       const config = {
         headers: {
@@ -51,14 +65,13 @@ const PasswordReset = ({ dispatch }: any) => {
         }
       };
       setLoading(true);
-      axios.post('http://localhost:3001/api/v1/reset-password', formData, config)
+      axios.post('http://localhost:3001/api/v1/updatepassword', formData, config)
         .then((res) => {
           setLoading(false);
           setPasswordResetError('');
           history.push('/login');
         })
         .catch((err: any) => {
-          console.log('err', err);
           setLoading(false);
           setPasswordResetError('Password reset failed. Please try again.')
         });
@@ -67,8 +80,8 @@ const PasswordReset = ({ dispatch }: any) => {
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = formik;
 
-  const isSubmitButtonDisabled = !!errors.password || !!errors.confirmPassword
-    || !values.password || !values.confirmPassword;
+  const isSubmitButtonDisabled = !!errors.email || !!errors.password || !!errors.confirmPassword
+    || !values.email || !values.password || !values.confirmPassword;
 
   return (
     <>
@@ -93,6 +106,19 @@ const PasswordReset = ({ dispatch }: any) => {
           >
             <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Reset your password</Typography>
             <form onSubmit={handleSubmit}>
+              <TextField
+                required
+                id="standard-basic"
+                label="Email"
+                name="email"
+                variant="standard"
+                sx={{ width: '100%', marginBottom: '1.5rem' }}
+                error={touched.email && !!errors.email}
+                helperText={errors.email ? errors.email : null}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.email}
+              />
               <TextField
                 required
                 id="standard-basic"
