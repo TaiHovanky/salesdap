@@ -52,15 +52,14 @@ export const validateDocumentTypeSuccess = () => ({
   type: VALIDATE_DOCUMENT_TYPE_SUCCESS
 });
 
-export const pinFile = (index: number) => ({
-  type: PIN_FILE,
-  index
-});
+// export const pinFile = () => ({
+//   type: PIN_FILE
+// });
 
-export const pinFileFailure = () => ({
-  type: PIN_FILE_FAILURE,
-  payload: 'Failed to pin file'
-});
+// export const pinFileFailure = () => ({
+//   type: PIN_FILE_FAILURE,
+//   payload: 'Failed to pin file'
+// });
 
 export const pinFileSuccess = (filename: string) => ({
   type: PIN_FILE_SUCCESS,

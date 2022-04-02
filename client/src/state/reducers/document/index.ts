@@ -7,9 +7,6 @@ import {
   CHANGE_RESULT_COLUMNS,
   VALIDATE_DOCUMENT_TYPE_FAILURE,
   VALIDATE_DOCUMENT_TYPE_SUCCESS,
-  PIN_FILE,
-  PIN_FILE_FAILURE,
-  PIN_FILE_SUCCESS,
   SET_FILE_SOURCE
 } from '../../actions/document';
 
@@ -74,30 +71,6 @@ export const documentReducer = (state = initialState, action: any) => {
         errorMessage: action.payload
       };
     case VALIDATE_DOCUMENT_TYPE_SUCCESS:
-      return {
-        ...state,
-        hasError: false,
-        errorMessage: ''
-      };
-    case PIN_FILE:
-      if (action.index === 0) {
-        return {
-          ...state,
-          isFilePinned1: !state.isFilePinned1
-        };
-      } else {
-        return {
-          ...state,
-          isFilePinned2: !state.isFilePinned2
-        };
-      }
-    case PIN_FILE_FAILURE:
-      return {
-        ...state,
-        hasError: true,
-        errorMessage: action.payload
-      };
-    case PIN_FILE_SUCCESS:
       return {
         ...state,
         hasError: false,

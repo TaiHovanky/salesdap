@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import axios from 'axios';
 import {
   Box,
@@ -7,17 +7,29 @@ import {
   Paper,
   Chip,
   Fab,
+  Alert,
+  Backdrop,
+  CircularProgress
 } from '@mui/material';
 import { Attachment, AttachFile, Upload } from '@mui/icons-material';
 import { connect } from 'react-redux';
+import {
+  pinFileSuccess,
+} from '../../state/actions/document';
 import NavBar from '../../components/nav-bar';
 import { UserState } from '../../state/reducers/user';
+import { checkIsValidFileType } from '../../utils/validate-file-type';
 
 interface Props {
-  user: UserState
+  user: UserState;
+  dispatch: any;
 }
 
-const Profile = ({ user }: Props) => {
+const Profile = ({ user, dispatch }: Props) => {
+  const [pinnedDocument, setPinnedDocument] = useState<any>();
+  const [hasError, setHasError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const inputFileRef: any = useRef( null );
 
   const handlePinnedFileClick = () => {
@@ -51,16 +63,47 @@ const Profile = ({ user }: Props) => {
     const document: any = event && event.target && event.target.files ?
       event.target.files[0] :
       null;
-    dispatch(selectDocument(document, index));
+    setPinnedDocument(document);
     const isValidDocType: boolean = document && document.name ?
       checkIsValidFileType(document.name) : false;
 
     if (isValidDocType) {
-      dispatch(validateDocumentTypeSuccess());
+      setHasError(false);
     } else {
-      dispatch(validateDocumentTypeFailure());
+      setHasError(true);
     }
   };
+
+  const handleFilePinning = () => {
+    setLoading(true);
+    const formData = new FormData();
+    if (
+      pinnedDocument &&
+      pinnedDocument.name
+    ) {
+      formData.append(
+        'sales_file',
+        pinnedDocument,
+        pinnedDocument.name
+      );
+      formData.append(
+        'email',
+        user.email
+      );
+    }
+    axios.post('http://localhost:3001/api/v1/pinfile', formData)
+      .then((data) => {
+        setLoading(false);
+        dispatch(pinFileSuccess(pinnedDocument.name));
+        setHasError(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+        setErrorMessage(err);
+        setHasError(true);
+      });
+  }
 
   return (
     <>
@@ -90,41 +133,65 @@ const Profile = ({ user }: Props) => {
               <Typography variant="subtitle1" sx={{ marginBottom: '2rem' }}>Company: {user.company}</Typography>
               <Typography variant="subtitle1">Pinned File:</Typography>
               <Chip onClick={handlePinnedFileClick} icon={<Attachment />} label={user.pinnedFile} />
-              <Fab
-                variant="extended"
-                aria-label="add"
-                sx={{ marginTop: '2.5rem' }}
-                onClick={handleFileSelectionBtnClick}
+              <Grid
+                item
+                container
+                xs={6}
+                p={0}
+                direction="column"
+                justifyContent="start"
+                alignItems="start"
               >
-                <AttachFile sx={{ mr: 1 }} />
-                Select File
-              </Fab>
-              <input
-                type="file"
-                ref={inputFileRef}
-                className="file-input"
-                onChange={validateFileSelection}
-                name="sales_file"
-              />
-              {selectedDocument && selectedDocument.name &&
-                <Typography variant="subtitle1" sx={{ margin: '1rem 0 0' }}>
-                  {selectedDocument.name}
-                </Typography>
-              }
-              <Fab
-                variant="extended"
-                color="primary"
-                aria-label="add"
-                sx={{ marginTop: '2rem' }}
-                onClick={handleUpload}
-              >
-                <Upload sx={{ mr: 1 }} />
-                Upload and Compare
-              </Fab>
+                <Fab
+                  variant="extended"
+                  aria-label="add"
+                  sx={{ marginTop: '2.5rem' }}
+                  onClick={handleFileSelectionBtnClick}
+                >
+                  <AttachFile sx={{ mr: 1 }} />
+                  Select New Pinned File
+                </Fab>
+                <input
+                  type="file"
+                  ref={inputFileRef}
+                  className="file-input"
+                  onChange={validateFileSelection}
+                  name="sales_file"
+                />
+                {pinnedDocument && pinnedDocument.name &&
+                  <Typography variant="subtitle1" sx={{ margin: '1rem 0 0' }}>
+                    {pinnedDocument.name}
+                  </Typography>
+                }
+                <Fab
+                  variant="extended"
+                  color="primary"
+                  aria-label="add"
+                  sx={{ marginTop: '2rem' }}
+                  onClick={handleFilePinning}
+                >
+                  <Upload sx={{ mr: 1 }} />
+                  Upload and Pin File
+                </Fab>
+              </Grid>
             </Paper>
           </Grid>
         </Grid>
       </Box>
+
+      {hasError &&
+        <Alert
+          severity="error"
+          variant="standard"
+          sx={{ marginTop: '2rem', borderRadius: '10px', width: '100%' }}
+        >
+          {errorMessage}
+        </Alert>
+      }
+
+      <Backdrop open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </>
   );
 }

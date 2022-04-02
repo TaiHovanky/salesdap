@@ -6,7 +6,6 @@ import {
   TextField,
   Typography,
   Grid,
-  Switch,
   FormControlLabel,
   FormControl,
   Radio,
@@ -21,9 +20,6 @@ import {
   changeResultColumns,
   validateDocumentTypeSuccess,
   validateDocumentTypeFailure,
-  pinFile,
-  pinFileFailure,
-  pinFileSuccess,
   setFileSource
 } from '../../state/actions/document';
 import { UserState } from '../../state/reducers/user';
@@ -99,35 +95,6 @@ const UploadDocumentColumn = ({
     }
   }
 
-  const handleFilePinning = () => {
-    if (index === 0) {
-      dispatch(pinFile(index));
-      const formData = new FormData();
-      if (
-        selectedDocument &&
-        selectedDocument.name
-      ) {
-        formData.append(
-          'sales_file',
-          selectedDocument,
-          selectedDocument.name
-        );
-        formData.append(
-          'email',
-          user.email
-        );
-      }
-      axios.post('http://localhost:3001/api/v1/pinfile', formData)
-        .then((data) => {
-          pinFileSuccess(selectedDocument.name);
-        })
-        .catch((err) => {
-          console.log(err);
-          pinFileFailure();
-        });
-    }
-  }
-
   const handleFileTypeChange = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setFileSource(index, event.target.value));
   }
@@ -153,7 +120,6 @@ const UploadDocumentColumn = ({
       .catch((err) => console.log('err pinned file', err));
   };
 
-  console.log('other col', otherColumnUsingPinned, index);
   return (
     <form>
       <TextField
@@ -227,13 +193,6 @@ const UploadDocumentColumn = ({
                   {selectedDocument.name}
                 </Typography>
               }
-              <FormControlLabel
-                control={
-                  <Switch checked={isFilePinned} onChange={handleFilePinning} name="pinFile" />
-                }
-                label="Pin file for later use?"
-                sx={{ marginTop: '1.5rem' }}
-              />
             </> :
             <>
               <Typography variant="subtitle1">Pinned File:</Typography>
