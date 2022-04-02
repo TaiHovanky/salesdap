@@ -9,7 +9,8 @@ import {
   VALIDATE_DOCUMENT_TYPE_SUCCESS,
   PIN_FILE,
   PIN_FILE_FAILURE,
-  PIN_FILE_SUCCESS
+  PIN_FILE_SUCCESS,
+  SET_FILE_SOURCE
 } from '../../actions/document';
 
 interface DocumentState {
@@ -20,7 +21,10 @@ interface DocumentState {
   comparisonColumn2: string;
   resultColumns1: string;
   resultColumns2: string;
-  isFilePinned: boolean;
+  isFilePinned1: boolean;
+  isFilePinned2: boolean;
+  fileSource1: string;
+  fileSource2: string;
   loading: boolean;
   hasError: boolean;
   errorMessage: string;
@@ -34,7 +38,10 @@ const initialState: DocumentState = {
   comparisonColumn2: '',
   resultColumns1: '',
   resultColumns2: '',
-  isFilePinned: false,
+  fileSource1: 'upload',
+  fileSource2: 'upload',
+  isFilePinned1: false,
+  isFilePinned2: false,
   loading: false,
   hasError: false,
   errorMessage: ''
@@ -73,10 +80,17 @@ export const documentReducer = (state = initialState, action: any) => {
         errorMessage: ''
       };
     case PIN_FILE:
-      return {
-        ...state,
-        isFilePinned: !state.isFilePinned
-      };
+      if (action.index === 0) {
+        return {
+          ...state,
+          isFilePinned1: !state.isFilePinned1
+        };
+      } else {
+        return {
+          ...state,
+          isFilePinned2: !state.isFilePinned2
+        };
+      }
     case PIN_FILE_FAILURE:
       return {
         ...state,
@@ -89,6 +103,18 @@ export const documentReducer = (state = initialState, action: any) => {
         hasError: false,
         errorMessage: ''
       };
+    case SET_FILE_SOURCE:
+      if (action.index === 0) {
+        return {
+          ...state,
+          fileSource1: action.payload
+        };
+      } else {
+        return {
+          ...state,
+          fileSource2: action.payload
+        };
+      }
     case UPLOAD_DOCUMENT:
       return { ...state, loading: true };
     case UPLOAD_DOCUMENT_SUCCESS:

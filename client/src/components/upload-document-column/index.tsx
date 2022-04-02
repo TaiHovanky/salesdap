@@ -7,8 +7,13 @@ import {
   Typography,
   Grid,
   Switch,
-  FormControlLabel
+  FormControlLabel,
+  FormControl,
+  Radio,
+  RadioGroup,
+  Chip
 } from '@mui/material';
+import { Attachment } from '@mui/icons-material';
 import { connect } from 'react-redux';
 import {
   selectDocument,
@@ -18,7 +23,8 @@ import {
   validateDocumentTypeFailure,
   pinFile,
   pinFileFailure,
-  pinFileSuccess
+  pinFileSuccess,
+  setFileSource
 } from '../../state/actions/document';
 import { UserState } from '../../state/reducers/user';
 import { checkIsValidFileType } from '../../utils/validate-file-type';
@@ -29,8 +35,10 @@ interface UploadDocumentColumnProps {
   comparisonColumn: string;
   resultColumns: string;
   isFilePinned: boolean;
+  fileSource: string;
   index: number;
   user: UserState;
+  otherColumnUsingPinned: boolean;
 }
 
 const UploadDocumentColumn = ({
@@ -39,8 +47,10 @@ const UploadDocumentColumn = ({
   comparisonColumn,
   resultColumns,
   isFilePinned,
+  fileSource,
   index,
-  user
+  user,
+  otherColumnUsingPinned
 }: UploadDocumentColumnProps) => {
   const inputFileRef: any = useRef( null );
 
@@ -91,7 +101,7 @@ const UploadDocumentColumn = ({
 
   const handleFilePinning = () => {
     if (index === 0) {
-      dispatch(pinFile());
+      dispatch(pinFile(index));
       const formData = new FormData();
       if (
         selectedDocument &&
@@ -118,6 +128,32 @@ const UploadDocumentColumn = ({
     }
   }
 
+  const handleFileTypeChange = (event: ChangeEvent<HTMLInputElement>) => {
+    dispatch(setFileSource(index, event.target.value));
+  }
+
+  const handlePinnedFileClick = () => {
+    axios.get('http://localhost:3001/api/v1/viewpinnedfile',
+      {
+        responseType: 'blob',
+        params: {
+          filename: user.pinnedFile
+        }
+      }
+    )
+      .then((res) => {
+        console.log('data viewing');
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', user.pinnedFile);
+        document.body.appendChild(link);
+        link.click();
+      })
+      .catch((err) => console.log('err pinned file', err));
+  };
+
+  console.log('other col', otherColumnUsingPinned, index);
   return (
     <form>
       <TextField
@@ -156,33 +192,54 @@ const UploadDocumentColumn = ({
           justifyContent="center"
           alignItems="center"
         >
-          <Fab
-            variant="extended"
-            aria-label="add"
-            sx={{ marginTop: '2.5rem' }}
-            onClick={handleFileSelectionBtnClick}
-          >
-            <AttachFile sx={{ mr: 1 }} />
-            Select File
-          </Fab>
-          <input
-            type="file"
-            ref={inputFileRef}
-            className="file-input"
-            onChange={validateFileSelection}
-            name="sales_file"
-          />
-          {selectedDocument && selectedDocument.name &&
-            <Typography variant="subtitle1" sx={{ margin: '1rem 0 0' }}>
-              {selectedDocument.name}
-            </Typography>
+          {!!user.pinnedFile && !otherColumnUsingPinned && <FormControl>
+            <RadioGroup
+              aria-labelledby="demo-controlled-radio-buttons-group"
+              name="controlled-radio-buttons-group"
+              value={fileSource}
+              onChange={handleFileTypeChange}
+              sx={{ marginBottom: '2rem' }}
+            >
+              <FormControlLabel value="upload" control={<Radio />} label="Upload a file" />
+              <FormControlLabel value="pinned" control={<Radio />} label="Use your pinned file" />
+            </RadioGroup>
+          </FormControl>}
+          {fileSource === 'upload' ?
+            <>
+              <Fab
+                variant="extended"
+                aria-label="add"
+                sx={{ marginTop: '2.5rem' }}
+                onClick={handleFileSelectionBtnClick}
+              >
+                <AttachFile sx={{ mr: 1 }} />
+                Select File
+              </Fab>
+              <input
+                type="file"
+                ref={inputFileRef}
+                className="file-input"
+                onChange={validateFileSelection}
+                name="sales_file"
+              />
+              {selectedDocument && selectedDocument.name &&
+                <Typography variant="subtitle1" sx={{ margin: '1rem 0 0' }}>
+                  {selectedDocument.name}
+                </Typography>
+              }
+              <FormControlLabel
+                control={
+                  <Switch checked={isFilePinned} onChange={handleFilePinning} name="pinFile" />
+                }
+                label="Pin file for later use?"
+                sx={{ marginTop: '1.5rem' }}
+              />
+            </> :
+            <>
+              <Typography variant="subtitle1">Pinned File:</Typography>
+              <Chip onClick={handlePinnedFileClick} icon={<Attachment />} label={user.pinnedFile} />
+            </>
           }
-          {index === 0 && <FormControlLabel
-            control={
-              <Switch checked={isFilePinned} onChange={handleFilePinning} name="pinFile" />
-            }
-            label="Pin file for later use?"
-          />}
         </Grid>
       </Grid>
     </form>
@@ -191,7 +248,6 @@ const UploadDocumentColumn = ({
 
 const mapStateToProps = (state: any) => ({
   activeStep: state.stepProgress.step,
-  isFilePinned: state.document.isFilePinned,
   user: state.user
 });
 

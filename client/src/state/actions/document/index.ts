@@ -9,6 +9,7 @@ export const VALIDATE_DOCUMENT_TYPE_SUCCESS = 'VALIDATE_DOCUMENT_TYPE_SUCCESS';
 export const PIN_FILE = 'PIN_FILE';
 export const PIN_FILE_FAILURE = 'PIN_FILE_FAILURE';
 export const PIN_FILE_SUCCESS = 'PIN_FILE_SUCCESS';
+export const SET_FILE_SOURCE = 'SET_FILE_SOURCE';
 
 export const uploadDocument = () => ({
   type: UPLOAD_DOCUMENT
@@ -51,8 +52,9 @@ export const validateDocumentTypeSuccess = () => ({
   type: VALIDATE_DOCUMENT_TYPE_SUCCESS
 });
 
-export const pinFile = () => ({
-  type: PIN_FILE
+export const pinFile = (index: number) => ({
+  type: PIN_FILE,
+  index
 });
 
 export const pinFileFailure = () => ({
@@ -63,4 +65,10 @@ export const pinFileFailure = () => ({
 export const pinFileSuccess = (filename: string) => ({
   type: PIN_FILE_SUCCESS,
   payload: filename
+});
+
+export const setFileSource = (index: number, value: string) => ({
+  type: SET_FILE_SOURCE,
+  index,
+  payload: value
 });

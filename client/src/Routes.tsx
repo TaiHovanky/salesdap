@@ -6,7 +6,7 @@ import Login from './pages/login';
 import Profile from './pages/profile';
 import PasswordReset from './pages/password-reset';
 import ForgotPassword from './pages/forgot-password';
-import PrivateRoute from './components/private-route'; // set everything to private after testing
+// import PrivateRoute from './components/private-route'; // set everything to private after testing
 
 const Routes = () => {
 

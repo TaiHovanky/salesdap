@@ -8,8 +8,8 @@ import AWS from 'aws-sdk';
  * @param file File in Multer
  * @returns Array of objects that represent rows in the spreadsheet
  */
-export const createJSONFromWorksheet = (file: any): Array<any> => {
-  const fileBuffer = fs.readFileSync(file.path);
+export const createJSONFromWorksheet = (file: any, isUsingPinnedFile: boolean): Array<any> => {
+  const fileBuffer = isUsingPinnedFile ? file : fs.readFileSync(file);
   const workbook: XLSX.WorkBook = XLSX.read(fileBuffer);
   const sheetName: string = workbook.SheetNames[0];
   const worksheet: XLSX.WorkSheet | null = workbook && workbook.Sheets ?

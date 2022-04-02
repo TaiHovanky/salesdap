@@ -15,6 +15,7 @@ import {
   uploadDocumentSuccess,
   uploadDocumentFailure,
 } from '../../state/actions/document';
+import { UserState } from '../../state/reducers/user';
 import { changeStep } from '../../state/actions/step-progress';
 
 interface UploadDocumentFormProps {
@@ -27,8 +28,13 @@ interface UploadDocumentFormProps {
   comparisonColumn2: string;
   resultColumns1: string;
   resultColumns2: string;
+  fileSource1: string;
+  fileSource2: string;
+  isFilePinned1: boolean;
+  isFilePinned2: boolean;
   errorMessage: string;
   hasError: boolean;
+  user: UserState;
 }
 
 const UploadDocumentForm = ({
@@ -41,8 +47,13 @@ const UploadDocumentForm = ({
   comparisonColumn2,
   resultColumns1,
   resultColumns2,
+  fileSource1,
+  fileSource2,
+  isFilePinned1,
+  isFilePinned2,
   errorMessage,
   hasError,
+  user
 }: UploadDocumentFormProps) => {
 
   /**
@@ -55,32 +66,41 @@ const UploadDocumentForm = ({
     if (
       selectedDocument1 &&
       selectedDocument1.name &&
-      selectedDocument2 &&
-      selectedDocument2.name
+      fileSource1 === 'upload'
     ) {
       formData.append(
         "sales_file1",
         selectedDocument1,
         selectedDocument1.name
       );
+    }
+
+    if (
+      selectedDocument2 &&
+      selectedDocument2.name &&
+      fileSource2 === 'upload'
+    ) {
       formData.append(
         "sales_file2",
         selectedDocument2,
         selectedDocument2.name
       );
-      formData.append('comparisonColumn1', comparisonColumn1);
-      formData.append('comparisonColumn2', comparisonColumn2);
-      formData.append('resultColumns1', resultColumns1);
-      formData.append('resultColumns2', resultColumns2);
-
-      dispatch(uploadDocument());
-      axios.post('http://localhost:3001/api/v1/uploadfile', formData)
-        .then((res) => {
-          dispatch(uploadDocumentSuccess(res.data));
-          dispatch(changeStep(activeStep += 1));
-        })
-        .catch((err: any) => dispatch(uploadDocumentFailure(err.message)));
     }
+    if (fileSource1 === 'pinned' || fileSource2 === 'pinned') {
+      formData.append('pinnedFilename', user.pinnedFile);
+    }
+    formData.append('comparisonColumn1', comparisonColumn1);
+    formData.append('comparisonColumn2', comparisonColumn2);
+    formData.append('resultColumns1', resultColumns1);
+    formData.append('resultColumns2', resultColumns2);
+
+    dispatch(uploadDocument());
+    axios.post('http://localhost:3001/api/v1/uploadfile', formData)
+      .then((res) => {
+        dispatch(uploadDocumentSuccess(res.data));
+        dispatch(changeStep(activeStep += 1));
+      })
+      .catch((err: any) => dispatch(uploadDocumentFailure(err.message)));
   };
 
   return (
@@ -107,6 +127,9 @@ const UploadDocumentForm = ({
             index={0}
             resultColumns={resultColumns1}
             selectedDocument={selectedDocument1}
+            fileSource={fileSource1}
+            isFilePinned={isFilePinned1}
+            otherColumnUsingPinned={fileSource2 === 'pinned'}
           />
         </Grid>
         <Grid
@@ -124,6 +147,9 @@ const UploadDocumentForm = ({
             index={1}
             resultColumns={resultColumns2}
             selectedDocument={selectedDocument2}
+            fileSource={fileSource2}
+            isFilePinned={isFilePinned2}
+            otherColumnUsingPinned={fileSource1 === 'pinned'}
           />
         </Grid>
       </Grid>
@@ -178,9 +204,14 @@ const mapStateToProps = (state: any) => ({
   comparisonColumn2: state.document.comparisonColumn2,
   resultColumns1: state.document.resultColumns1,
   resultColumns2: state.document.resultColumns2,
+  fileSource1: state.document.fileSource1,
+  fileSource2: state.document.fileSource2,
+  isFilePinned1: state.document.isFilePinned1,
+  isFilePinned2: state.document.isFilePinned2,
   errorMessage: state.document.errorMessage,
   hasError: state.document.hasError,
   loading: state.document.loading,
+  user: state.user
 });
 
 export default connect(mapStateToProps)(UploadDocumentForm);

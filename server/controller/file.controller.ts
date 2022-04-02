@@ -13,19 +13,20 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
     comparisonColumn2,
     resultColumns1,
     resultColumns2,
-    isUsingPinnedFile,
-    filename
+    pinnedFilename
   } = req.body;
 
   let pinnedFile;
-  if (isUsingPinnedFile) {
-    pinnedFile = await readPinnedFile(filename);
+  if (pinnedFilename) {
+    pinnedFile = await readPinnedFile(pinnedFilename);
   }
   /* Convert the uploaded spreadsheets into JSON objects that can be processed */
-  const salesData1: Array<any> = isUsingPinnedFile ?
-    createJSONFromWorksheet(pinnedFile) :
-    createJSONFromWorksheet(req.files.sales_file1[0]);
-  const salesData2: Array<any> = createJSONFromWorksheet(req.files.sales_file2[0]);
+  const salesData1: Array<any> = pinnedFilename ?
+    createJSONFromWorksheet(pinnedFile, true) :
+    createJSONFromWorksheet(req.files.sales_file1[0].path, false);
+  const salesData2: Array<any> = pinnedFilename ?
+    createJSONFromWorksheet(pinnedFile, true) :
+    createJSONFromWorksheet(req.files.sales_file2[0].path, false);
 
   /* Create list of rows where there is a duplicate value that is shared between the specified columns
     (comparisonColumn1 and comparisonColumn2) */
