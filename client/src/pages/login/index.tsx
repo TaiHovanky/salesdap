@@ -8,6 +8,7 @@ import {
   Grid,
   Typography,
   Alert,
+  Dialog
 } from '@mui/material';
 import axios from 'axios';
 import { useHistory, Link } from 'react-router-dom';
@@ -15,11 +16,18 @@ import { useFormik } from 'formik';
 import { connect } from 'react-redux';
 import NavBar from '../../components/nav-bar';
 import { updateUser } from '../../state/actions/user';
+import EmailCapture from '../email-capture';
 
 const Login = ({ dispatch }: any) => {
   const [loading, setLoading] = useState(false);
   const [loginError, setLoginError] = useState('');
+  const [isEmailCaptureModalOpen, setIsEmailCaptureModalOpen] = useState(true);
+
   const history = useHistory();
+
+  const handleClose = (event: any) => {
+    setIsEmailCaptureModalOpen(false);
+  }
 
   const validate = (values: any) => {
     const errors: any = {};
@@ -169,6 +177,10 @@ const Login = ({ dispatch }: any) => {
       <Backdrop open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
+
+      <Dialog open={isEmailCaptureModalOpen} onClose={handleClose}>
+        <EmailCapture onClose={handleClose} />
+      </Dialog>
     </>
   );
 };
