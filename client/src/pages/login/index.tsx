@@ -150,7 +150,7 @@ const Login = ({ dispatch }: any) => {
               Don't have an account?  <Link to="/register">Sign up now!</Link>
             </Typography>
             <Typography sx={{ marginTop: '0.5rem' }}>
-              Forgot your password?  <Link to="/password-reset">Reset your password</Link>
+              Forgot your password?  <Link to="/forgot-password">Reset your password</Link>
             </Typography>
 
             {!!loginError &&

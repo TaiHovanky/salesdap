@@ -88,6 +88,7 @@ const UploadDocumentForm = ({
     }
     if (fileSource1 === 'pinned' || fileSource2 === 'pinned') {
       formData.append('pinnedFilename', user.pinnedFile);
+      formData.append('pinnedFileIndex', fileSource1 === 'pinned' ? '0' : '1')
     }
     formData.append('comparisonColumn1', comparisonColumn1);
     formData.append('comparisonColumn2', comparisonColumn2);
@@ -102,6 +103,11 @@ const UploadDocumentForm = ({
       })
       .catch((err: any) => dispatch(uploadDocumentFailure(err.message)));
   };
+
+  const isSubmitBtnEnabled = ((fileSource1 === 'pinned' && user.pinnedFile && selectedDocument2) ||
+    (fileSource2 === 'pinned' && user.pinnedFile && selectedDocument1) ||
+    (selectedDocument1 && selectedDocument2 && fileSource1 === 'upload' && fileSource2 === 'upload')) &&
+    (comparisonColumn1 && comparisonColumn2 && resultColumns1 && resultColumns2);
 
   return (
     <>
@@ -171,6 +177,7 @@ const UploadDocumentForm = ({
             color="primary"
             aria-label="add"
             sx={{ marginTop: '2rem' }}
+            disabled={!isSubmitBtnEnabled}
             onClick={handleUpload}
           >
             <Upload sx={{ mr: 1 }} />

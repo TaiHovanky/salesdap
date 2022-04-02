@@ -94,6 +94,7 @@ export const documentReducer = (state = initialState, action: any) => {
       return {
         ...state,
         loading: false,
+        hasError: false,
         documentData: action.payload
       };
     case UPLOAD_DOCUMENT_FAILURE:
