@@ -116,7 +116,7 @@ const UploadDocumentForm = ({
         spacing={2}
         justifyContent="space-around"
         alignItems="center"
-        sx={{ height: '80%' }}
+        sx={{ height: '90%' }}
       >
         <Grid
           item
@@ -125,7 +125,7 @@ const UploadDocumentForm = ({
           p={0}
           sx={{ height: '100%' }}
           direction="column"
-          justifyContent="center"
+          justifyContent="start"
           alignItems="center"
         >
           <UploadDocumentColumn
@@ -145,7 +145,7 @@ const UploadDocumentForm = ({
           p={0}
           sx={{ height: '100%' }}
           direction="column"
-          justifyContent="center"
+          justifyContent="start"
           alignItems="center"
         >
           <UploadDocumentColumn

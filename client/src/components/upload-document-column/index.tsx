@@ -3,9 +3,7 @@ import axios from 'axios';
 import { AttachFile } from '@mui/icons-material';
 import {
   Fab,
-  TextField,
   Typography,
-  Grid,
   FormControlLabel,
   FormControl,
   Radio,
@@ -15,15 +13,12 @@ import {
 import { Attachment } from '@mui/icons-material';
 import { connect } from 'react-redux';
 import {
-  selectDocument,
-  changeComparisonColumn,
-  changeResultColumns,
-  validateDocumentTypeSuccess,
   validateDocumentTypeFailure,
   setFileSource
 } from '../../state/actions/document';
 import { UserState } from '../../state/reducers/user';
 import { checkIsValidFileType } from '../../utils/validate-file-type';
+import UploadedFileGrid from '../uploaded-file-grid';
 
 interface UploadDocumentColumnProps {
   dispatch: any;
@@ -51,22 +46,6 @@ const UploadDocumentColumn = ({
   const inputFileRef: any = useRef( null );
 
   /**
-   * As the user types in the Column field, update its value
-   * @param event
-   */
-  const handleComparisonColumnFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
-    dispatch(changeComparisonColumn(event.target.value, index));
-  };
-
-  /**
-   * As the user types in the Column field, update its value
-   * @param event
-   */
-   const handleResultColumnFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
-    dispatch(changeResultColumns(event.target.value, index));
-  };
-
-  /**
    * When the user selects a document, validate the file type
    * @param event 
    */
@@ -74,12 +53,23 @@ const UploadDocumentColumn = ({
     const document: any = event && event.target && event.target.files ?
       event.target.files[0] :
       null;
-    dispatch(selectDocument(document, index));
+    // dispatch(selectDocument(document, index));
     const isValidDocType: boolean = document && document.name ?
       checkIsValidFileType(document.name) : false;
 
     if (isValidDocType) {
-      dispatch(validateDocumentTypeSuccess());
+      // dispatch(validateDocumentTypeSuccess());
+      const formData = new FormData();
+      formData.append(
+        `sales_file${index + 1}`,
+        selectedDocument,
+        selectedDocument.name
+      );
+      axios.post('http://localhost:3001/api/v1/uploadfile', formData)
+        .then((res) => {
+          dispatch(uploadDocumentSuccess(res.data));
+        })
+        .catch((err: any) => dispatch(uploadDocumentFailure(err.message)));
     } else {
       dispatch(validateDocumentTypeFailure());
     }
@@ -121,27 +111,8 @@ const UploadDocumentColumn = ({
   };
 
   return (
-    <form>
-      <TextField
-        required
-        id="standard-basic"
-        label="Column to find duplicate values in"
-        variant="standard"
-        sx={{ width: '100%' }}
-        onChange={handleComparisonColumnFieldChange}
-        value={comparisonColumn}
-      />
-      <TextField
-        required
-        id="standard-basic"
-        label="Columns that you want to see in results table"
-        helperText="Separate values with a comma"
-        variant="standard"
-        sx={{ width: '100%', marginTop: '2rem' }}
-        onChange={handleResultColumnFieldChange}
-        value={resultColumns}
-      />
-      <Grid
+    <form style={{ width: '100%' }}>
+      {/* <Grid
         container
         spacing={2}
         justifyContent="center"
@@ -157,7 +128,7 @@ const UploadDocumentColumn = ({
           direction="column"
           justifyContent="center"
           alignItems="center"
-        >
+        > */}
           {!!user.pinnedFile && !otherColumnUsingPinned && <FormControl>
             <RadioGroup
               aria-labelledby="demo-controlled-radio-buttons-group"
@@ -175,7 +146,7 @@ const UploadDocumentColumn = ({
               <Fab
                 variant="extended"
                 aria-label="add"
-                sx={{ marginTop: '2.5rem' }}
+                sx={{ marginTop: '2.5rem', marginBottom: '3rem' }}
                 onClick={handleFileSelectionBtnClick}
               >
                 <AttachFile sx={{ mr: 1 }} />
@@ -193,14 +164,15 @@ const UploadDocumentColumn = ({
                   {selectedDocument.name}
                 </Typography>
               }
+              <UploadedFileGrid />
             </> :
             <>
               <Typography variant="subtitle1">Pinned File:</Typography>
               <Chip onClick={handlePinnedFileClick} icon={<Attachment />} label={user.pinnedFile} />
             </>
           }
-        </Grid>
-      </Grid>
+        {/* </Grid>
+      </Grid> */}
     </form>
   );
 }
