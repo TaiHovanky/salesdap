@@ -25,10 +25,11 @@ export const uploadDocumentFailure = (errorMessage: any) => ({
   payload: errorMessage
 });
 
-export const selectDocument = (document: any, index: number) => ({
+export const selectDocument = (document: any, index: number, name: string) => ({
   type: SELECT_DOCUMENT,
   payload: document,
-  index
+  index,
+  name
 });
 
 export const changeComparisonColumn = (value: string, index: number) => ({

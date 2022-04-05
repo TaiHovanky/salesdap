@@ -3,9 +3,16 @@ import {
   findDuplicates,
   displayRelevantColumns,
   readPinnedFile,
-  storePinnedFile
+  storeFile
 } from '../utils/upload.util';
 import db from '../db';
+
+export const uploadFile = async (req: any, res: any) => {
+  const jsonFileData = createJSONFromWorksheet(req.files.sales_file[0].path, false);
+  const storedfile = await storeFile(req.files.sales_file[0]);
+  console.log('stored file', storedfile);
+  res.status(200).send(jsonFileData);
+}
 
 export const uploadAndCompareFiles = async (req: any, res: any) => {
   const {
@@ -16,7 +23,7 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
     pinnedFilename,
     pinnedFileIndex
   } = req.body;
-
+  console.log('req body', req.body);
   try {
     let pinnedFile;
     if (pinnedFilename) {
@@ -53,7 +60,7 @@ export const pinFile = (req: any, res: any) => {
     const file = req.files.sales_file[0];
     const { email } = req.body;
   
-    storePinnedFile(file)
+    storeFile(file)
       .then(() => {
         db('users').update({ pinned_filename: file.originalname }).where({ email })
           .then(() => res.status(200).send('File pinned successfully'));

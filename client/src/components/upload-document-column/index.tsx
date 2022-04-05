@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useRef } from 'react';
 import axios from 'axios';
+import * as XLSX from 'xlsx';
 import { AttachFile } from '@mui/icons-material';
 import {
   Fab,
@@ -8,17 +9,21 @@ import {
   FormControl,
   Radio,
   RadioGroup,
-  Chip
+  Chip,
+  TextField
 } from '@mui/material';
 import { Attachment } from '@mui/icons-material';
 import { connect } from 'react-redux';
 import {
   validateDocumentTypeFailure,
-  setFileSource
+  setFileSource,
+  changeComparisonColumn,
+  validateDocumentTypeSuccess,
+  selectDocument
 } from '../../state/actions/document';
 import { UserState } from '../../state/reducers/user';
 import { checkIsValidFileType } from '../../utils/validate-file-type';
-import UploadedFileGrid from '../uploaded-file-grid';
+// import UploadedFileGrid from '../uploaded-file-grid';
 
 interface UploadDocumentColumnProps {
   dispatch: any;
@@ -46,10 +51,18 @@ const UploadDocumentColumn = ({
   const inputFileRef: any = useRef( null );
 
   /**
+   * As the user types in the Column field, update its value
+   * @param event
+   */
+   const handleComparisonColumnFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
+    dispatch(changeComparisonColumn(event.target.value, index));
+  };
+
+  /**
    * When the user selects a document, validate the file type
    * @param event 
    */
-  const validateFileSelection = (event: any) => {
+  const validateFileSelection = async (event: any) => {
     const document: any = event && event.target && event.target.files ?
       event.target.files[0] :
       null;
@@ -58,18 +71,19 @@ const UploadDocumentColumn = ({
       checkIsValidFileType(document.name) : false;
 
     if (isValidDocType) {
-      // dispatch(validateDocumentTypeSuccess());
-      const formData = new FormData();
-      formData.append(
-        `sales_file${index + 1}`,
-        selectedDocument,
-        selectedDocument.name
-      );
-      axios.post('http://localhost:3001/api/v1/uploadfile', formData)
-        .then((res) => {
-          dispatch(uploadDocumentSuccess(res.data));
-        })
-        .catch((err: any) => dispatch(uploadDocumentFailure(err.message)));
+      dispatch(validateDocumentTypeSuccess());
+      const data = await document.arrayBuffer();
+  /* data is an ArrayBuffer */
+      const workbook = XLSX.read(data);
+      const sheetName: string = workbook.SheetNames[0];
+      const worksheet: XLSX.WorkSheet | null = workbook && workbook.Sheets ?
+        workbook.Sheets[sheetName as any] : null;
+
+      if (worksheet) {
+        const wsDataObj: any = XLSX.utils.sheet_to_json(worksheet);
+        console.log('ws data obj', wsDataObj);
+        dispatch(selectDocument(wsDataObj, index, document.name));
+      }
     } else {
       dispatch(validateDocumentTypeFailure());
     }
@@ -146,7 +160,7 @@ const UploadDocumentColumn = ({
               <Fab
                 variant="extended"
                 aria-label="add"
-                sx={{ marginTop: '2.5rem', marginBottom: '3rem' }}
+                sx={{ marginTop: '2.5rem' }}
                 onClick={handleFileSelectionBtnClick}
               >
                 <AttachFile sx={{ mr: 1 }} />
@@ -164,15 +178,21 @@ const UploadDocumentColumn = ({
                   {selectedDocument.name}
                 </Typography>
               }
-              <UploadedFileGrid />
             </> :
             <>
               <Typography variant="subtitle1">Pinned File:</Typography>
               <Chip onClick={handlePinnedFileClick} icon={<Attachment />} label={user.pinnedFile} />
             </>
           }
-        {/* </Grid>
-      </Grid> */}
+          <TextField
+            required
+            id="standard-basic"
+            label="Column to find duplicate values in"
+            variant="standard"
+            sx={{ width: '100%' }}
+            onChange={handleComparisonColumnFieldChange}
+            value={comparisonColumn}
+          />
     </form>
   );
 }

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useRef } from 'react';
 import {
   Alert,
   Backdrop,
@@ -7,6 +7,7 @@ import {
   Fab
 } from '@mui/material';
 import axios from 'axios';
+import DataGrid, { ColumnChooser, ColumnFixing, Paging, Pager } from 'devextreme-react/data-grid';
 import { Upload } from '@mui/icons-material';
 import { connect } from 'react-redux';
 import UploadDocumentColumn from '../upload-document-column';
@@ -55,7 +56,8 @@ const UploadDocumentForm = ({
   hasError,
   user
 }: UploadDocumentFormProps) => {
-
+  const dataGrid1 = useRef<any>(null);
+  const dataGrid2 = useRef<any>(null);
   /**
    * Puts the selected file and column name into a FormData instance,
    * sends it to the server, and then changes to the next step where
@@ -90,10 +92,22 @@ const UploadDocumentForm = ({
       formData.append('pinnedFilename', user.pinnedFile);
       formData.append('pinnedFileIndex', fileSource1 === 'pinned' ? '0' : '1')
     }
+    let visibleColumns1;
+    let visibleColumns2;
+    if (dataGrid1 && dataGrid1.current && dataGrid1.current.instance) {
+      console.log('datagrid instance current getting cols', dataGrid1, dataGrid1.current.instance.getVisibleColumns());
+      visibleColumns1 = dataGrid1.current.instance.getVisibleColumns().map((col: any) => col.dataSource);
+      console.log('visible cols 1', visibleColumns1);
+    }
+    if (dataGrid1 && dataGrid2.current && dataGrid2.current.instance) {
+      console.log('datagrid instance current getting cols', dataGrid2, dataGrid2.current.instance.getVisibleColumns());
+      visibleColumns2 = dataGrid2.current.instance.getVisibleColumns().map((col: any) => col.dataSource);;
+      console.log('visible cols 2', visibleColumns2);
+    }
     formData.append('comparisonColumn1', comparisonColumn1);
     formData.append('comparisonColumn2', comparisonColumn2);
-    formData.append('resultColumns1', resultColumns1);
-    formData.append('resultColumns2', resultColumns2);
+    formData.append('resultColumns1', visibleColumns1);
+    formData.append('resultColumns2', visibleColumns2);
 
     dispatch(uploadDocument());
     axios.post('http://localhost:3001/api/v1/uploadfile', formData)
@@ -104,10 +118,10 @@ const UploadDocumentForm = ({
       .catch((err: any) => dispatch(uploadDocumentFailure(err.message)));
   };
 
-  const isSubmitBtnEnabled = ((fileSource1 === 'pinned' && user.pinnedFile && selectedDocument2) ||
-    (fileSource2 === 'pinned' && user.pinnedFile && selectedDocument1) ||
-    (selectedDocument1 && selectedDocument2 && fileSource1 === 'upload' && fileSource2 === 'upload')) &&
-    (comparisonColumn1 && comparisonColumn2 && resultColumns1 && resultColumns2);
+  // const isSubmitBtnEnabled = ((fileSource1 === 'pinned' && user.pinnedFile && selectedDocument2) ||
+  //   (fileSource2 === 'pinned' && user.pinnedFile && selectedDocument1) ||
+  //   (selectedDocument1 && selectedDocument2 && fileSource1 === 'upload' && fileSource2 === 'upload')) &&
+  //   (comparisonColumn1 && comparisonColumn2 && resultColumns1 && resultColumns2);
 
   return (
     <>
@@ -137,6 +151,28 @@ const UploadDocumentForm = ({
             isFilePinned={isFilePinned1}
             otherColumnUsingPinned={fileSource2 === 'pinned'}
           />
+          <div style={{ width: '100%'}}>
+            <DataGrid
+              id="gridContainer"
+              dataSource={selectedDocument1.data}
+              allowColumnReordering={true}
+              allowColumnResizing={true}
+              columnAutoWidth={true}
+              showBorders={true}
+              ref={dataGrid1}
+            >
+              <ColumnChooser enabled={true} height={200} />
+              <ColumnFixing enabled={true} />
+              <Paging defaultPageSize={5} />
+              <Pager
+                visible={true}
+                displayMode={"full"}
+                showPageSizeSelector={false}
+                showInfo={true}
+                showNavigationButtons={true}
+              />
+            </DataGrid>
+          </div>
         </Grid>
         <Grid
           item
@@ -157,6 +193,28 @@ const UploadDocumentForm = ({
             isFilePinned={isFilePinned2}
             otherColumnUsingPinned={fileSource1 === 'pinned'}
           />
+          <div style={{ width: '100%'}}>
+            <DataGrid
+              id="gridContainer"
+              dataSource={selectedDocument2.data}
+              allowColumnReordering={true}
+              allowColumnResizing={true}
+              columnAutoWidth={true}
+              showBorders={true}
+              ref={dataGrid2}
+            >
+              <ColumnChooser enabled={true} height={200} />
+              <ColumnFixing enabled={true} />
+              <Paging defaultPageSize={5} />
+              <Pager
+                visible={true}
+                displayMode={"full"}
+                showPageSizeSelector={false}
+                showInfo={true}
+                showNavigationButtons={true}
+              />
+            </DataGrid>
+          </div>
         </Grid>
       </Grid>
       <Grid
@@ -177,7 +235,7 @@ const UploadDocumentForm = ({
             color="primary"
             aria-label="add"
             sx={{ marginTop: '2rem' }}
-            disabled={!isSubmitBtnEnabled}
+            // disabled={!isSubmitBtnEnabled}
             onClick={handleUpload}
           >
             <Upload sx={{ mr: 1 }} />

@@ -10,10 +10,15 @@ import {
   SET_FILE_SOURCE
 } from '../../actions/document';
 
+interface SelectedDocument {
+  data: Array<any>;
+  name: string;
+}
+
 interface DocumentState {
   documentData: Array<any>;
-  selectedDocument1: any;
-  selectedDocument2: any;
+  selectedDocument1: SelectedDocument;
+  selectedDocument2: SelectedDocument;
   comparisonColumn1: string;
   comparisonColumn2: string;
   resultColumns1: string;
@@ -29,8 +34,8 @@ interface DocumentState {
 
 const initialState: DocumentState = {
   documentData: [],
-  selectedDocument1: null,
-  selectedDocument2: null,
+  selectedDocument1: { data: [], name: '' },
+  selectedDocument2: { data: [], name: '' },
   comparisonColumn1: '',
   comparisonColumn2: '',
   resultColumns1: '',
@@ -60,9 +65,21 @@ export const documentReducer = (state = initialState, action: any) => {
       }
     case SELECT_DOCUMENT:
       if (action.index === 0) {
-        return { ...state, selectedDocument1: action.payload };
+        return {
+          ...state,
+          selectedDocument1: {
+            data: action.payload,
+            name: action.name
+          }
+        };
       } else {
-        return { ...state, selectedDocument2: action.payload}
+        return {
+          ...state,
+          selectedDocument2: {
+            data: action.payload,
+            name: action.name
+          }
+        };
       }
     case VALIDATE_DOCUMENT_TYPE_FAILURE:
       return {

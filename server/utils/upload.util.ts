@@ -138,7 +138,7 @@ export const displayRelevantColumns = (
   return result;
 }
 
-export const storePinnedFile = (file: any) => new Promise((resolve, reject) => {
+export const storeFile = (file: any) => new Promise((resolve, reject) => {
   const fileBuffer = fs.readFileSync(file.path);
 
   const s3 = new AWS.S3({
@@ -148,7 +148,7 @@ export const storePinnedFile = (file: any) => new Promise((resolve, reject) => {
 
   const params: any = {
     Bucket: process.env.AWS_BUCKET_NAME,
-    Key: `${file.originalname}`,
+    Key: `${file.originalname}-${new Date().getTime()}`,
     Body: fileBuffer
   };
 
@@ -156,6 +156,7 @@ export const storePinnedFile = (file: any) => new Promise((resolve, reject) => {
     if (err) {
       return reject(err)
     }
+    console.log('data.location', data.location);
     return resolve(data.location);
   });
 });
