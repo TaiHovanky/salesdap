@@ -1,4 +1,5 @@
 import { WorkSheet, WorkBook, utils, read, writeFile } from 'xlsx';
+import axios from 'axios';
 
 export const createJSONFromSpreadsheet = async (document: any) => {
   const data = await document.arrayBuffer();
@@ -15,16 +16,19 @@ export const createJSONFromSpreadsheet = async (document: any) => {
 
 export const downloadSpreadsheetFromJSON = async (data: Array<any>) => {
   const worksheetData: Array<Array<any>> = [];
-  data.forEach((row: any) => {
-    const rowArr = Array.from(Object.keys(row)).map((rowProp: string) => row[rowProp]);
+  let columns: Array<string> = [];
+  data.forEach((row: any, index: number) => {
+    if (index === 0) {
+      columns = Array.from(Object.keys(row));
+      worksheetData.push(columns);
+    }
+    const rowArr = columns.map((rowProp: string) => row[rowProp]);
     worksheetData.push(rowArr);
   });
   const worksheet: WorkSheet = utils.aoa_to_sheet(worksheetData);
   const workbook: WorkBook = utils.book_new();
   utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-  writeFile(workbook, 'salesdap-results.xls');
-  // XLSX.writeFile(workbook, "out.xlsb");
-  // createFileLink()
+  writeFile(workbook, 'account-mapping.xls');
 }
 
 export const createFileLink = (data: any, pinnedFile: any) => {
@@ -34,4 +38,13 @@ export const createFileLink = (data: any, pinnedFile: any) => {
   link.setAttribute('download', pinnedFile);
   document.body.appendChild(link);
   link.click();
+}
+
+export const getPinnedFile = (filename: string) => {
+  return axios.get('http://localhost:3001/api/v1/viewpinnedfile',
+    {
+      responseType: 'blob',
+      params: { filename }
+    }
+  );
 }

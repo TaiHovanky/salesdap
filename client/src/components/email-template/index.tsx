@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, ChangeEvent } from 'react';
 import {
   Grid,
   Box,
@@ -9,26 +9,33 @@ import {
 import { Download, ContentCopy } from '@mui/icons-material';
 import { connect } from 'react-redux';
 import { downloadSpreadsheetFromJSON } from '../../utils/spreadsheet.utils';
-
-const EMAIL_DEFAULT_TEXT = `[insert name],
-
-Thanks for sending over your account list.
-
-Attached you’ll find a list that maps both our account teams to one another. 
-
-Regards,
-
-[insert your signature]
-`;
+import { updateEmailTemplate } from '../../state/actions/email-template';
 
 interface Props {
   duplicatesData: Array<any>;
+  template: string;
+  dispatch: any;
 }
 
-const EmailTemplate = ({ duplicatesData }: Props) => {
+const EmailTemplate = ({ duplicatesData, template, dispatch }: Props) => {
+  const textAreaRef = useRef<any>(null);
+
+  const handleTemplateChange = (event: ChangeEvent<HTMLInputElement>) => {
+    dispatch(updateEmailTemplate(event.target.value));
+  }
+
   const handleResultsDownload = () => {
     downloadSpreadsheetFromJSON(duplicatesData);
   }
+
+  const handleCopyEmailTemplate = async (event: any) => {
+    try {
+      await navigator.clipboard.writeText(template);
+      console.log('Page URL copied to clipboard');
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
+  };
 
   return (
     <>
@@ -54,15 +61,18 @@ const EmailTemplate = ({ duplicatesData }: Props) => {
               id="email-template-multiline"
               label="Email Template"
               multiline
+              ref={textAreaRef}
               rows={9}
-              defaultValue={EMAIL_DEFAULT_TEXT}
+              defaultValue={template}
               variant="filled"
               sx={{ width: '100%' }}
+              onChange={handleTemplateChange}
             />
             <Fab
               variant="extended"
               aria-label="add"
               sx={{ marginTop: '2.5rem' }}
+              onClick={handleCopyEmailTemplate}
             >
               <ContentCopy sx={{ mr: 1 }} />
               Copy Template
@@ -84,7 +94,8 @@ const EmailTemplate = ({ duplicatesData }: Props) => {
 }
 
 const mapStateToProps = (state: any) => ({
-  duplicatesData: state.document.duplicatesData
+  duplicatesData: state.document.duplicatesData,
+  template: state.emailTemplate.template
 });
 
 export default connect(mapStateToProps)(EmailTemplate);

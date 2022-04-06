@@ -1,5 +1,4 @@
 import React, { ChangeEvent, useRef } from 'react';
-import axios from 'axios';
 import { AttachFile } from '@mui/icons-material';
 import {
   Fab,
@@ -23,7 +22,11 @@ import {
 } from '../../state/actions/document';
 import { UserState } from '../../state/reducers/user';
 import { checkIsValidFileType } from '../../utils/validate-file-type';
-import { createJSONFromSpreadsheet, createFileLink } from '../../utils/spreadsheet.utils';
+import {
+  createJSONFromSpreadsheet,
+  createFileLink,
+  getPinnedFile
+} from '../../utils/spreadsheet.utils';
 
 interface UploadDocumentColumnProps {
   dispatch: any;
@@ -32,7 +35,6 @@ interface UploadDocumentColumnProps {
   fileSource: string;
   index: number;
   user: UserState;
-  otherColumnUsingPinned: boolean;
 }
 
 const UploadDocumentColumn = ({
@@ -41,8 +43,7 @@ const UploadDocumentColumn = ({
   comparisonColumn,
   fileSource,
   index,
-  user,
-  otherColumnUsingPinned
+  user
 }: UploadDocumentColumnProps) => {
   const inputFileRef: any = useRef( null );
 
@@ -91,7 +92,7 @@ const UploadDocumentColumn = ({
     if (event.target.value === 'pinned') {
       dispatch(setIsLoading(true));
       try {
-        const pinnedFileBlob = await getPinnedFile();
+        const pinnedFileBlob = await getPinnedFile(user.pinnedFile);
         const wsDataObj: Array<any> = await createJSONFromSpreadsheet(pinnedFileBlob.data);
         dispatch(selectDocument(wsDataObj, index, user.pinnedFile));
         dispatch(setIsLoading(false));
@@ -104,21 +105,10 @@ const UploadDocumentColumn = ({
     }
   }
 
-  const getPinnedFile = () => {
-    return axios.get('http://localhost:3001/api/v1/viewpinnedfile',
-      {
-        responseType: 'blob',
-        params: {
-          filename: user.pinnedFile
-        }
-      }
-    );
-  }
-
   const handlePinnedFileClick = async () => {
     try {
-      const pinnedFileData = await getPinnedFile()
-      createFileLink(pinnedFileData, user.pinnedFile);
+      const pinnedFileData = await getPinnedFile(user.pinnedFile);
+      createFileLink(pinnedFileData.data, user.pinnedFile);
     } catch (err: any) {
       console.log('err', err);
     }
@@ -143,7 +133,7 @@ const UploadDocumentColumn = ({
           justifyContent="center"
           alignItems="center"
         > */}
-          {!!user.pinnedFile && !otherColumnUsingPinned && <FormControl>
+          {!!user.pinnedFile && index === 0 && <FormControl>
             <RadioGroup
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"

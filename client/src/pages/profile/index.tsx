@@ -11,7 +11,7 @@ import {
   Backdrop,
   CircularProgress
 } from '@mui/material';
-import { Attachment, AttachFile, Upload } from '@mui/icons-material';
+import { Attachment, Upload } from '@mui/icons-material';
 import { connect } from 'react-redux';
 import {
   pinFileSuccess,
@@ -19,6 +19,10 @@ import {
 import NavBar from '../../components/nav-bar';
 import { UserState } from '../../state/reducers/user';
 import { checkIsValidFileType } from '../../utils/validate-file-type';
+import {
+  createFileLink,
+  getPinnedFile
+} from '../../utils/spreadsheet.utils';
 
 interface Props {
   user: UserState;
@@ -26,30 +30,18 @@ interface Props {
 }
 
 const Profile = ({ user, dispatch }: Props) => {
-  const [pinnedDocument, setPinnedDocument] = useState<any>();
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const inputFileRef: any = useRef( null );
+  const inputFileRef: any = useRef(null);
 
-  const handlePinnedFileClick = () => {
-    axios.get('http://localhost:3001/api/v1/viewpinnedfile',
-      {
-        responseType: 'blob',
-        params: {
-          filename: user.pinnedFile
-        }
-      }
-    )
-      .then((res) => {
-        const url = window.URL.createObjectURL(new Blob([res.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', user.pinnedFile);
-        document.body.appendChild(link);
-        link.click();
-      })
-      .catch((err) => console.log('err pinned file', err));
+  const handlePinnedFileClick = async () => {
+    try {
+      const pinnedFileData = await getPinnedFile(user.pinnedFile);
+      createFileLink(pinnedFileData.data, user.pinnedFile);
+    } catch (err: any) {
+      console.log('err', err);
+    }
   };
 
   const handleFileSelectionBtnClick = () => {
@@ -63,28 +55,28 @@ const Profile = ({ user, dispatch }: Props) => {
     const document: any = event && event.target && event.target.files ?
       event.target.files[0] :
       null;
-    setPinnedDocument(document);
     const isValidDocType: boolean = document && document.name ?
       checkIsValidFileType(document.name) : false;
 
     if (isValidDocType) {
       setHasError(false);
+      handleFilePinning(document);
     } else {
       setHasError(true);
     }
   };
 
-  const handleFilePinning = () => {
+  const handleFilePinning = (file: any) => {
     setLoading(true);
     const formData = new FormData();
     if (
-      pinnedDocument &&
-      pinnedDocument.name
+      file &&
+      file.name
     ) {
       formData.append(
         'sales_file',
-        pinnedDocument,
-        pinnedDocument.name
+        file,
+        file.name
       );
       formData.append(
         'email',
@@ -94,7 +86,7 @@ const Profile = ({ user, dispatch }: Props) => {
     axios.post('http://localhost:3001/api/v1/pinfile', formData)
       .then((data) => {
         setLoading(false);
-        dispatch(pinFileSuccess(pinnedDocument.name));
+        dispatch(pinFileSuccess(file.name));
         setHasError(false);
       })
       .catch((err) => {
@@ -148,7 +140,7 @@ const Profile = ({ user, dispatch }: Props) => {
                   sx={{ marginTop: '2.5rem' }}
                   onClick={handleFileSelectionBtnClick}
                 >
-                  <AttachFile sx={{ mr: 1 }} />
+                  <Upload sx={{ mr: 1 }} />
                   Select New Pinned File
                 </Fab>
                 <input
@@ -158,21 +150,6 @@ const Profile = ({ user, dispatch }: Props) => {
                   onChange={validateFileSelection}
                   name="sales_file"
                 />
-                {pinnedDocument && pinnedDocument.name &&
-                  <Typography variant="subtitle1" sx={{ margin: '1rem 0 0' }}>
-                    {pinnedDocument.name}
-                  </Typography>
-                }
-                <Fab
-                  variant="extended"
-                  color="primary"
-                  aria-label="add"
-                  sx={{ marginTop: '2rem' }}
-                  onClick={handleFilePinning}
-                >
-                  <Upload sx={{ mr: 1 }} />
-                  Upload and Pin File
-                </Fab>
               </Grid>
             </Paper>
           </Grid>

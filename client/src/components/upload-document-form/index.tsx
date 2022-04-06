@@ -125,7 +125,6 @@ const UploadDocumentForm = ({
             index={0}
             selectedDocument={selectedDocument1}
             fileSource={fileSource1}
-            otherColumnUsingPinned={fileSource2 === 'pinned'}
           />
           <div style={{ width: '100%'}}>
             <DataGrid
@@ -165,7 +164,6 @@ const UploadDocumentForm = ({
             index={1}
             selectedDocument={selectedDocument2}
             fileSource={fileSource2}
-            otherColumnUsingPinned={fileSource1 === 'pinned'}
           />
           <div style={{ width: '100%'}}>
             <DataGrid
