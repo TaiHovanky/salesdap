@@ -7,7 +7,8 @@ import {
   Fab
 } from '@mui/material';
 import { Download, ContentCopy } from '@mui/icons-material';
-import { downloadSpreadsheetFromJSON } from '../../utils/spreadsheet.utils.ts';
+import { connect } from 'react-redux';
+import { downloadSpreadsheetFromJSON } from '../../utils/spreadsheet.utils';
 
 const EMAIL_DEFAULT_TEXT = `[insert name],
 
@@ -20,9 +21,13 @@ Regards,
 [insert your signature]
 `;
 
-const EmailTemplate = () => {
-  const handleResultsDownload = () => {
+interface Props {
+  duplicatesData: Array<any>;
+}
 
+const EmailTemplate = ({ duplicatesData }: Props) => {
+  const handleResultsDownload = () => {
+    downloadSpreadsheetFromJSON(duplicatesData);
   }
 
   return (
@@ -78,4 +83,8 @@ const EmailTemplate = () => {
   );
 }
 
-export default EmailTemplate;
+const mapStateToProps = (state: any) => ({
+  duplicatesData: state.document.duplicatesData
+});
+
+export default connect(mapStateToProps)(EmailTemplate);
