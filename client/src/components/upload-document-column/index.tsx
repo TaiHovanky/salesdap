@@ -1,6 +1,5 @@
 import React, { ChangeEvent, useRef } from 'react';
 import axios from 'axios';
-import * as XLSX from 'xlsx';
 import { AttachFile } from '@mui/icons-material';
 import {
   Fab,
@@ -23,13 +22,13 @@ import {
 } from '../../state/actions/document';
 import { UserState } from '../../state/reducers/user';
 import { checkIsValidFileType } from '../../utils/validate-file-type';
-// import UploadedFileGrid from '../uploaded-file-grid';
+import { createFileLink } from '../../utils/create-file-link';
+import { createJSONFromSpreadsheet } from '../../utils/create-json-from-spreadsheet';
 
 interface UploadDocumentColumnProps {
   dispatch: any;
   selectedDocument: any;
   comparisonColumn: string;
-  resultColumns: string;
   isFilePinned: boolean;
   fileSource: string;
   index: number;
@@ -41,7 +40,6 @@ const UploadDocumentColumn = ({
   dispatch,
   selectedDocument,
   comparisonColumn,
-  resultColumns,
   isFilePinned,
   fileSource,
   index,
@@ -72,18 +70,8 @@ const UploadDocumentColumn = ({
 
     if (isValidDocType) {
       dispatch(validateDocumentTypeSuccess());
-      const data = await document.arrayBuffer();
-  /* data is an ArrayBuffer */
-      const workbook = XLSX.read(data);
-      const sheetName: string = workbook.SheetNames[0];
-      const worksheet: XLSX.WorkSheet | null = workbook && workbook.Sheets ?
-        workbook.Sheets[sheetName as any] : null;
-
-      if (worksheet) {
-        const wsDataObj: any = XLSX.utils.sheet_to_json(worksheet);
-        console.log('ws data obj', wsDataObj);
-        dispatch(selectDocument(wsDataObj, index, document.name));
-      }
+      const wsDataObj = await createJSONFromSpreadsheet(document);
+      dispatch(selectDocument(wsDataObj, index, document.name));
     } else {
       dispatch(validateDocumentTypeFailure());
     }
@@ -99,29 +87,38 @@ const UploadDocumentColumn = ({
     }
   }
 
-  const handleFileTypeChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFileTypeChange = async (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setFileSource(index, event.target.value));
+    if (event.target.value === 'pinned') {
+      try {
+        const pinnedFileBlob = await getPinnedFile('json');
+        console.log('pinned file data', pinnedFileBlob);
+        const pinnedFileData = JSON.parse(Buffer.from(pinnedFileBlob.data).toString());
+        dispatch(selectDocument(pinnedFileData, index, user.pinnedFile));
+      } catch (err: any) {
+        console.log('err', err);
+      }
+    }
   }
 
-  const handlePinnedFileClick = () => {
-    axios.get('http://localhost:3001/api/v1/viewpinnedfile',
+  const getPinnedFile = (responseType: any) => {
+    return axios.get('http://localhost:3001/api/v1/viewpinnedfile',
       {
-        responseType: 'blob',
+        responseType,
         params: {
           filename: user.pinnedFile
         }
       }
-    )
-      .then((res) => {
-        console.log('data viewing');
-        const url = window.URL.createObjectURL(new Blob([res.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', user.pinnedFile);
-        document.body.appendChild(link);
-        link.click();
-      })
-      .catch((err) => console.log('err pinned file', err));
+    );
+  }
+
+  const handlePinnedFileClick = async () => {
+    try {
+      const pinnedFileData = await getPinnedFile('blob')
+      createFileLink(pinnedFileData, user.pinnedFile);
+    } catch (err: any) {
+      console.log('err', err);
+    }
   };
 
   return (

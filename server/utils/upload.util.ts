@@ -21,6 +21,14 @@ export const createJSONFromWorksheet = (file: any, isUsingPinnedFile: boolean): 
   return [];
 };
 
+export const parseJSONFromFile = (file: any, isUsingPinnedFile: boolean): Array<any> => {
+  const fileBuffer = isUsingPinnedFile ? file : fs.readFileSync(file);
+  if (fileBuffer) {
+    return JSON.parse(fileBuffer.toString());
+  }
+  return [];
+};
+
 /**
  * Loop through spreadsheet data and use comparison columns to find duplicate values. If
  * a duplicate value is found, both rows from each spreadsheet are added to the results.
@@ -109,8 +117,8 @@ const checkForDuplicates = (
   resultsList: Array<any>,
 ): void => {
   if (valueHash[cellValue]) {
-    resultsList.push(valueHash[cellValue])
-    resultsList.push(row);
+    resultsList.push({ ...valueHash[cellValue], ...row});
+    // resultsList.push(row);
   }
 }
 

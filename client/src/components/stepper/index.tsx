@@ -37,7 +37,7 @@ const HorizontalLinearStepper = ({ activeStep }: Props) => {
         </Stepper>
         {activeStep === steps.length - 1 ? (
           <React.Fragment>
-            <Container sx={{ height: '100%' }}>
+            <Container sx={{ height: '100%', width: '100%' }}>
               <DuplicatesTable />
             </Container>
           </React.Fragment>
