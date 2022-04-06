@@ -64,13 +64,12 @@ const UploadDocumentColumn = ({
     const document: any = event && event.target && event.target.files ?
       event.target.files[0] :
       null;
-    // dispatch(selectDocument(document, index));
     const isValidDocType: boolean = document && document.name ?
       checkIsValidFileType(document.name) : false;
 
     if (isValidDocType) {
       dispatch(validateDocumentTypeSuccess());
-      const wsDataObj = await createJSONFromSpreadsheet(document);
+      const wsDataObj: Array<any> = await createJSONFromSpreadsheet(document);
       dispatch(selectDocument(wsDataObj, index, document.name));
       dispatch(setIsLoading(false));
     } else {
@@ -94,7 +93,7 @@ const UploadDocumentColumn = ({
       dispatch(setIsLoading(true));
       try {
         const pinnedFileBlob = await getPinnedFile();
-        const wsDataObj = await createJSONFromSpreadsheet(pinnedFileBlob.data);
+        const wsDataObj: Array<any> = await createJSONFromSpreadsheet(pinnedFileBlob.data);
         dispatch(selectDocument(wsDataObj, index, user.pinnedFile));
         dispatch(setIsLoading(false));
       } catch (err: any) {

@@ -1,28 +1,9 @@
-import * as XLSX from 'xlsx';
 /* load 'fs' for readFile and writeFile support */
 import * as fs from 'fs';
 import AWS from 'aws-sdk';
 
-/**
- * Use xlsx to convert the spreadsheet to a JavaScript array of objects
- * @param file File in Multer
- * @returns Array of objects that represent rows in the spreadsheet
- */
-export const createJSONFromWorksheet = (file: any, isUsingPinnedFile: boolean): Array<any> => {
-  const fileBuffer = isUsingPinnedFile ? file : fs.readFileSync(file);
-  const workbook: XLSX.WorkBook = XLSX.read(fileBuffer);
-  const sheetName: string = workbook.SheetNames[0];
-  const worksheet: XLSX.WorkSheet | null = workbook && workbook.Sheets ?
-    workbook.Sheets[sheetName as any] : null;
-
-  if (worksheet) {
-    return XLSX.utils.sheet_to_json(worksheet);
-  }
-  return [];
-};
-
-export const parseJSONFromFile = (file: any, isUsingPinnedFile: boolean): Array<any> => {
-  const fileBuffer = isUsingPinnedFile ? file : fs.readFileSync(file);
+export const parseJSONFromFile = (file: any): Array<any> => {
+  const fileBuffer = fs.readFileSync(file);
   if (fileBuffer) {
     return JSON.parse(fileBuffer.toString());
   }
@@ -118,7 +99,6 @@ const checkForDuplicates = (
 ): void => {
   if (valueHash[cellValue]) {
     resultsList.push({ ...valueHash[cellValue], ...row});
-    // resultsList.push(row);
   }
 }
 
@@ -164,7 +144,6 @@ export const storeFile = (file: any) => new Promise((resolve, reject) => {
     if (err) {
       return reject(err)
     }
-    console.log('data.location', data.location);
     return resolve(data.location);
   });
 });
