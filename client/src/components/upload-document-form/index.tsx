@@ -12,7 +12,7 @@ import { Upload } from '@mui/icons-material';
 import { connect } from 'react-redux';
 import UploadDocumentColumn from '../upload-document-column';
 import {
-  uploadDocument,
+  setIsLoading,
   uploadDocumentSuccess,
   uploadDocumentFailure,
 } from '../../state/actions/document';
@@ -29,8 +29,6 @@ interface UploadDocumentFormProps {
   comparisonColumn2: string;
   fileSource1: string;
   fileSource2: string;
-  isFilePinned1: boolean;
-  isFilePinned2: boolean;
   errorMessage: string;
   hasError: boolean;
   user: UserState;
@@ -46,8 +44,6 @@ const UploadDocumentForm = ({
   comparisonColumn2,
   fileSource1,
   fileSource2,
-  isFilePinned1,
-  isFilePinned2,
   errorMessage,
   hasError,
   user
@@ -61,7 +57,7 @@ const UploadDocumentForm = ({
    */
   const handleUpload = () => {
     const formData = new FormData();
-    if (selectedDocument1 && selectedDocument1.name && fileSource1 === 'upload') {
+    if (selectedDocument1 && selectedDocument1.name) {
       const docBlob1 = new Blob([JSON.stringify(selectedDocument1.data)], { type: 'application/json' });
       formData.append(
         "sales_file1",
@@ -70,7 +66,7 @@ const UploadDocumentForm = ({
       );
     }
 
-    if (selectedDocument2 && selectedDocument2.name && fileSource2 === 'upload') {
+    if (selectedDocument2 && selectedDocument2.name) {
       const docBlob2 = new Blob([JSON.stringify(selectedDocument2.data)], { type: 'application/json' });
       formData.append(
         "sales_file2",
@@ -78,10 +74,6 @@ const UploadDocumentForm = ({
         selectedDocument2.name
       );
     }
-    // if (fileSource1 === 'pinned' || fileSource2 === 'pinned') {
-    //   formData.append('pinnedFilename', user.pinnedFile);
-    //   formData.append('pinnedFileIndex', fileSource1 === 'pinned' ? '0' : '1')
-    // }
     let resultColumns1;
     let resultColumns2;
     if (dataGrid1 && dataGrid1.current && dataGrid1.current.instance) {
@@ -95,7 +87,7 @@ const UploadDocumentForm = ({
     formData.append('resultColumns1', resultColumns1);
     formData.append('resultColumns2', resultColumns2);
 
-    dispatch(uploadDocument());
+    dispatch(setIsLoading(true));
     axios.post('http://localhost:3001/api/v1/uploadfile', formData)
       .then((res) => {
         dispatch(uploadDocumentSuccess(res.data));
@@ -106,7 +98,7 @@ const UploadDocumentForm = ({
 
   // const isSubmitBtnEnabled = ((fileSource1 === 'pinned' && user.pinnedFile && selectedDocument2) ||
   //   (fileSource2 === 'pinned' && user.pinnedFile && selectedDocument1) ||
-  //   (selectedDocument1 && selectedDocument2 && fileSource1 === 'upload' && fileSource2 === 'upload')) &&
+  //   (selectedDocument1 && selectedDocument2 && fileSource2 === 'upload')) &&
   //   (comparisonColumn1 && comparisonColumn2 && resultColumns1 && resultColumns2);
 
   return (
@@ -133,7 +125,6 @@ const UploadDocumentForm = ({
             index={0}
             selectedDocument={selectedDocument1}
             fileSource={fileSource1}
-            isFilePinned={isFilePinned1}
             otherColumnUsingPinned={fileSource2 === 'pinned'}
           />
           <div style={{ width: '100%'}}>
@@ -174,7 +165,6 @@ const UploadDocumentForm = ({
             index={1}
             selectedDocument={selectedDocument2}
             fileSource={fileSource2}
-            isFilePinned={isFilePinned2}
             otherColumnUsingPinned={fileSource1 === 'pinned'}
           />
           <div style={{ width: '100%'}}>
@@ -253,8 +243,6 @@ const mapStateToProps = (state: any) => ({
   comparisonColumn2: state.document.comparisonColumn2,
   fileSource1: state.document.fileSource1,
   fileSource2: state.document.fileSource2,
-  isFilePinned1: state.document.isFilePinned1,
-  isFilePinned2: state.document.isFilePinned2,
   errorMessage: state.document.errorMessage,
   hasError: state.document.hasError,
   loading: state.document.loading,

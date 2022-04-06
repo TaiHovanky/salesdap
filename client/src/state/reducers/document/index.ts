@@ -1,5 +1,5 @@
 import {
-  UPLOAD_DOCUMENT,
+  SET_IS_LOADING,
   UPLOAD_DOCUMENT_FAILURE,
   UPLOAD_DOCUMENT_SUCCESS,
   SELECT_DOCUMENT,
@@ -23,8 +23,6 @@ interface DocumentState {
   comparisonColumn2: string;
   resultColumns1: string;
   resultColumns2: string;
-  isFilePinned1: boolean;
-  isFilePinned2: boolean;
   fileSource1: string;
   fileSource2: string;
   loading: boolean;
@@ -42,8 +40,6 @@ const initialState: DocumentState = {
   resultColumns2: '',
   fileSource1: 'upload',
   fileSource2: 'upload',
-  isFilePinned1: false,
-  isFilePinned2: false,
   loading: false,
   hasError: false,
   errorMessage: ''
@@ -105,8 +101,8 @@ export const documentReducer = (state = initialState, action: any) => {
           fileSource2: action.payload
         };
       }
-    case UPLOAD_DOCUMENT:
-      return { ...state, loading: true };
+    case SET_IS_LOADING:
+      return { ...state, loading: action.payload };
     case UPLOAD_DOCUMENT_SUCCESS:
       return {
         ...state,

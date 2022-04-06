@@ -18,7 +18,8 @@ import {
   setFileSource,
   changeComparisonColumn,
   validateDocumentTypeSuccess,
-  selectDocument
+  selectDocument,
+  setIsLoading
 } from '../../state/actions/document';
 import { UserState } from '../../state/reducers/user';
 import { checkIsValidFileType } from '../../utils/validate-file-type';
@@ -29,7 +30,6 @@ interface UploadDocumentColumnProps {
   dispatch: any;
   selectedDocument: any;
   comparisonColumn: string;
-  isFilePinned: boolean;
   fileSource: string;
   index: number;
   user: UserState;
@@ -40,7 +40,6 @@ const UploadDocumentColumn = ({
   dispatch,
   selectedDocument,
   comparisonColumn,
-  isFilePinned,
   fileSource,
   index,
   user,
@@ -61,6 +60,7 @@ const UploadDocumentColumn = ({
    * @param event 
    */
   const validateFileSelection = async (event: any) => {
+    dispatch(setIsLoading(true));
     const document: any = event && event.target && event.target.files ?
       event.target.files[0] :
       null;
@@ -72,6 +72,7 @@ const UploadDocumentColumn = ({
       dispatch(validateDocumentTypeSuccess());
       const wsDataObj = await createJSONFromSpreadsheet(document);
       dispatch(selectDocument(wsDataObj, index, document.name));
+      dispatch(setIsLoading(false));
     } else {
       dispatch(validateDocumentTypeFailure());
     }
@@ -90,21 +91,25 @@ const UploadDocumentColumn = ({
   const handleFileTypeChange = async (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setFileSource(index, event.target.value));
     if (event.target.value === 'pinned') {
+      dispatch(setIsLoading(true));
       try {
-        const pinnedFileBlob = await getPinnedFile('json');
-        console.log('pinned file data', pinnedFileBlob);
-        const pinnedFileData = JSON.parse(Buffer.from(pinnedFileBlob.data).toString());
-        dispatch(selectDocument(pinnedFileData, index, user.pinnedFile));
+        const pinnedFileBlob = await getPinnedFile();
+        const wsDataObj = await createJSONFromSpreadsheet(pinnedFileBlob.data);
+        dispatch(selectDocument(wsDataObj, index, user.pinnedFile));
+        dispatch(setIsLoading(false));
       } catch (err: any) {
         console.log('err', err);
+        dispatch(setIsLoading(false));
       }
+    } else {
+      dispatch(selectDocument([], index, ''));
     }
   }
 
-  const getPinnedFile = (responseType: any) => {
+  const getPinnedFile = () => {
     return axios.get('http://localhost:3001/api/v1/viewpinnedfile',
       {
-        responseType,
+        responseType: 'blob',
         params: {
           filename: user.pinnedFile
         }
@@ -114,7 +119,7 @@ const UploadDocumentColumn = ({
 
   const handlePinnedFileClick = async () => {
     try {
-      const pinnedFileData = await getPinnedFile('blob')
+      const pinnedFileData = await getPinnedFile()
       createFileLink(pinnedFileData, user.pinnedFile);
     } catch (err: any) {
       console.log('err', err);

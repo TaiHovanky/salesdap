@@ -1,4 +1,4 @@
-export const UPLOAD_DOCUMENT = 'UPLOAD_DOCUMENT';
+export const SET_IS_LOADING = 'SET_IS_LOADING';
 export const UPLOAD_DOCUMENT_SUCCESS = 'UPLOAD_DOCUMENT_SUCCESS';
 export const UPLOAD_DOCUMENT_FAILURE = 'UPLOAD_DOCUMENT_FAILURE';
 export const SELECT_DOCUMENT = 'SELECT_DOCUMENT';
@@ -11,8 +11,9 @@ export const PIN_FILE_FAILURE = 'PIN_FILE_FAILURE';
 export const PIN_FILE_SUCCESS = 'PIN_FILE_SUCCESS';
 export const SET_FILE_SOURCE = 'SET_FILE_SOURCE';
 
-export const uploadDocument = () => ({
-  type: UPLOAD_DOCUMENT
+export const setIsLoading = (isLoading: boolean) => ({
+  type: SET_IS_LOADING,
+  payload: isLoading
 });
 
 export const uploadDocumentSuccess = (documentData: any) => ({
