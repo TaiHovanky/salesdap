@@ -16,9 +16,9 @@ export const setIsLoading = (isLoading: boolean) => ({
   payload: isLoading
 });
 
-export const uploadDocumentSuccess = (documentData: any) => ({
+export const uploadDocumentSuccess = (duplicatesData: any) => ({
   type: UPLOAD_DOCUMENT_SUCCESS,
-  payload: documentData
+  payload: duplicatesData
 });
 
 export const uploadDocumentFailure = (errorMessage: any) => ({

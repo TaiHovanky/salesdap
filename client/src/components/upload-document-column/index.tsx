@@ -23,8 +23,7 @@ import {
 } from '../../state/actions/document';
 import { UserState } from '../../state/reducers/user';
 import { checkIsValidFileType } from '../../utils/validate-file-type';
-import { createFileLink } from '../../utils/create-file-link';
-import { createJSONFromSpreadsheet } from '../../utils/create-json-from-spreadsheet';
+import { createJSONFromSpreadsheet, createFileLink } from '../../utils/spreadsheet.utils';
 
 interface UploadDocumentColumnProps {
   dispatch: any;

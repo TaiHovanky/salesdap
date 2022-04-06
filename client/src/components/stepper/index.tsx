@@ -10,9 +10,10 @@ import { connect } from 'react-redux';
 
 import UploadDocumentForm from '../upload-document-form';
 import DuplicatesTable from '../duplicates-table';
+import EmailTemplate from '../email-template';
 import StepperFooter from '../stepper-footer';
 
-const steps = ['Upload document', 'View duplicates'];
+const steps = ['Upload document', 'View duplicates', 'Email customers'];
 
 interface Props {
   activeStep: number;
@@ -35,19 +36,27 @@ const HorizontalLinearStepper = ({ activeStep }: Props) => {
             );
           })}
         </Stepper>
-        {activeStep === steps.length - 1 ? (
-          <React.Fragment>
-            <Container sx={{ height: '100%', width: '100%' }}>
-              <DuplicatesTable />
-            </Container>
-          </React.Fragment>
-        ) : (
+        {activeStep === 0 &&
           <React.Fragment>
             <Container sx={{ height: '100%' }}>
               <UploadDocumentForm />
             </Container>
           </React.Fragment>
-        )}
+        }
+        {activeStep === 1 &&
+          <React.Fragment>
+            <Container sx={{ height: '100%', width: '100%' }}>
+              <DuplicatesTable />
+            </Container>
+          </React.Fragment>
+        }
+        {activeStep === 2 &&
+          <React.Fragment>
+            <Container sx={{ height: '100%', width: '100%' }}>
+              <EmailTemplate />
+            </Container>
+          </React.Fragment>
+        }
       </Box>
       <StepperFooter steps={steps} />
     </>

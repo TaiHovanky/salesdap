@@ -16,7 +16,7 @@ interface SelectedDocument {
 }
 
 interface DocumentState {
-  documentData: Array<any>;
+  duplicatesData: Array<any>;
   selectedDocument1: SelectedDocument;
   selectedDocument2: SelectedDocument;
   comparisonColumn1: string;
@@ -31,7 +31,7 @@ interface DocumentState {
 }
 
 const initialState: DocumentState = {
-  documentData: [],
+  duplicatesData: [],
   selectedDocument1: { data: [], name: '' },
   selectedDocument2: { data: [], name: '' },
   comparisonColumn1: '',
@@ -108,7 +108,7 @@ export const documentReducer = (state = initialState, action: any) => {
         ...state,
         loading: false,
         hasError: false,
-        documentData: action.payload
+        duplicatesData: action.payload
       };
     case UPLOAD_DOCUMENT_FAILURE:
       return {

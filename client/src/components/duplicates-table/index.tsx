@@ -5,7 +5,7 @@ import {
   Grid
 } from '@mui/material';
 
-const DuplicatesTable = ({ documentData }: any) => {
+const DuplicatesTable = ({ duplicatesData }: any) => {
   return (
     // <div style={{ display: 'flex', height: '100%', width: '100%' }}>
     <Grid
@@ -27,7 +27,7 @@ const DuplicatesTable = ({ documentData }: any) => {
         <div style={{ width: '100%'}}>
           <DataGrid
             id="gridContainer"
-            dataSource={documentData}
+            dataSource={duplicatesData}
             allowColumnReordering={true}
             allowColumnResizing={true}
             columnAutoWidth={true}
@@ -46,14 +46,11 @@ const DuplicatesTable = ({ documentData }: any) => {
         </div>
       </Grid>
     </Grid>
-      /* <div style={{ flexGrow: 1 }}> */
-      /* </div> */
-    // </div>
   );
 }
 
 const mapStateToProps = (state: any) => ({
-  documentData: state.document.documentData
+  duplicatesData: state.document.duplicatesData
 });
 
 export default connect(mapStateToProps)(DuplicatesTable);
