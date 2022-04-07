@@ -1,12 +1,9 @@
 import {
   SET_IS_LOADING,
-  UPLOAD_DOCUMENT_FAILURE,
   UPLOAD_DOCUMENT_SUCCESS,
   SELECT_DOCUMENT,
   CHANGE_COMPARISON_COLUMN,
   CHANGE_RESULT_COLUMNS,
-  VALIDATE_DOCUMENT_TYPE_FAILURE,
-  VALIDATE_DOCUMENT_TYPE_SUCCESS,
   SET_FILE_SOURCE
 } from '../../actions/document';
 
@@ -26,8 +23,6 @@ interface DocumentState {
   fileSource1: string;
   fileSource2: string;
   loading: boolean;
-  hasError: boolean;
-  errorMessage: string;
 }
 
 const initialState: DocumentState = {
@@ -41,8 +36,6 @@ const initialState: DocumentState = {
   fileSource1: 'upload',
   fileSource2: 'upload',
   loading: false,
-  hasError: false,
-  errorMessage: ''
 };
 
 export const documentReducer = (state = initialState, action: any) => {
@@ -77,18 +70,6 @@ export const documentReducer = (state = initialState, action: any) => {
           }
         };
       }
-    case VALIDATE_DOCUMENT_TYPE_FAILURE:
-      return {
-        ...state,
-        hasError: true,
-        errorMessage: action.payload
-      };
-    case VALIDATE_DOCUMENT_TYPE_SUCCESS:
-      return {
-        ...state,
-        hasError: false,
-        errorMessage: ''
-      };
     case SET_FILE_SOURCE:
       if (action.index === 0) {
         return {
@@ -107,15 +88,7 @@ export const documentReducer = (state = initialState, action: any) => {
       return {
         ...state,
         loading: false,
-        hasError: false,
         duplicatesData: action.payload
-      };
-    case UPLOAD_DOCUMENT_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        hasError: true,
-        errorMessage: action.payload
       };
     default:
       return state;

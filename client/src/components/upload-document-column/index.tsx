@@ -13,13 +13,14 @@ import {
 import { Attachment } from '@mui/icons-material';
 import { connect } from 'react-redux';
 import {
-  validateDocumentTypeFailure,
   setFileSource,
   changeComparisonColumn,
-  validateDocumentTypeSuccess,
   selectDocument,
   setIsLoading
 } from '../../state/actions/document';
+import {
+  showError, hideError
+} from '../../state/actions/alert';
 import { UserState } from '../../state/reducers/user';
 import { checkIsValidFileType } from '../../utils/validate-file-type';
 import {
@@ -68,12 +69,12 @@ const UploadDocumentColumn = ({
       checkIsValidFileType(document.name) : false;
 
     if (isValidDocType) {
-      dispatch(validateDocumentTypeSuccess());
+      dispatch(hideError());
       const wsDataObj: Array<any> = await createJSONFromSpreadsheet(document);
       dispatch(selectDocument(wsDataObj, index, document.name));
       dispatch(setIsLoading(false));
     } else {
-      dispatch(validateDocumentTypeFailure());
+      dispatch(showError('Invalid file type. Only .xls, .xlsx, or .csv files can be processed.'));
     }
   };
 

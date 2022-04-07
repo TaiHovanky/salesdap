@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import axios from 'axios';
 import {
   Box,
@@ -7,9 +7,6 @@ import {
   Paper,
   Chip,
   Fab,
-  Alert,
-  Backdrop,
-  CircularProgress
 } from '@mui/material';
 import { Attachment, Upload } from '@mui/icons-material';
 import { connect } from 'react-redux';
@@ -23,6 +20,8 @@ import {
   createFileLink,
   getPinnedFile
 } from '../../utils/spreadsheet.utils';
+import { showError, hideError } from '../../state/actions/alert';
+import { setIsLoading } from '../../state/actions/loading';
 
 interface Props {
   user: UserState;
@@ -30,17 +29,18 @@ interface Props {
 }
 
 const Profile = ({ user, dispatch }: Props) => {
-  const [hasError, setHasError] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
   const inputFileRef: any = useRef(null);
 
   const handlePinnedFileClick = async () => {
     try {
+      dispatch(setIsLoading(true));
       const pinnedFileData = await getPinnedFile(user.pinnedFile);
+      dispatch(setIsLoading(false));
       createFileLink(pinnedFileData.data, user.pinnedFile);
     } catch (err: any) {
       console.log('err', err);
+      dispatch(setIsLoading(false));
+      dispatch(showError(`Failed to download pinned file. ${err}`));
     }
   };
 
@@ -59,15 +59,15 @@ const Profile = ({ user, dispatch }: Props) => {
       checkIsValidFileType(document.name) : false;
 
     if (isValidDocType) {
-      setHasError(false);
+      dispatch(hideError());
       handleFilePinning(document);
     } else {
-      setHasError(true);
+      dispatch(showError('Invalid file type. Only pin .xls, .xlsx, or .csv'));
     }
   };
 
   const handleFilePinning = (file: any) => {
-    setLoading(true);
+    dispatch(setIsLoading(true));
     const formData = new FormData();
     if (
       file &&
@@ -84,16 +84,15 @@ const Profile = ({ user, dispatch }: Props) => {
       );
     }
     axios.post('http://localhost:3001/api/v1/pinfile', formData)
-      .then((data) => {
-        setLoading(false);
+      .then(() => {
         dispatch(pinFileSuccess(file.name));
-        setHasError(false);
+        dispatch(hideError());
+        dispatch(setIsLoading(false));
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false);
-        setErrorMessage(err);
-        setHasError(true);
+        dispatch(setIsLoading(false));
+        dispatch(showError(`Failed to pin file. ${err}`));
       });
   }
 
@@ -155,20 +154,6 @@ const Profile = ({ user, dispatch }: Props) => {
           </Grid>
         </Grid>
       </Box>
-
-      {hasError &&
-        <Alert
-          severity="error"
-          variant="standard"
-          sx={{ marginTop: '2rem', borderRadius: '10px', width: '100%' }}
-        >
-          {errorMessage}
-        </Alert>
-      }
-
-      <Backdrop open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
     </>
   );
 }

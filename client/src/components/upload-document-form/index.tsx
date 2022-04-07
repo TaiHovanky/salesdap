@@ -1,8 +1,5 @@
 import React, { useRef, useEffect } from 'react';
 import {
-  Alert,
-  Backdrop,
-  CircularProgress,
   Grid,
   Fab
 } from '@mui/material';
@@ -11,17 +8,14 @@ import DataGrid, { ColumnChooser, ColumnFixing, Paging, Pager } from 'devextreme
 import { Upload } from '@mui/icons-material';
 import { connect } from 'react-redux';
 import UploadDocumentColumn from '../upload-document-column';
-import {
-  setIsLoading,
-  uploadDocumentSuccess,
-  uploadDocumentFailure,
-} from '../../state/actions/document';
+import { uploadDocumentSuccess } from '../../state/actions/document';
 import { UserState } from '../../state/reducers/user';
 import { changeStep } from '../../state/actions/step-progress';
+import { showError, hideError } from '../../state/actions/alert';
+import { setIsLoading } from '../../state/actions/loading';
 
 interface UploadDocumentFormProps {
   dispatch: any;
-  loading: boolean;
   activeStep: number;
   selectedDocument1: any;
   selectedDocument2: any;
@@ -29,14 +23,11 @@ interface UploadDocumentFormProps {
   comparisonColumn2: string;
   fileSource1: string;
   fileSource2: string;
-  errorMessage: string;
-  hasError: boolean;
   user: UserState;
 }
 
 const UploadDocumentForm = ({
   dispatch,
-  loading,
   activeStep,
   selectedDocument1,
   selectedDocument2,
@@ -44,8 +35,6 @@ const UploadDocumentForm = ({
   comparisonColumn2,
   fileSource1,
   fileSource2,
-  errorMessage,
-  hasError,
   user
 }: UploadDocumentFormProps) => {
   const dataGrid1 = useRef<any>(null);
@@ -67,6 +56,7 @@ const UploadDocumentForm = ({
    * the duplicates will be displayed
    */
   const handleUpload = () => {
+    dispatch(setIsLoading(true));
     const formData = new FormData();
     if (selectedDocument1 && selectedDocument1.name) {
       const docBlob1 = new Blob([JSON.stringify(selectedDocument1.data)], { type: 'application/json' });
@@ -98,13 +88,17 @@ const UploadDocumentForm = ({
     formData.append('resultColumns1', resultColumns1);
     formData.append('resultColumns2', resultColumns2);
 
-    dispatch(setIsLoading(true));
     axios.post('http://localhost:3001/api/v1/uploadfile', formData)
       .then((res) => {
+        dispatch(hideError());
         dispatch(uploadDocumentSuccess(res.data));
+        dispatch(setIsLoading(false));
         dispatch(changeStep(activeStep += 1));
       })
-      .catch((err: any) => dispatch(uploadDocumentFailure(err.message)));
+      .catch((err: any) => {
+        dispatch(setIsLoading(false));
+        dispatch(showError(`File upload and comparison failed. ${err}`));
+      });
   };
 
   const isSubmitBtnEnabled = selectedDocument1 && selectedDocument2 &&
@@ -224,20 +218,6 @@ const UploadDocumentForm = ({
           </Fab>
         </Grid>
       </Grid>
-
-      {hasError &&
-        <Alert
-          severity="error"
-          variant="standard"
-          sx={{ marginTop: '2rem', borderRadius: '10px', width: '100%' }}
-        >
-          {errorMessage}
-        </Alert>
-      }
-
-      <Backdrop open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
     </>
   );
 };
@@ -250,9 +230,6 @@ const mapStateToProps = (state: any) => ({
   comparisonColumn2: state.document.comparisonColumn2,
   fileSource1: state.document.fileSource1,
   fileSource2: state.document.fileSource2,
-  errorMessage: state.document.errorMessage,
-  hasError: state.document.hasError,
-  loading: state.document.loading,
   user: state.user
 });
 

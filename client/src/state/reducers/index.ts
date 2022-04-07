@@ -3,10 +3,14 @@ import { documentReducer } from './document';
 import { stepProgressReducer } from './step-progress';
 import { userReducer } from './user';
 import { emailTemplateReducer } from './email-template';
+import { alertReducer } from './alert';
+import { loadingReducer } from './loading';
 
 export const rootReducer = combineReducers({
   stepProgress: stepProgressReducer,
   document: documentReducer,
   user: userReducer,
-  emailTemplate: emailTemplateReducer
+  emailTemplate: emailTemplateReducer,
+  alert: alertReducer,
+  loading: loadingReducer
 });

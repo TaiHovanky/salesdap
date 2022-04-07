@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Box,
   Fab,
   TextField,
-  CircularProgress,
-  Backdrop,
   Grid,
   Typography,
-  Alert,
 } from '@mui/material';
 import axios from 'axios';
 import { useHistory, Link } from 'react-router-dom';
@@ -15,10 +12,10 @@ import { useFormik } from 'formik';
 import { connect } from 'react-redux';
 import NavBar from '../../components/nav-bar';
 import { updateUser } from '../../state/actions/user';
+import { showError, hideError } from '../../state/actions/alert';
+import { setIsLoading } from '../../state/actions/loading';
 
 const Register = ({ dispatch }: any) => {
-  const [loading, setLoading] = useState(false);
-  const [registrationError, setRegistrationError] = useState('');
   const history = useHistory();
 
   const validate = (values: any) => {
@@ -55,6 +52,7 @@ const Register = ({ dispatch }: any) => {
     },
     validate,
     onSubmit: (values: any) => {
+      dispatch(setIsLoading(true));
       const formData = new FormData();
       formData.append('email', values.email);
       formData.append('password', values.password);
@@ -66,18 +64,17 @@ const Register = ({ dispatch }: any) => {
           'Content-Type': 'multipart/form-data'
         }
       };
-      setLoading(true);
       axios.post('http://localhost:3001/api/v1/register', formData, config)
         .then((res) => {
-          setLoading(false);
-          setRegistrationError('');
+          dispatch(hideError());
           dispatch(updateUser(res.data));
+          dispatch(setIsLoading(false));
           history.push('/home');
         })
         .catch((err: any) => {
           console.log('err', err);
-          setLoading(false);
-          setRegistrationError('Registration failed. Please try again.')
+          dispatch(setIsLoading(false));
+          dispatch(showError(`Registration failed. Please try again. ${err}`));
         });
     },
   });
@@ -205,16 +202,6 @@ const Register = ({ dispatch }: any) => {
                   >
                     Submit
                   </Fab>
-
-                  {!!registrationError &&
-                    <Alert
-                      severity="error"
-                      variant="standard"
-                      sx={{ marginTop: '2rem', borderRadius: '10px', width: '100%' }}
-                    >
-                      {registrationError}
-                    </Alert>
-                  }
                 </Grid>
               </Grid>
             </form>
@@ -224,10 +211,6 @@ const Register = ({ dispatch }: any) => {
           </Grid>
         </Grid>
       </Box>
-
-      <Backdrop open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
     </>
   );
 };

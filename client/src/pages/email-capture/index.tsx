@@ -10,18 +10,18 @@ import {
   Toolbar,
   IconButton,
   Alert,
-  CircularProgress,
-  Backdrop,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
+import { connect } from 'react-redux';
 import { useFormik } from 'formik';
+import { setIsLoading } from '../../state/actions/loading';
 
 interface EmailCaptureProps {
   onClose: any;
+  dispatch: any;
 }
 
-const EmailCapture = ({ onClose }: EmailCaptureProps) => {
-  const [loading, setLoading] = useState(false);
+const EmailCapture = ({ onClose, dispatch }: EmailCaptureProps) => {
   const [emailCaptureError, setEmailCaptureError] = useState('');
 
   const validate = (values: any) => {
@@ -40,6 +40,7 @@ const EmailCapture = ({ onClose }: EmailCaptureProps) => {
     },
     validate,
     onSubmit: (values: any) => {
+      dispatch(setIsLoading(true));
       const formData = new FormData();
       formData.append('email', values.email);
       const config = {
@@ -47,15 +48,15 @@ const EmailCapture = ({ onClose }: EmailCaptureProps) => {
           'Content-Type': 'multipart/form-data'
         }
       };
-      setLoading(true);
+
       axios.post('http://localhost:3001/api/v1/email', formData, config)
         .then(() => {
-          setLoading(false);
+          dispatch(setIsLoading(false));
           onClose();
         })
         .catch((err: any) => {
           console.log('email err', err);
-          setLoading(false);
+          dispatch(setIsLoading(false));
           setEmailCaptureError('Waitlist registration failed. Please try again.');
         });
     }
@@ -127,12 +128,8 @@ const EmailCapture = ({ onClose }: EmailCaptureProps) => {
           </form>
         </Grid>
       </Grid>
-
-      <Backdrop open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
     </Box>
   );
 }
 
-export default EmailCapture;
+export default connect()(EmailCapture);
