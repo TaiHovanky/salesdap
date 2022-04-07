@@ -12,6 +12,6 @@ code {
     monospace;
 }
 
-.dx-datagrid-column-chooser {
-  top: 335px !important;
+.dx-popup-normal {
+  transform: translate(0px, 70px) !important;
 }

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import {
   Alert,
   Backdrop,
@@ -50,6 +50,17 @@ const UploadDocumentForm = ({
 }: UploadDocumentFormProps) => {
   const dataGrid1 = useRef<any>(null);
   const dataGrid2 = useRef<any>(null);
+
+  useEffect(() => {
+    // `current.instance` points to the UI component instance
+    if (dataGrid1 && dataGrid1.current && dataGrid1.current.instance && selectedDocument1.data.length) {
+      dataGrid1.current.instance.showColumnChooser();
+    }
+    if (dataGrid2 && dataGrid2.current && dataGrid2.current.instance && selectedDocument2.data.length) {
+      dataGrid2.current.instance.showColumnChooser();
+    }
+  }, [selectedDocument1.data.length, selectedDocument2.data.length]);
+
   /**
    * Puts the selected file and column name into a FormData instance,
    * sends it to the server, and then changes to the next step where
@@ -96,10 +107,8 @@ const UploadDocumentForm = ({
       .catch((err: any) => dispatch(uploadDocumentFailure(err.message)));
   };
 
-  // const isSubmitBtnEnabled = ((fileSource1 === 'pinned' && user.pinnedFile && selectedDocument2) ||
-  //   (fileSource2 === 'pinned' && user.pinnedFile && selectedDocument1) ||
-  //   (selectedDocument1 && selectedDocument2 && fileSource2 === 'upload')) &&
-  //   (comparisonColumn1 && comparisonColumn2 && resultColumns1 && resultColumns2);
+  const isSubmitBtnEnabled = selectedDocument1 && selectedDocument2 &&
+    comparisonColumn1 && comparisonColumn2;
 
   return (
     <>
@@ -136,9 +145,9 @@ const UploadDocumentForm = ({
               showBorders={true}
               ref={dataGrid1}
             >
-              <ColumnChooser enabled={true} height={200} />
+              <ColumnChooser enabled={true} height={150} />
               <ColumnFixing enabled={true} />
-              <Paging defaultPageSize={5} />
+              <Paging defaultPageSize={2} />
               <Pager
                 visible={true}
                 displayMode={"full"}
@@ -175,9 +184,9 @@ const UploadDocumentForm = ({
               showBorders={true}
               ref={dataGrid2}
             >
-              <ColumnChooser enabled={true} height={200} />
+              <ColumnChooser enabled={true} height={150} />
               <ColumnFixing enabled={true} />
-              <Paging defaultPageSize={5} />
+              <Paging defaultPageSize={2} />
               <Pager
                 visible={true}
                 displayMode={"full"}
@@ -207,7 +216,7 @@ const UploadDocumentForm = ({
             color="primary"
             aria-label="add"
             sx={{ marginTop: '2rem' }}
-            // disabled={!isSubmitBtnEnabled}
+            disabled={!isSubmitBtnEnabled}
             onClick={handleUpload}
           >
             <Upload sx={{ mr: 1 }} />

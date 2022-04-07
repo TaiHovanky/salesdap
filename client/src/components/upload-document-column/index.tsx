@@ -115,7 +115,7 @@ const UploadDocumentColumn = ({
   };
 
   return (
-    <form style={{ width: '100%' }}>
+    <form style={{ width: '100%', marginTop: '1.5rem' }}>
       {/* <Grid
         container
         spacing={2}
@@ -133,24 +133,26 @@ const UploadDocumentColumn = ({
           justifyContent="center"
           alignItems="center"
         > */}
-          {!!user.pinnedFile && index === 0 && <FormControl>
-            <RadioGroup
-              aria-labelledby="demo-controlled-radio-buttons-group"
-              name="controlled-radio-buttons-group"
-              value={fileSource}
-              onChange={handleFileTypeChange}
-              sx={{ marginBottom: '2rem' }}
-            >
-              <FormControlLabel value="upload" control={<Radio />} label="Upload a file" />
-              <FormControlLabel value="pinned" control={<Radio />} label="Use your pinned file" />
-            </RadioGroup>
-          </FormControl>}
+          <div style={{ height: '100px' }}>
+            {!!user.pinnedFile && index === 0 && <FormControl>
+              <RadioGroup
+                aria-labelledby="demo-controlled-radio-buttons-group"
+                name="controlled-radio-buttons-group"
+                value={fileSource}
+                onChange={handleFileTypeChange}
+                sx={{ marginBottom: '1rem' }}
+              >
+                <FormControlLabel value="upload" control={<Radio />} label="Upload a file" />
+                <FormControlLabel value="pinned" control={<Radio />} label="Use your pinned file" />
+              </RadioGroup>
+            </FormControl>}
+          </div>
           {fileSource === 'upload' ?
-            <>
+            <div style={{ height: '80px' }}>
               <Fab
                 variant="extended"
                 aria-label="add"
-                sx={{ marginTop: '2.5rem' }}
+                sx={{ margin: '0 auto' }}
                 onClick={handleFileSelectionBtnClick}
               >
                 <AttachFile sx={{ mr: 1 }} />
@@ -163,23 +165,25 @@ const UploadDocumentColumn = ({
                 onChange={validateFileSelection}
                 name="sales_file"
               />
-              {selectedDocument && selectedDocument.name &&
-                <Typography variant="subtitle1" sx={{ margin: '1rem 0 0' }}>
-                  {selectedDocument.name}
-                </Typography>
-              }
-            </> :
-            <>
+              <div style={{ height: '2rem', marginTop: '1rem' }}>
+                {selectedDocument && selectedDocument.name &&
+                  <Typography variant="subtitle1">
+                    {selectedDocument.name}
+                  </Typography>
+                }
+              </div>
+            </div> :
+            <div style={{ height: '80px' }}>
               <Typography variant="subtitle1">Pinned File:</Typography>
               <Chip onClick={handlePinnedFileClick} icon={<Attachment />} label={user.pinnedFile} />
-            </>
+            </div>
           }
           <TextField
             required
             id="standard-basic"
             label="Column to find duplicate values in"
             variant="standard"
-            sx={{ width: '100%' }}
+            sx={{ width: '100%', margin: '1.5rem 0' }}
             onChange={handleComparisonColumnFieldChange}
             value={comparisonColumn}
           />
