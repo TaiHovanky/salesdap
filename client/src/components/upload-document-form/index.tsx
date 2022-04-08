@@ -9,7 +9,6 @@ import { Upload } from '@mui/icons-material';
 import { connect } from 'react-redux';
 import UploadDocumentColumn from '../upload-document-column';
 import { uploadDocumentSuccess } from '../../state/actions/document';
-import { UserState } from '../../state/reducers/user';
 import { changeStep } from '../../state/actions/step-progress';
 import { showError, hideError } from '../../state/actions/alert';
 import { setIsLoading } from '../../state/actions/loading';
@@ -23,7 +22,6 @@ interface UploadDocumentFormProps {
   comparisonColumn2: string;
   fileSource1: string;
   fileSource2: string;
-  user: UserState;
 }
 
 const UploadDocumentForm = ({
@@ -35,7 +33,6 @@ const UploadDocumentForm = ({
   comparisonColumn2,
   fileSource1,
   fileSource2,
-  user
 }: UploadDocumentFormProps) => {
   const dataGrid1 = useRef<any>(null);
   const dataGrid2 = useRef<any>(null);
@@ -60,20 +57,12 @@ const UploadDocumentForm = ({
     const formData = new FormData();
     if (selectedDocument1 && selectedDocument1.name) {
       const docBlob1 = new Blob([JSON.stringify(selectedDocument1.data)], { type: 'application/json' });
-      formData.append(
-        "sales_file1",
-        docBlob1,
-        selectedDocument1.name
-      );
+      formData.append("sales_file1", docBlob1, selectedDocument1.name);
     }
 
     if (selectedDocument2 && selectedDocument2.name) {
       const docBlob2 = new Blob([JSON.stringify(selectedDocument2.data)], { type: 'application/json' });
-      formData.append(
-        "sales_file2",
-        docBlob2,
-        selectedDocument2.name
-      );
+      formData.append("sales_file2", docBlob2, selectedDocument2.name);
     }
     let resultColumns1;
     let resultColumns2;
@@ -109,7 +98,7 @@ const UploadDocumentForm = ({
       <Grid
         container
         spacing={2}
-        justifyContent="space-around"
+        justifyContent="space-between"
         alignItems="center"
         sx={{ height: '90%' }}
       >

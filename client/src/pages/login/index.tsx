@@ -55,7 +55,7 @@ const Login = ({ dispatch }: any) => {
           'Content-Type': 'multipart/form-data'
         }
       };
-      // setLoading(true);
+
       axios.post('http://localhost:3001/api/v1/login', formData, config)
         .then((res: any) => {
           dispatch(hideError());

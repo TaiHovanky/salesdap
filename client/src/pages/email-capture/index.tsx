@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import axios from 'axios';
 import {
   Box,
@@ -9,12 +9,12 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-  Alert,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { connect } from 'react-redux';
 import { useFormik } from 'formik';
 import { setIsLoading } from '../../state/actions/loading';
+import { showError, hideError } from '../../state/actions/alert';
 
 interface EmailCaptureProps {
   onClose: any;
@@ -22,7 +22,6 @@ interface EmailCaptureProps {
 }
 
 const EmailCapture = ({ onClose, dispatch }: EmailCaptureProps) => {
-  const [emailCaptureError, setEmailCaptureError] = useState('');
 
   const validate = (values: any) => {
     const errors: any = {};
@@ -51,13 +50,14 @@ const EmailCapture = ({ onClose, dispatch }: EmailCaptureProps) => {
 
       axios.post('http://localhost:3001/api/v1/email', formData, config)
         .then(() => {
+          dispatch(hideError());
           dispatch(setIsLoading(false));
           onClose();
         })
         .catch((err: any) => {
           console.log('email err', err);
           dispatch(setIsLoading(false));
-          setEmailCaptureError('Waitlist registration failed. Please try again.');
+          dispatch(showError('Waitlist registration failed. Please try again.'))
         });
     }
   });
@@ -116,15 +116,6 @@ const EmailCapture = ({ onClose, dispatch }: EmailCaptureProps) => {
             >
               submit
             </Fab>
-            {!!emailCaptureError &&
-              <Alert
-                severity="error"
-                variant="standard"
-                sx={{ marginTop: '2rem', borderRadius: '10px', width: '100%' }}
-              >
-                {emailCaptureError}
-              </Alert>
-            }
           </form>
         </Grid>
       </Grid>
