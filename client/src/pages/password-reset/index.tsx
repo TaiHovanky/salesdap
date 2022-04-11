@@ -21,7 +21,7 @@ const PasswordReset = () => {
   const params: any = useParams();
 
   useEffect(() => {
-    axios.post('http://localhost:3001/api/v1/resetpassword', { token: params.token })
+    axios.post('/api/v1/resetpassword', { token: params.token })
       .catch((err) => {
         history.push('/login');
       });
@@ -65,7 +65,7 @@ const PasswordReset = () => {
         }
       };
       setLoading(true);
-      axios.post('http://localhost:3001/api/v1/updatepassword', formData, config)
+      axios.post('/api/v1/updatepassword', formData, config)
         .then((res) => {
           setLoading(false);
           setPasswordResetError('');

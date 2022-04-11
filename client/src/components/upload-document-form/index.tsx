@@ -74,7 +74,7 @@ const UploadDocumentForm = ({
       formData.append('resultColumns2', resultColumns2);
 
       dispatch(uploadDocument());
-      axios.post('http://localhost:3001/api/v1/uploadfile', formData)
+      axios.post('/api/v1/uploadfile', formData)
         .then((res) => {
           dispatch(uploadDocumentSuccess(res.data));
           dispatch(changeStep(activeStep += 1));

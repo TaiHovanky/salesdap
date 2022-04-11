@@ -50,7 +50,7 @@ const Login = ({ dispatch }: any) => {
         }
       };
       setLoading(true);
-      axios.post('http://localhost:3001/api/v1/login', formData, config)
+      axios.post('/api/v1/login', formData, config)
         .then((res: any) => {
           setLoading(false);
           dispatch(updateUser(res.data));
