@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import axios from 'axios';
 import {
   Box,
@@ -9,20 +9,19 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-  Alert,
-  CircularProgress,
-  Backdrop,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
+import { connect } from 'react-redux';
 import { useFormik } from 'formik';
+import { setIsLoading } from '../../state/actions/loading';
+import { showError, hideError } from '../../state/actions/alert';
 
 interface EmailCaptureProps {
   onClose: any;
+  dispatch: any;
 }
 
-const EmailCapture = ({ onClose }: EmailCaptureProps) => {
-  const [loading, setLoading] = useState(false);
-  const [emailCaptureError, setEmailCaptureError] = useState('');
+const EmailCapture = ({ onClose, dispatch }: EmailCaptureProps) => {
 
   const validate = (values: any) => {
     const errors: any = {};
@@ -40,6 +39,7 @@ const EmailCapture = ({ onClose }: EmailCaptureProps) => {
     },
     validate,
     onSubmit: (values: any) => {
+      dispatch(setIsLoading(true));
       const formData = new FormData();
       formData.append('email', values.email);
       const config = {
@@ -47,16 +47,17 @@ const EmailCapture = ({ onClose }: EmailCaptureProps) => {
           'Content-Type': 'multipart/form-data'
         }
       };
-      setLoading(true);
+
       axios.post('/api/v1/email', formData, config)
         .then(() => {
-          setLoading(false);
+          dispatch(hideError());
+          dispatch(setIsLoading(false));
           onClose();
         })
         .catch((err: any) => {
           console.log('email err', err);
-          setLoading(false);
-          setEmailCaptureError('Waitlist registration failed. Please try again.');
+          dispatch(setIsLoading(false));
+          dispatch(showError('Waitlist registration failed. Please try again.'))
         });
     }
   });
@@ -115,24 +116,11 @@ const EmailCapture = ({ onClose }: EmailCaptureProps) => {
             >
               submit
             </Fab>
-            {!!emailCaptureError &&
-              <Alert
-                severity="error"
-                variant="standard"
-                sx={{ marginTop: '2rem', borderRadius: '10px', width: '100%' }}
-              >
-                {emailCaptureError}
-              </Alert>
-            }
           </form>
         </Grid>
       </Grid>
-
-      <Backdrop open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
     </Box>
   );
 }
 
-export default EmailCapture;
+export default connect()(EmailCapture);

@@ -1,21 +1,11 @@
-import * as XLSX from 'xlsx';
 /* load 'fs' for readFile and writeFile support */
 import * as fs from 'fs';
+import AWS from 'aws-sdk';
 
-/**
- * Use xlsx to convert the spreadsheet to a JavaScript array of objects
- * @param file File in Multer
- * @returns Array of objects that represent rows in the spreadsheet
- */
-export const createJSONFromWorksheet = (file: any): Array<any> => {
-  const fileBuffer = fs.readFileSync(file.path);
-  const workbook: XLSX.WorkBook = XLSX.read(fileBuffer);
-  const sheetName: string = workbook.SheetNames[0];
-  const worksheet: XLSX.WorkSheet | null = workbook && workbook.Sheets ?
-    workbook.Sheets[sheetName as any] : null;
-
-  if (worksheet) {
-    return XLSX.utils.sheet_to_json(worksheet);
+export const parseJSONFromFile = (file: any): Array<any> => {
+  const fileBuffer = fs.readFileSync(file);
+  if (fileBuffer) {
+    return JSON.parse(fileBuffer.toString());
   }
   return [];
 };
@@ -108,8 +98,7 @@ const checkForDuplicates = (
   resultsList: Array<any>,
 ): void => {
   if (valueHash[cellValue]) {
-    resultsList.push(valueHash[cellValue])
-    resultsList.push(row);
+    resultsList.push({ ...valueHash[cellValue], ...row});
   }
 }
 
@@ -136,3 +125,44 @@ export const displayRelevantColumns = (
   });
   return result;
 }
+
+export const storeFile = (file: any) => new Promise((resolve, reject) => {
+  const fileBuffer = fs.readFileSync(file.path);
+
+  const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  });
+
+  const params: any = {
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: `${file.originalname}-${new Date().getTime()}`,
+    Body: fileBuffer
+  };
+
+  s3.upload(params, (err: any, data: any) => {
+    if (err) {
+      return reject(err)
+    }
+    return resolve(data.location);
+  });
+});
+
+export const readPinnedFile = (filename: string) => new Promise((resolve, reject) => {
+  const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  });
+
+  const params: any = {
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: `${filename}`,
+  };
+
+  s3.getObject(params, (err, data) => {
+    if (err) {
+      return reject(err)
+    }
+    return resolve(data.Body);
+  });
+});

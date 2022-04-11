@@ -64,7 +64,7 @@ const NavBar = ({ user }: NavBarProps) => {
             </Typography>
           </Button>
 
-          {user && user.email && <div>
+          {user && user.email && <>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -72,6 +72,7 @@ const NavBar = ({ user }: NavBarProps) => {
               aria-haspopup="true"
               onClick={handleMenu}
               color="inherit"
+              sx={{ marginLeft: 'auto' }}
             >
               <AccountCircle />
             </IconButton>
@@ -95,7 +96,7 @@ const NavBar = ({ user }: NavBarProps) => {
               </MenuItem>
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
-          </div>}
+          </>}
         </Toolbar>
       </AppBar>
     </Box>
