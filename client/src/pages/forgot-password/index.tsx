@@ -10,14 +10,12 @@ import {
   Alert,
 } from '@mui/material';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
 import NavBar from '../../components/nav-bar';
 
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const [forgotPasswordError, setForgotPasswordError] = useState('');
-  const history = useHistory();
 
   const validate = (values: any) => {
     const errors: any = {};
@@ -44,10 +42,9 @@ const ForgotPassword = () => {
       };
       setLoading(true);
       axios.post('http://localhost:3001/api/v1/forgotpassword', formData, config)
-        .then((res: any) => {
+        .then(() => {
           setLoading(false);
           setForgotPasswordError('');
-          history.push('/home');
         })
         .catch((err: any) => {
           console.log('err', err);

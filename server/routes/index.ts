@@ -2,7 +2,7 @@ import express from 'express';
 import multer from 'multer';
 const upload = multer({ dest: 'uploads/' });
 
-import { uploadAndCompareFiles } from '../controller/file.controller';
+import { uploadAndCompareFiles, pinFile, viewPinnedFile } from '../controller/file.controller';
 import { saveEmail } from '../controller/email.controller';
 import { registerUser } from '../controller/register.controller';
 import { loginUser } from '../controller/login.controller';
@@ -47,6 +47,14 @@ router.post('/api/v1/resetpassword', (req: any, res: any) => {
 
 router.post('/api/v1/updatepassword', upload.none(), (req: any, res: any) => {
   updatePassword(req, res);
+});
+
+router.post('/api/v1/pinfile', upload.fields([{ name: 'sales_file', maxCount: 1}]), (req: any, res: any) => {
+  pinFile(req, res);
+});
+
+router.get('/api/v1/viewpinnedfile', (req: any, res: any) => {
+  viewPinnedFile(req, res);
 });
 
 export default router;

@@ -1,30 +1,28 @@
-export const UPLOAD_DOCUMENT = 'UPLOAD_DOCUMENT';
+export const SET_IS_LOADING = 'SET_IS_LOADING';
 export const UPLOAD_DOCUMENT_SUCCESS = 'UPLOAD_DOCUMENT_SUCCESS';
-export const UPLOAD_DOCUMENT_FAILURE = 'UPLOAD_DOCUMENT_FAILURE';
 export const SELECT_DOCUMENT = 'SELECT_DOCUMENT';
 export const CHANGE_COMPARISON_COLUMN = 'CHANGE_COMPARISON_COLUMN';
 export const CHANGE_RESULT_COLUMNS = 'CHANGE_RESULT_COLUMNS';
-export const VALIDATE_DOCUMENT_TYPE_FAILURE = 'VALIDATE_DOCUMENT_TYPE_FAILURE';
-export const VALIDATE_DOCUMENT_TYPE_SUCCESS = 'VALIDATE_DOCUMENT_TYPE_SUCCESS';
+export const PIN_FILE = 'PIN_FILE';
+export const PIN_FILE_FAILURE = 'PIN_FILE_FAILURE';
+export const PIN_FILE_SUCCESS = 'PIN_FILE_SUCCESS';
+export const SET_FILE_SOURCE = 'SET_FILE_SOURCE';
 
-export const uploadDocument = () => ({
-  type: UPLOAD_DOCUMENT
+export const setIsLoading = (isLoading: boolean) => ({
+  type: SET_IS_LOADING,
+  payload: isLoading
 });
 
-export const uploadDocumentSuccess = (documentData: any) => ({
+export const uploadDocumentSuccess = (duplicatesData: any) => ({
   type: UPLOAD_DOCUMENT_SUCCESS,
-  payload: documentData
+  payload: duplicatesData
 });
 
-export const uploadDocumentFailure = (errorMessage: any) => ({
-  type: UPLOAD_DOCUMENT_FAILURE,
-  payload: errorMessage
-});
-
-export const selectDocument = (document: any, index: number) => ({
+export const selectDocument = (document: any, index: number, name: string) => ({
   type: SELECT_DOCUMENT,
   payload: document,
-  index
+  index,
+  name
 });
 
 export const changeComparisonColumn = (value: string, index: number) => ({
@@ -39,11 +37,22 @@ export const changeResultColumns = (value: string, index: number) => ({
   index
 });
 
-export const validateDocumentTypeFailure = () => ({
-  type: VALIDATE_DOCUMENT_TYPE_FAILURE,
-  payload: 'Invalid file type. Only .xls, .xlsx, or .csv files can be processed.'
+// export const pinFile = () => ({
+//   type: PIN_FILE
+// });
+
+// export const pinFileFailure = () => ({
+//   type: PIN_FILE_FAILURE,
+//   payload: 'Failed to pin file'
+// });
+
+export const pinFileSuccess = (filename: string) => ({
+  type: PIN_FILE_SUCCESS,
+  payload: filename
 });
 
-export const validateDocumentTypeSuccess = () => ({
-  type: VALIDATE_DOCUMENT_TYPE_SUCCESS
+export const setFileSource = (index: number, value: string) => ({
+  type: SET_FILE_SOURCE,
+  index,
+  payload: value
 });

@@ -1,37 +1,53 @@
 import React from 'react';
+import DataGrid, { Paging, Pager } from 'devextreme-react/data-grid';
 import { connect } from 'react-redux';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Grid } from '@mui/material';
 
-const createColumns = (rowObject: any): GridColDef[] => {
-  const columnNames = Array.from(Object.keys(rowObject));
-  return columnNames.map((rowProperty: string) => ({
-    field: rowProperty,
-    headerName: rowProperty,
-    flex: 2
-  }));
-}
-
-const DuplicatesTable = ({ documentData }: any) => {
-  const columns: Array<GridColDef> = documentData.length ? createColumns(documentData[0]) : [];
-  const rows: Array<any> = documentData.map((row: any, index: number) => ({
-    ...row,
-    id: index
-  }));
+const DuplicatesTable = ({ duplicatesData }: any) => {
   return (
-    <div style={{ display: 'flex', height: '100%' }}>
-      <div style={{ flexGrow: 1 }}>
+    <Grid
+      container
+      justifyContent="center"
+      alignItems="center"
+      sx={{ height: '90%', marginTop: '3.5rem', padding: '0 2rem' }}
+    >
+      <Grid
+        item
+        container
+        xs={12}
+        md={12}
+        p={0}
+        sx={{ height: '95%', width: '100%' }}
+        direction="column"
+        justifyContent="start"
+        alignItems="center"
+      >
         <DataGrid
-          rows={rows}
-          columns={columns}
-          sx={{ height: '90%', width: '100%', marginTop: '3rem' }}
-        />
-      </div>
-    </div>
+          id="gridContainer"
+          dataSource={duplicatesData}
+          allowColumnReordering={true}
+          allowColumnResizing={true}
+          columnAutoWidth={true}
+          showBorders={true}
+          width="100%"
+          rowAlternationEnabled={true}
+        >
+          <Paging defaultPageSize={25} />
+          <Pager
+            visible={true}
+            displayMode={"full"}
+            showPageSizeSelector={false}
+            showInfo={true}
+            showNavigationButtons={true}
+          />
+        </DataGrid>
+      </Grid>
+    </Grid>
   );
 }
 
 const mapStateToProps = (state: any) => ({
-  documentData: state.document.documentData
+  duplicatesData: state.document.duplicatesData
 });
 
 export default connect(mapStateToProps)(DuplicatesTable);

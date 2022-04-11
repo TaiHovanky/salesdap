@@ -3,11 +3,9 @@ import {
   Box,
   Fab,
   TextField,
-  CircularProgress,
-  Backdrop,
   Grid,
   Typography,
-  Alert,
+  Dialog
 } from '@mui/material';
 import axios from 'axios';
 import { useHistory, Link } from 'react-router-dom';
@@ -15,11 +13,18 @@ import { useFormik } from 'formik';
 import { connect } from 'react-redux';
 import NavBar from '../../components/nav-bar';
 import { updateUser } from '../../state/actions/user';
+import EmailCapture from '../email-capture';
+import { showError, hideError } from '../../state/actions/alert';
+import { setIsLoading } from '../../state/actions/loading';
 
 const Login = ({ dispatch }: any) => {
-  const [loading, setLoading] = useState(false);
-  const [loginError, setLoginError] = useState('');
+  const [isEmailCaptureModalOpen, setIsEmailCaptureModalOpen] = useState(true);
+
   const history = useHistory();
+
+  const handleClose = (event: any) => {
+    setIsEmailCaptureModalOpen(false);
+  }
 
   const validate = (values: any) => {
     const errors: any = {};
@@ -41,6 +46,7 @@ const Login = ({ dispatch }: any) => {
     },
     validate,
     onSubmit: (values: any) => {
+      dispatch(setIsLoading(true));
       const formData = new FormData();
       formData.append('email', values.email);
       formData.append('password', values.password);
@@ -49,18 +55,18 @@ const Login = ({ dispatch }: any) => {
           'Content-Type': 'multipart/form-data'
         }
       };
-      setLoading(true);
+
       axios.post('http://localhost:3001/api/v1/login', formData, config)
         .then((res: any) => {
-          setLoading(false);
+          dispatch(hideError());
           dispatch(updateUser(res.data));
-          console.log('res data', res.data);
+          dispatch(setIsLoading(false));
           history.push('/home');
         })
         .catch((err: any) => {
           console.log('err', err);
-          setLoading(false);
-          setLoginError('Wrong email or password');
+          dispatch(setIsLoading(false));
+          dispatch(showError('Wrong email or password'));
         });
     },
   });
@@ -151,25 +157,15 @@ const Login = ({ dispatch }: any) => {
               Don't have an account?  <Link to="/register">Sign up now!</Link>
             </Typography>
             <Typography sx={{ marginTop: '0.5rem' }}>
-              Forgot your password?  <Link to="/password-reset">Reset your password</Link>
+              Forgot your password?  <Link to="/forgot-password">Reset your password</Link>
             </Typography>
-
-            {!!loginError &&
-              <Alert
-                severity="error"
-                variant="standard"
-                sx={{ marginTop: '2rem', borderRadius: '10px', width: '100%' }}
-              >
-                {loginError}
-              </Alert>
-            }
           </Grid>
         </Grid>
       </Box>
 
-      <Backdrop open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <Dialog open={isEmailCaptureModalOpen} onClose={handleClose}>
+        <EmailCapture onClose={handleClose} />
+      </Dialog>
     </>
   );
 };
