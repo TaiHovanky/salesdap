@@ -4,7 +4,7 @@ import {
   Fab
 } from '@mui/material';
 import axios from 'axios';
-import DataGrid, { ColumnChooser, ColumnFixing, Paging, Pager } from 'devextreme-react/data-grid';
+import { DataGrid, ColumnChooser, ColumnFixing, Paging, Pager } from 'devextreme-react/data-grid';
 import { Upload } from '@mui/icons-material';
 import { connect } from 'react-redux';
 import UploadDocumentColumn from '../upload-document-column';
