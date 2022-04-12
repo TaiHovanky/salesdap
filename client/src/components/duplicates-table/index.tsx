@@ -35,7 +35,7 @@ const DuplicatesTable = ({ duplicatesData }: Props): any => {
           columnAutoWidth={true}
           showBorders={true}
           rowAlternationEnabled={true}
-        >
+        />
           {/* <Paging defaultPageSize={25} />
           <Pager
             visible={true}
@@ -44,7 +44,6 @@ const DuplicatesTable = ({ duplicatesData }: Props): any => {
             showInfo={true}
             showNavigationButtons={true}
           /> */}
-        </DataGrid>
       </Grid>
     </Grid>
   );
