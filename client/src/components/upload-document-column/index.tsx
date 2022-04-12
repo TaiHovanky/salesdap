@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef } from 'react';
+import React, { useRef } from 'react';
 import { AttachFile } from '@mui/icons-material';
 import {
   Fab,
@@ -8,7 +8,8 @@ import {
   Radio,
   RadioGroup,
   Chip,
-  TextField
+  TextField,
+  Autocomplete
 } from '@mui/material';
 import { Attachment } from '@mui/icons-material';
 import { connect } from 'react-redux';
@@ -52,7 +53,7 @@ const UploadDocumentColumn = ({
    * As the user types in the Column field, update its value
    * @param event
    */
-   const handleComparisonColumnFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
+   const handleComparisonColumnFieldChange = (event: any) => {
     dispatch(changeComparisonColumn(event.target.value, index));
   };
 
@@ -88,7 +89,7 @@ const UploadDocumentColumn = ({
     }
   }
 
-  const handleFileTypeChange = async (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFileTypeChange = async (event: any) => {
     dispatch(setFileSource(index, event.target.value));
     if (event.target.value === 'pinned') {
       dispatch(setIsLoading(true));
@@ -114,6 +115,11 @@ const UploadDocumentColumn = ({
       console.log('err', err);
     }
   };
+  console.log('upload docs', selectedDocument);
+
+  const autocompleteOptions: Array<string> = selectedDocument && selectedDocument.data && selectedDocument.data[0] ?
+    Array.from(Object.keys(selectedDocument.data[0])) :
+    [];
 
   return (
     <form style={{ width: '100%', marginTop: '1.5rem' }}>
@@ -179,7 +185,7 @@ const UploadDocumentColumn = ({
               <Chip onClick={handlePinnedFileClick} icon={<Attachment />} label={user.pinnedFile} />
             </div>
           }
-          <TextField
+          {/* <TextField
             required
             id="standard-basic"
             label="Column to find duplicate values in"
@@ -187,6 +193,19 @@ const UploadDocumentColumn = ({
             sx={{ width: '100%', margin: '1.5rem 0' }}
             onChange={handleComparisonColumnFieldChange}
             value={comparisonColumn}
+          /> */}
+          <Autocomplete
+            multiple={true}
+            options={autocompleteOptions}
+            onChange={handleComparisonColumnFieldChange}
+            sx={{ width: '100%', margin: '1.5rem 0' }}
+            renderInput={(params) => (<TextField
+              {...params}
+              variant="standard"
+              helperText={`Columns from file ${index === 0 ? 'A' : 'B'} that will be compared with columns
+              from file ${index === 0 ? 'B' : 'A'} to determine match. Hint: the more unique a column's value is
+              to a company, the better (DUNS number, company website, etc.).`}
+            />)}
           />
     </form>
   );

@@ -77,7 +77,7 @@ const UploadDocumentForm = ({
     formData.append('resultColumns1', resultColumns1);
     formData.append('resultColumns2', resultColumns2);
 
-    axios.post('/api/v1/uploadfile', formData)
+    axios.post('http://localhost:3001/api/v1/uploadfile', formData)
       .then((res) => {
         dispatch(hideError());
         dispatch(uploadDocumentSuccess(res.data));
@@ -100,7 +100,7 @@ const UploadDocumentForm = ({
         spacing={2}
         justifyContent="space-between"
         alignItems="center"
-        sx={{ height: '90%' }}
+        // sx={{ height: '90%' }}
       >
         <Grid
           item
@@ -118,7 +118,7 @@ const UploadDocumentForm = ({
             selectedDocument={selectedDocument1}
             fileSource={fileSource1}
           />
-          <div style={{ width: '100%'}}>
+          {/* <div style={{ width: '100%'}}>
             <DataGrid
               id="gridContainer"
               dataSource={selectedDocument1.data}
@@ -139,7 +139,7 @@ const UploadDocumentForm = ({
                 showNavigationButtons={true}
               />
             </DataGrid>
-          </div>
+          </div> */}
         </Grid>
         <Grid
           item
@@ -157,7 +157,7 @@ const UploadDocumentForm = ({
             selectedDocument={selectedDocument2}
             fileSource={fileSource2}
           />
-          <div style={{ width: '100%'}}>
+          {/* <div style={{ width: '100%'}}>
             <DataGrid
               id="gridContainer"
               dataSource={selectedDocument2.data}
@@ -178,7 +178,7 @@ const UploadDocumentForm = ({
                 showNavigationButtons={true}
               />
             </DataGrid>
-          </div>
+          </div> */}
         </Grid>
       </Grid>
       <Grid

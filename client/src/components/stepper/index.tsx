@@ -22,7 +22,7 @@ interface Props {
 const HorizontalLinearStepper = ({ activeStep }: Props) => {
   return (
     <>
-      <Box sx={{ width: '100%', height: '79vh', marginTop: '3.5vh' }}>
+      <Box sx={{ width: '100%', height: '85vh', marginTop: '3.5vh' }}>
         <Stepper activeStep={activeStep} sx={{ marginLeft: '25%', marginRight: '25%'}}>
           {steps.map((label: string) => {
             const stepProps: { completed?: boolean } = {};
