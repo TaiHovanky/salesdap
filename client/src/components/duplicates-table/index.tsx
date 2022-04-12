@@ -1,6 +1,5 @@
-// @ts-nocheck
 import React from 'react';
-import DataGrid, { Paging, Pager } from 'devextreme-react/data-grid';
+import { DataGrid, Paging, Pager } from 'devextreme-react/data-grid';
 import { connect } from 'react-redux';
 import { Grid } from '@mui/material';
 
@@ -35,15 +34,16 @@ const DuplicatesTable = ({ duplicatesData }: Props): any => {
           columnAutoWidth={true}
           showBorders={true}
           rowAlternationEnabled={true}
-        />
-          {/* <Paging defaultPageSize={25} />
+        >
+          <Paging defaultPageSize={25} />
           <Pager
             visible={true}
             displayMode={"full"}
             showPageSizeSelector={false}
             showInfo={true}
             showNavigationButtons={true}
-          /> */}
+          />
+        </DataGrid>
       </Grid>
     </Grid>
   );
