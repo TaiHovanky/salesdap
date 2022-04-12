@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import DataGrid, { Paging, Pager } from 'devextreme-react/data-grid';
 import { connect } from 'react-redux';
@@ -33,7 +34,6 @@ const DuplicatesTable = ({ duplicatesData }: Props): any => {
           allowColumnResizing={true}
           columnAutoWidth={true}
           showBorders={true}
-          width="100%"
           rowAlternationEnabled={true}
         >
           {/* <Paging defaultPageSize={25} />
