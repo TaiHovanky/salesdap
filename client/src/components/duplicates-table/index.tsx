@@ -36,14 +36,14 @@ const DuplicatesTable = ({ duplicatesData }: Props): any => {
           width="100%"
           rowAlternationEnabled={true}
         >
-          <Paging defaultPageSize={25} />
+          {/* <Paging defaultPageSize={25} />
           <Pager
             visible={true}
             displayMode={"full"}
             showPageSizeSelector={false}
             showInfo={true}
             showNavigationButtons={true}
-          />
+          /> */}
         </DataGrid>
       </Grid>
     </Grid>
