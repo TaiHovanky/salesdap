@@ -47,6 +47,7 @@
     ]
   },
   "devDependencies": {
+    "@types/devextreme": "^16.2.1",
     "@types/react-dom": "^17.0.5",
     "@types/react-router-dom": "^5.1.7",
     "@types/redux-logger": "^3.0.9"
