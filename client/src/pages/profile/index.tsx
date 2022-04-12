@@ -83,7 +83,7 @@ const Profile = ({ user, dispatch }: Props) => {
         user.email
       );
     }
-    axios.post('http://localhost:3001/api/v1/pinfile', formData)
+    axios.post('/api/v1/pinfile', formData)
       .then(() => {
         dispatch(pinFileSuccess(file.name));
         dispatch(hideError());
