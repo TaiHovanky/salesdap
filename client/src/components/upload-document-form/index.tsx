@@ -30,7 +30,7 @@ class NewGrid extends DataGrid {
   }
 
   render() {
-    return <DataGrid>{this.props.children}</DataGrid>
+    return React.Children.toArray(this.props.children);
   }
 
 }
