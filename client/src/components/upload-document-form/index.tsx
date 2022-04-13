@@ -33,7 +33,7 @@ const UploadDocumentForm = ({
   comparisonColumn2,
   fileSource1,
   fileSource2,
-}: UploadDocumentFormProps) => {
+}: UploadDocumentFormProps): any => {
   const dataGrid1 = useRef<any>(null);
   const dataGrid2 = useRef<any>(null);
 
@@ -121,7 +121,7 @@ const UploadDocumentForm = ({
           <div style={{ width: '100%'}}>
             <DataGrid
               id="gridContainer"
-              dataSource={selectedDocument1.data}
+              dataSource={selectedDocument1.data || []}
               allowColumnReordering={true}
               allowColumnResizing={true}
               columnAutoWidth={true}
@@ -160,7 +160,7 @@ const UploadDocumentForm = ({
           <div style={{ width: '100%'}}>
             <DataGrid
               id="gridContainer"
-              dataSource={selectedDocument2.data}
+              dataSource={selectedDocument2.data || []}
               allowColumnReordering={true}
               allowColumnResizing={true}
               columnAutoWidth={true}
@@ -222,4 +222,4 @@ const mapStateToProps = (state: any) => ({
   user: state.user
 });
 
-export default connect(mapStateToProps)(UploadDocumentForm);
+export default connect<any, any, any>(mapStateToProps)(UploadDocumentForm);
