@@ -25,6 +25,10 @@ interface UploadDocumentFormProps {
 }
 
 class NewGrid extends DataGrid {
+  constructor(props: any) {
+    super(props);
+  }
+
   render() {
     return <DataGrid>{this.props.children}</DataGrid>
   }
