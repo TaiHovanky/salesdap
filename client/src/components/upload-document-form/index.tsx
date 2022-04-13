@@ -4,7 +4,7 @@ import {
   Fab
 } from '@mui/material';
 import axios from 'axios';
-import { DataGrid, ColumnChooser, ColumnFixing, Paging, Pager } from 'devextreme-react/data-grid';
+// import { DataGrid, ColumnChooser, ColumnFixing, Paging, Pager } from 'devextreme-react/data-grid';
 import { Upload } from '@mui/icons-material';
 import { connect } from 'react-redux';
 import UploadDocumentColumn from '../upload-document-column';
@@ -24,16 +24,16 @@ interface UploadDocumentFormProps {
   fileSource2: string;
 }
 
-class NewGrid extends DataGrid {
-  constructor(props: any) {
-    super(props);
-  }
+// class NewGrid extends DataGrid {
+//   constructor(props: any) {
+//     super(props);
+//   }
 
-  render() {
-    return React.Children.toArray(this.props.children);
-  }
+//   render() {
+//     return React.Children.toArray(this.props.children);
+//   }
 
-}
+// }
 
 const UploadDocumentForm = ({
   dispatch,
@@ -45,18 +45,18 @@ const UploadDocumentForm = ({
   fileSource1,
   fileSource2,
 }: UploadDocumentFormProps): any => {
-  const dataGrid1 = useRef<any>(null);
-  const dataGrid2 = useRef<any>(null);
+  // const dataGrid1 = useRef<any>(null);
+  // const dataGrid2 = useRef<any>(null);
 
-  useEffect(() => {
-    // `current.instance` points to the UI component instance
-    if (dataGrid1 && dataGrid1.current && dataGrid1.current.instance && selectedDocument1.data.length) {
-      dataGrid1.current.instance.showColumnChooser();
-    }
-    if (dataGrid2 && dataGrid2.current && dataGrid2.current.instance && selectedDocument2.data.length) {
-      dataGrid2.current.instance.showColumnChooser();
-    }
-  }, [selectedDocument1.data.length, selectedDocument2.data.length]);
+  // useEffect(() => {
+  //   // `current.instance` points to the UI component instance
+  //   if (dataGrid1 && dataGrid1.current && dataGrid1.current.instance && selectedDocument1.data.length) {
+  //     dataGrid1.current.instance.showColumnChooser();
+  //   }
+  //   if (dataGrid2 && dataGrid2.current && dataGrid2.current.instance && selectedDocument2.data.length) {
+  //     dataGrid2.current.instance.showColumnChooser();
+  //   }
+  // }, [selectedDocument1.data.length, selectedDocument2.data.length]);
 
   /**
    * Puts the selected file and column name into a FormData instance,
@@ -75,14 +75,16 @@ const UploadDocumentForm = ({
       const docBlob2 = new Blob([JSON.stringify(selectedDocument2.data)], { type: 'application/json' });
       formData.append("sales_file2", docBlob2, selectedDocument2.name);
     }
-    let resultColumns1;
-    let resultColumns2;
-    if (dataGrid1 && dataGrid1.current && dataGrid1.current.instance) {
-      resultColumns1 = dataGrid1.current.instance.getVisibleColumns().map((col: any) => col.dataField);
-    }
-    if (dataGrid1 && dataGrid2.current && dataGrid2.current.instance) {
-      resultColumns2 = dataGrid2.current.instance.getVisibleColumns().map((col: any) => col.dataField);
-    }
+    const resultColumns1 = selectedDocument1 && selectedDocument1.data && selectedDocument1.data[0] ?
+      Array.from(Object.keys(selectedDocument1.data[0])).join() : '';
+    const resultColumns2 = selectedDocument2 && selectedDocument2.data && selectedDocument2.data[0] ?
+      Array.from(Object.keys(selectedDocument2.data[0])).join() : '';
+    // if (dataGrid1 && dataGrid1.current && dataGrid1.current.instance) {
+    //   resultColumns1 = dataGrid1.current.instance.getVisibleColumns().map((col: any) => col.dataField);
+    // }
+    // if (dataGrid1 && dataGrid2.current && dataGrid2.current.instance) {
+    //   resultColumns2 = dataGrid2.current.instance.getVisibleColumns().map((col: any) => col.dataField);
+    // }
     formData.append('comparisonColumn1', comparisonColumn1);
     formData.append('comparisonColumn2', comparisonColumn2);
     formData.append('resultColumns1', resultColumns1);
@@ -129,7 +131,7 @@ const UploadDocumentForm = ({
             selectedDocument={selectedDocument1}
             fileSource={fileSource1}
           />
-          <div style={{ width: '100%'}}>
+          {/* <div style={{ width: '100%'}}>
             <NewGrid
               id="gridContainer"
               dataSource={selectedDocument1.data || []}
@@ -150,7 +152,7 @@ const UploadDocumentForm = ({
                 showNavigationButtons={true}
               />
             </NewGrid>
-          </div>
+          </div> */}
         </Grid>
         <Grid
           item
@@ -168,7 +170,7 @@ const UploadDocumentForm = ({
             selectedDocument={selectedDocument2}
             fileSource={fileSource2}
           />
-          <div style={{ width: '100%'}}>
+          {/* <div style={{ width: '100%'}}>
             <NewGrid
               id="gridContainer"
               dataSource={selectedDocument2.data || []}
@@ -189,7 +191,7 @@ const UploadDocumentForm = ({
                 showNavigationButtons={true}
               />
             </NewGrid>
-          </div>
+          </div> */}
         </Grid>
       </Grid>
       <Grid
