@@ -4,7 +4,7 @@ import {
   Fab
 } from '@mui/material';
 import axios from 'axios';
-// import { DataGrid, ColumnChooser, ColumnFixing, Paging, Pager } from 'devextreme-react/data-grid';
+import { DataGrid, ColumnChooser, ColumnFixing, Paging, Pager } from 'devextreme-react/data-grid';
 import { Upload } from '@mui/icons-material';
 import { connect } from 'react-redux';
 import UploadDocumentColumn from '../upload-document-column';
@@ -45,8 +45,8 @@ const UploadDocumentForm = ({
   fileSource1,
   fileSource2,
 }: UploadDocumentFormProps): any => {
-  // const dataGrid1 = useRef<any>(null);
-  // const dataGrid2 = useRef<any>(null);
+  const dataGrid1 = useRef<any>(null);
+  const dataGrid2 = useRef<any>(null);
 
   // useEffect(() => {
   //   // `current.instance` points to the UI component instance
@@ -136,8 +136,8 @@ const UploadDocumentForm = ({
             selectedDocument={selectedDocument1}
             fileSource={fileSource1}
           />
-          {/* <div style={{ width: '100%'}}>
-            <NewGrid
+          <div style={{ width: '100%'}}>
+            <DataGrid
               id="gridContainer"
               dataSource={selectedDocument1.data || []}
               allowColumnReordering={true}
@@ -156,8 +156,8 @@ const UploadDocumentForm = ({
                 showInfo={true}
                 showNavigationButtons={true}
               />
-            </NewGrid>
-          </div> */}
+            </DataGrid>
+          </div>
         </Grid>
         <Grid
           item
@@ -175,8 +175,8 @@ const UploadDocumentForm = ({
             selectedDocument={selectedDocument2}
             fileSource={fileSource2}
           />
-          {/* <div style={{ width: '100%'}}>
-            <NewGrid
+          <div style={{ width: '100%'}}>
+            <DataGrid
               id="gridContainer"
               dataSource={selectedDocument2.data || []}
               allowColumnReordering={true}
@@ -195,8 +195,8 @@ const UploadDocumentForm = ({
                 showInfo={true}
                 showNavigationButtons={true}
               />
-            </NewGrid>
-          </div> */}
+            </DataGrid>
+          </div>
         </Grid>
       </Grid>
       <Grid
