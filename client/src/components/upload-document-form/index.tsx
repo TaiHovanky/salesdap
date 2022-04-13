@@ -89,8 +89,13 @@ const UploadDocumentForm = ({
     formData.append('comparisonColumn2', comparisonColumn2);
     formData.append('resultColumns1', resultColumns1);
     formData.append('resultColumns2', resultColumns2);
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    };
 
-    axios.post('/api/v1/uploadfile', formData)
+    axios.post('/api/v1/uploadfile', formData, config)
       .then((res) => {
         dispatch(hideError());
         dispatch(uploadDocumentSuccess(res.data));
