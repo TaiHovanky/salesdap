@@ -24,6 +24,13 @@ interface UploadDocumentFormProps {
   fileSource2: string;
 }
 
+class NewGrid extends DataGrid {
+  render() {
+    return <DataGrid>{this.props.children}</DataGrid>
+  }
+
+}
+
 const UploadDocumentForm = ({
   dispatch,
   activeStep,
@@ -119,7 +126,7 @@ const UploadDocumentForm = ({
             fileSource={fileSource1}
           />
           <div style={{ width: '100%'}}>
-            <DataGrid
+            <NewGrid
               id="gridContainer"
               dataSource={selectedDocument1.data || []}
               allowColumnReordering={true}
@@ -138,7 +145,7 @@ const UploadDocumentForm = ({
                 showInfo={true}
                 showNavigationButtons={true}
               />
-            </DataGrid>
+            </NewGrid>
           </div>
         </Grid>
         <Grid
@@ -158,7 +165,7 @@ const UploadDocumentForm = ({
             fileSource={fileSource2}
           />
           <div style={{ width: '100%'}}>
-            <DataGrid
+            <NewGrid
               id="gridContainer"
               dataSource={selectedDocument2.data || []}
               allowColumnReordering={true}
@@ -177,7 +184,7 @@ const UploadDocumentForm = ({
                 showInfo={true}
                 showNavigationButtons={true}
               />
-            </DataGrid>
+            </NewGrid>
           </div>
         </Grid>
       </Grid>
