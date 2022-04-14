@@ -2,6 +2,10 @@
 import * as fs from 'fs';
 import AWS from 'aws-sdk';
 
+const MOST_PRECISE_MATCH = 'Matched in 3 columns';
+const LESS_PRECISE_MATCH = 'Matched in 2 columns';
+const LEAST_PRECISE_MATCH = 'Matched in 1 column';
+
 export const parseJSONFromFile = (file: any): Array<any> => {
   const fileBuffer = fs.readFileSync(file);
   if (fileBuffer) {
@@ -67,7 +71,8 @@ const addCellValueToHash = (
 ): void => {
   salesData.forEach((row: any, rowIndex: number) => {
     comparisonColumnList.forEach((column) => {
-      const cellValue: string = row[column];
+      const cellValue: string = typeof row[column] === 'string' ?
+        row[column].toLowerCase().trim() : row[column].toString();;
       if (cellValue) {
         // const sanitizedCellValue: string = cellValue.toLowerCase().trim();
         if (!valueHash.hasOwnProperty(cellValue)) {
@@ -89,16 +94,17 @@ const checkForMatches = (
   salesData2.forEach((row: any, rowIndex: number) => {
     const matchedIndxesForRow: Array<number> = [];
     comparisonColumnList.forEach((column) => {
-      const cellValue: string = row[column];
+      const cellValue: string = typeof row[column] === 'string' ?
+        row[column].toLowerCase().trim() : row[column].toString();
       if (cellValue) {
-        console.log('if cell val', cellValue);
+        // console.log('if cell val', cellValue);
         // const sanitizedCellValue: string = cellValue.toLowerCase().trim();
         if (valueHash[cellValue]) {
           /* Add the rowIndex for the match to the list of matched indexes. Later, we'll
           use that list to determine how many columns of that row in file 2 match how many columns
           in file 1 */
-          console.log('matched indexes for row in loop', matchedIndxesForRow)
           matchedIndxesForRow.push(valueHash[cellValue].rowIndex);
+          console.log('matched indexes for row in loop', matchedIndxesForRow, cellValue)
         }
       }
     });
@@ -133,7 +139,7 @@ const checkForMatches = (
     });
   });
 
-  console.log('results list after', resultsList);
+  console.log('results list after', resultsList, comparisonColumnList.length);
 }
 
 /**
@@ -184,12 +190,18 @@ export const displayRelevantColumns = (
   const resColArr2: Array<string> = resultColumns2.split(',');
   const columns: Array<string> = [...resColArr1, ...resColArr2];
 
-  duplicatesList.forEach((category: Array<any>) => {
+  duplicatesList.forEach((category: Array<any>, categoryIndex: number) => {
     category.forEach((item: any) => {
-      const row = columns.reduce((rowObj, col) => ({ ...rowObj, [col]: item[col] || null }), {});
+      let precision: string = LEAST_PRECISE_MATCH;
+      if (categoryIndex === 0) {
+        precision = MOST_PRECISE_MATCH;
+      } else if (categoryIndex === 1) {
+        precision = LESS_PRECISE_MATCH;
+      }
+      const row = columns.reduce((rowObj, col) => ({ ...rowObj, [col]: item[col] || null }), { precision });
       result.push(row);
     });
-  })
+  });
   console.log('res cols', resColArr1, resColArr2, result);
   return result;
 }

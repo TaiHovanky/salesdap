@@ -1,5 +1,5 @@
 import React from 'react';
-import DataGrid, { Paging, Pager } from 'devextreme-react/data-grid';
+import DataGrid, { Paging, Pager, Column } from 'devextreme-react/data-grid';
 import { connect } from 'react-redux';
 import { Grid } from '@mui/material';
 
@@ -32,6 +32,9 @@ const DuplicatesTable = ({ duplicatesData }: any) => {
           width="100%"
           rowAlternationEnabled={true}
         >
+          <Column dataField="precision" groupIndex={0} sortOrder="desc"/>
+          {duplicatesData && duplicatesData[0] && Array.from(Object.keys(duplicatesData[0]))
+            .map((colName: string, index: number) => <Column dataField={colName} key={index} />)}
           <Paging defaultPageSize={25} />
           <Pager
             visible={true}

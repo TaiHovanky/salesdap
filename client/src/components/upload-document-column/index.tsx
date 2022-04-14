@@ -202,7 +202,7 @@ const UploadDocumentColumn = ({
             multiple={true}
             options={autocompleteOptions}
             onChange={handleComparisonColumnFieldChange}
-            // value={comparisonColumn}
+            value={comparisonColumn}
             sx={{ width: '100%', margin: '1.5rem 0' }}
             renderInput={(params) => (<TextField
               {...params}
