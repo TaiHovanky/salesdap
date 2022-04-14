@@ -22,25 +22,28 @@ export const parseJSONFromFile = (file: any): Array<any> => {
 export const findDuplicates = (
   salesData1: Array<any>,
   salesData2: Array<any>,
-  comparisonColumn1: string,
-  comparisonColumn2: string
-): Array<any> => {
+  comparisonColumns1: Array<string>,
+  comparisonColumns2: Array<string>
+): Array<Array<any>> => {
   const valueHash: any = {};
-  let resultsList: Array<any> = [];
+  let resultsList: Array<Array<any>> = comparisonColumns1.map((_) => []);
+  console.log('res list start', resultsList);
 
-  loopThroughSpreadsheet(
+  addCellValueToHash(
     salesData1,
-    comparisonColumn1,
+    comparisonColumns1,
     valueHash,
-    resultsList,
-    addCellValueToHash
+    // resultsList,
+    // addCellValueToHash
   );
-  loopThroughSpreadsheet(
+  // console.log('value hash', valueHash);
+  checkForMatches(
+    salesData1,
     salesData2,
-    comparisonColumn2,
+    comparisonColumns2,
     valueHash,
     resultsList,
-    checkForDuplicates
+    // checkForDuplicates
   );
 
   return resultsList;
@@ -55,20 +58,82 @@ export const findDuplicates = (
  * @param {Array<any>} resultsList List of rows that contain duplicate values
  * @param callback Function that updates results in some way
  */
-const loopThroughSpreadsheet = (
+const addCellValueToHash = (
   salesData: Array<any>,
-  comparisonColumn: string,
+  comparisonColumnList: Array<string>,
   valueHash: any,
-  resultsList: Array<any>,
-  callback: any
+  // resultsList: Array<any>,
+  // callback: any
 ): void => {
-  salesData.forEach((row: any) => {
-    const cellValue: string = row[comparisonColumn];
-    if (cellValue) {
-      const sanitizedCellValue: string = cellValue.toLowerCase().trim();
-      callback(sanitizedCellValue, valueHash, row, resultsList);
-    }
+  salesData.forEach((row: any, rowIndex: number) => {
+    comparisonColumnList.forEach((column) => {
+      const cellValue: string = row[column];
+      if (cellValue) {
+        // const sanitizedCellValue: string = cellValue.toLowerCase().trim();
+        if (!valueHash.hasOwnProperty(cellValue)) {
+          valueHash[cellValue] = { row, rowIndex };
+        }
+      }
+    });
   });
+}
+
+const checkForMatches = (
+  salesData1: Array<any>,
+  salesData2: Array<any>,
+  comparisonColumnList: Array<string>,
+  valueHash: any,
+  resultsList: Array<Array<any>>,
+  // callback: any
+): void => {
+  salesData2.forEach((row: any, rowIndex: number) => {
+    const matchedIndxesForRow: Array<number> = [];
+    comparisonColumnList.forEach((column) => {
+      const cellValue: string = row[column];
+      if (cellValue) {
+        console.log('if cell val', cellValue);
+        // const sanitizedCellValue: string = cellValue.toLowerCase().trim();
+        if (valueHash[cellValue]) {
+          /* Add the rowIndex for the match to the list of matched indexes. Later, we'll
+          use that list to determine how many columns of that row in file 2 match how many columns
+          in file 1 */
+          console.log('matched indexes for row in loop', matchedIndxesForRow)
+          matchedIndxesForRow.push(valueHash[cellValue].rowIndex);
+        }
+      }
+    });
+    console.log('matched indexes for row', matchedIndxesForRow);
+
+    const possibleMatches: any = {}; /* Object should contain row indexes (from file 1)
+    and a count of how many cells from a row in file 2 matched a cell from file 1. This lets us
+    determine how precise a match is. If all the cells in the comparison columns for file 2
+    match all the cells in the comparison columns for file 1, then it's definitely a match.
+    If only some of the cells match, then it could be a match or a false positive. */
+    matchedIndxesForRow.forEach((matchedRowIndex: number) => {
+      if (!possibleMatches[matchedRowIndex]) {
+        possibleMatches[matchedRowIndex] = 1;
+      } else if (possibleMatches[matchedRowIndex]) {
+        possibleMatches[matchedRowIndex] += 1;
+      }
+    });
+    console.log('possible matches', possibleMatches)
+    
+    Array.from(Object.keys(possibleMatches)).forEach((key) => {
+      // note that key is equal to the rowIndex of file 1. rowIndex in this func is for file 2
+      if (possibleMatches[key] === comparisonColumnList.length) {
+        console.log('precise match ', rowIndex);
+        resultsList[0].push({ ...row, ...salesData1[parseInt(key)] });
+      } else if (possibleMatches[key] === comparisonColumnList.length - 1 && resultsList[1]) {
+        console.log('less precise match ', rowIndex);
+        resultsList[1].push({ ...row, ...salesData1[parseInt(key)] });
+      } else if (possibleMatches[key] === comparisonColumnList.length - 2 && resultsList[2]) {
+        console.log('imprecise match ', rowIndex);
+        resultsList[2].push({ ...row, ...salesData1[parseInt(key)] });
+      }
+    });
+  });
+
+  console.log('results list after', resultsList);
 }
 
 /**
@@ -77,11 +142,11 @@ const loopThroughSpreadsheet = (
  * @param {any} valueHash Object containing cell value as key, spreadsheet row as value
  * @param {any} row Object that represents a row in the spreadsheet
  */
-const addCellValueToHash = (cellValue: string, valueHash: any, row: any): void => {
-  if (!valueHash.hasOwnProperty(cellValue)) {
-    valueHash[cellValue] = row;
-  }
-}
+// const addCellValueToHash = (cellValue: string, valueHash: any, row: any): void => {
+//   if (!valueHash.hasOwnProperty(cellValue)) {
+//     valueHash[cellValue] = row;
+//   }
+// }
 
 /**
  * Compare the cell with the valueHash to see if there's a match with the data from the
@@ -91,16 +156,16 @@ const addCellValueToHash = (cellValue: string, valueHash: any, row: any): void =
  * @param {any} row Object that represents a row in the spreadsheet
  * @param {Array<any>} resultsList List of rows that contain duplicate values
  */
-const checkForDuplicates = (
-  cellValue: string,
-  valueHash: any,
-  row: any,
-  resultsList: Array<any>,
-): void => {
-  if (valueHash[cellValue]) {
-    resultsList.push({ ...valueHash[cellValue], ...row});
-  }
-}
+// const checkForDuplicates = (
+//   cellValue: string,
+//   valueHash: any,
+//   row: any,
+//   resultsList: Array<any>,
+// ): void => {
+//   if (valueHash[cellValue]) {
+//     resultsList.push({ ...valueHash[cellValue], ...row});
+//   }
+// }
 
 /**
  * Create an array of objects that contain the desired columns from each spreadsheet.
@@ -119,10 +184,13 @@ export const displayRelevantColumns = (
   const resColArr2: Array<string> = resultColumns2.split(',');
   const columns: Array<string> = [...resColArr1, ...resColArr2];
 
-  duplicatesList.forEach((item: any) => {
-    const row = columns.reduce((rowObj, col) => ({ ...rowObj, [col]: item[col] || null }), {});
-    result.push(row);
-  });
+  duplicatesList.forEach((category: Array<any>) => {
+    category.forEach((item: any) => {
+      const row = columns.reduce((rowObj, col) => ({ ...rowObj, [col]: item[col] || null }), {});
+      result.push(row);
+    });
+  })
+  console.log('res cols', resColArr1, resColArr2, result);
   return result;
 }
 

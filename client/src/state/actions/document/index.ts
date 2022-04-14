@@ -25,17 +25,17 @@ export const selectDocument = (document: any, index: number, name: string) => ({
   name
 });
 
-export const changeComparisonColumn = (value: string, index: number) => ({
+export const changeComparisonColumn = (value: Array<string>, index: number) => ({
   type: CHANGE_COMPARISON_COLUMN,
   payload: value,
   index
 });
 
-export const changeResultColumns = (value: string, index: number) => ({
-  type: CHANGE_RESULT_COLUMNS,
-  payload: value,
-  index
-});
+// export const changeResultColumns = (value: Array<string>, index: number) => ({
+//   type: CHANGE_RESULT_COLUMNS,
+//   payload: value,
+//   index
+// }); <-- might not need while using autocomplete
 
 // export const pinFile = () => ({
 //   type: PIN_FILE

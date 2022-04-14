@@ -18,8 +18,10 @@ interface UploadDocumentFormProps {
   activeStep: number;
   selectedDocument1: any;
   selectedDocument2: any;
-  comparisonColumn1: string;
-  comparisonColumn2: string;
+  comparisonColumn1: Array<string>;
+  comparisonColumn2: Array<string>;
+  resultColumns1: Array<string>;
+  resultColumns2: Array<string>;
   fileSource1: string;
   fileSource2: string;
 }
@@ -31,9 +33,11 @@ const UploadDocumentForm = ({
   selectedDocument2,
   comparisonColumn1,
   comparisonColumn2,
+  resultColumns1,
+  resultColumns2,
   fileSource1,
   fileSource2,
-}: UploadDocumentFormProps) => {
+}: UploadDocumentFormProps): any => {
   const dataGrid1 = useRef<any>(null);
   const dataGrid2 = useRef<any>(null);
 
@@ -64,22 +68,23 @@ const UploadDocumentForm = ({
       const docBlob2 = new Blob([JSON.stringify(selectedDocument2.data)], { type: 'application/json' });
       formData.append("sales_file2", docBlob2, selectedDocument2.name);
     }
-    let resultColumns1;
-    let resultColumns2;
-    if (dataGrid1 && dataGrid1.current && dataGrid1.current.instance) {
-      resultColumns1 = dataGrid1.current.instance.getVisibleColumns().map((col: any) => col.dataField);
-    }
-    if (dataGrid1 && dataGrid2.current && dataGrid2.current.instance) {
-      resultColumns2 = dataGrid2.current.instance.getVisibleColumns().map((col: any) => col.dataField);
-    }
-    formData.append('comparisonColumn1', comparisonColumn1);
-    formData.append('comparisonColumn2', comparisonColumn2);
-    formData.append('resultColumns1', resultColumns1);
-    formData.append('resultColumns2', resultColumns2);
+    // let resultColumns1;
+    // let resultColumns2;
+    // if (dataGrid1 && dataGrid1.current && dataGrid1.current.instance) {
+    //   resultColumns1 = dataGrid1.current.instance.getVisibleColumns().map((col: any) => col.dataField);
+    // }
+    // if (dataGrid1 && dataGrid2.current && dataGrid2.current.instance) {
+    //   resultColumns2 = dataGrid2.current.instance.getVisibleColumns().map((col: any) => col.dataField);
+    // }
+    formData.append('comparisonColumn1', comparisonColumn1.join());
+    formData.append('comparisonColumn2', comparisonColumn2.join());
+    formData.append('resultColumns1', resultColumns1.join());
+    formData.append('resultColumns2', resultColumns2.join());
 
     axios.post('http://localhost:3001/api/v1/uploadfile', formData)
       .then((res) => {
         dispatch(hideError());
+        console.log('res', res.data);
         dispatch(uploadDocumentSuccess(res.data));
         dispatch(setIsLoading(false));
         dispatch(changeStep(activeStep += 1));
@@ -217,6 +222,8 @@ const mapStateToProps = (state: any) => ({
   selectedDocument2: state.document.selectedDocument2,
   comparisonColumn1: state.document.comparisonColumn1,
   comparisonColumn2: state.document.comparisonColumn2,
+  resultColumns1: state.document.resultColumns1,
+  resultColumns2: state.document.resultColumns2,
   fileSource1: state.document.fileSource1,
   fileSource2: state.document.fileSource2,
   user: state.user

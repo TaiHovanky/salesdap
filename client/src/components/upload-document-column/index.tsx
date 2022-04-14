@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { SyntheticEvent, useRef } from 'react';
 import { AttachFile } from '@mui/icons-material';
 import {
   Fab,
@@ -33,7 +33,7 @@ import {
 interface UploadDocumentColumnProps {
   dispatch: any;
   selectedDocument: any;
-  comparisonColumn: string;
+  comparisonColumn: Array<string>;
   fileSource: string;
   index: number;
   user: UserState;
@@ -53,8 +53,12 @@ const UploadDocumentColumn = ({
    * As the user types in the Column field, update its value
    * @param event
    */
-   const handleComparisonColumnFieldChange = (event: any) => {
-    dispatch(changeComparisonColumn(event.target.value, index));
+  const handleComparisonColumnFieldChange = (
+    event: SyntheticEvent<Element, Event>,
+    newValue: Array<string>
+  ) => {
+     console.log('handleComparisonColumnFieldChange', newValue);
+    dispatch(changeComparisonColumn(newValue, index));
   };
 
   /**
@@ -198,6 +202,7 @@ const UploadDocumentColumn = ({
             multiple={true}
             options={autocompleteOptions}
             onChange={handleComparisonColumnFieldChange}
+            // value={comparisonColumn}
             sx={{ width: '100%', margin: '1.5rem 0' }}
             renderInput={(params) => (<TextField
               {...params}

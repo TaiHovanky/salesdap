@@ -24,8 +24,9 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
     const duplicatesList: Array<any> = findDuplicates(
       salesData1,
       salesData2,
-      comparisonColumn1,
-      comparisonColumn2);
+      comparisonColumn1.split(','),
+      comparisonColumn2.split(',')
+    );
 
     /* Create array of objects (rows) that only contain the columns that the user wants to see
       (as specified in resultColumns1 and resultColumns2 */
