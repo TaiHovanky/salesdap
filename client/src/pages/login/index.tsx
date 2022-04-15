@@ -56,7 +56,7 @@ const Login = ({ dispatch }: any) => {
         }
       };
 
-      axios.post('http://localhost:3001/api/v1/login', formData, config)
+      axios.post('/api/v1/login', formData, config)
         .then((res: any) => {
           dispatch(hideError());
           dispatch(updateUser(res.data));
