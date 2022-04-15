@@ -48,7 +48,7 @@ const EmailCapture = ({ onClose, dispatch }: EmailCaptureProps) => {
         }
       };
 
-      axios.post('http://localhost:3001/api/v1/email', formData, config)
+      axios.post('/api/v1/email', formData, config)
         .then(() => {
           dispatch(hideError());
           dispatch(setIsLoading(false));
