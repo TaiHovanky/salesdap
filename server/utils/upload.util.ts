@@ -2,9 +2,9 @@
 import * as fs from 'fs';
 import AWS from 'aws-sdk';
 
-const MOST_PRECISE_MATCH = 'Matched in 3 columns';
-const LESS_PRECISE_MATCH = 'Matched in 2 columns';
-const LEAST_PRECISE_MATCH = 'Matched in 1 column';
+const MOST_PRECISE_MATCH = '3 columns matched';
+const LESS_PRECISE_MATCH = '2 columns matched';
+const LEAST_PRECISE_MATCH = '1 column matched';
 
 export const parseJSONFromFile = (file: any): Array<any> => {
   const fileBuffer = fs.readFileSync(file);
@@ -31,23 +31,18 @@ export const findDuplicates = (
 ): Array<Array<any>> => {
   const valueHash: any = {};
   let resultsList: Array<Array<any>> = comparisonColumns1.map((_) => []);
-  console.log('res list start', resultsList);
 
   addCellValueToHash(
     salesData1,
     comparisonColumns1,
     valueHash,
-    // resultsList,
-    // addCellValueToHash
   );
-  // console.log('value hash', valueHash);
   checkForMatches(
     salesData1,
     salesData2,
     comparisonColumns2,
     valueHash,
     resultsList,
-    // checkForDuplicates
   );
 
   return resultsList;
@@ -66,15 +61,12 @@ const addCellValueToHash = (
   salesData: Array<any>,
   comparisonColumnList: Array<string>,
   valueHash: any,
-  // resultsList: Array<any>,
-  // callback: any
 ): void => {
   salesData.forEach((row: any, rowIndex: number) => {
     comparisonColumnList.forEach((column) => {
       const cellValue: string = typeof row[column] === 'string' ?
         row[column].toLowerCase().trim() : row[column].toString();;
       if (cellValue) {
-        // const sanitizedCellValue: string = cellValue.toLowerCase().trim();
         if (!valueHash.hasOwnProperty(cellValue)) {
           valueHash[cellValue] = { row, rowIndex };
         }
@@ -88,27 +80,22 @@ const checkForMatches = (
   salesData2: Array<any>,
   comparisonColumnList: Array<string>,
   valueHash: any,
-  resultsList: Array<Array<any>>,
-  // callback: any
+  resultsList: Array<Array<any>>
 ): void => {
-  salesData2.forEach((row: any, rowIndex: number) => {
+  salesData2.forEach((row: any) => {
     const matchedIndxesForRow: Array<number> = [];
     comparisonColumnList.forEach((column) => {
       const cellValue: string = typeof row[column] === 'string' ?
         row[column].toLowerCase().trim() : row[column].toString();
       if (cellValue) {
-        // console.log('if cell val', cellValue);
-        // const sanitizedCellValue: string = cellValue.toLowerCase().trim();
         if (valueHash[cellValue]) {
           /* Add the rowIndex for the match to the list of matched indexes. Later, we'll
           use that list to determine how many columns of that row in file 2 match how many columns
           in file 1 */
           matchedIndxesForRow.push(valueHash[cellValue].rowIndex);
-          console.log('matched indexes for row in loop', matchedIndxesForRow, cellValue)
         }
       }
     });
-    console.log('matched indexes for row', matchedIndxesForRow);
 
     const possibleMatches: any = {}; /* Object should contain row indexes (from file 1)
     and a count of how many cells from a row in file 2 matched a cell from file 1. This lets us
@@ -122,56 +109,19 @@ const checkForMatches = (
         possibleMatches[matchedRowIndex] += 1;
       }
     });
-    console.log('possible matches', possibleMatches)
     
     Array.from(Object.keys(possibleMatches)).forEach((key) => {
       // note that key is equal to the rowIndex of file 1. rowIndex in this func is for file 2
       if (possibleMatches[key] === comparisonColumnList.length) {
-        console.log('precise match ', rowIndex);
         resultsList[0].push({ ...row, ...salesData1[parseInt(key)] });
       } else if (possibleMatches[key] === comparisonColumnList.length - 1 && resultsList[1]) {
-        console.log('less precise match ', rowIndex);
         resultsList[1].push({ ...row, ...salesData1[parseInt(key)] });
       } else if (possibleMatches[key] === comparisonColumnList.length - 2 && resultsList[2]) {
-        console.log('imprecise match ', rowIndex);
         resultsList[2].push({ ...row, ...salesData1[parseInt(key)] });
       }
     });
   });
-
-  console.log('results list after', resultsList, comparisonColumnList.length);
 }
-
-/**
- * Update the value hash
- * @param {string} cellValue Cell in the row/column
- * @param {any} valueHash Object containing cell value as key, spreadsheet row as value
- * @param {any} row Object that represents a row in the spreadsheet
- */
-// const addCellValueToHash = (cellValue: string, valueHash: any, row: any): void => {
-//   if (!valueHash.hasOwnProperty(cellValue)) {
-//     valueHash[cellValue] = row;
-//   }
-// }
-
-/**
- * Compare the cell with the valueHash to see if there's a match with the data from the
- * other spreadsheet
- * @param {string} cellValue Cell in the row/column
- * @param {any} valueHash Object containing cell value as key, spreadsheet row as value
- * @param {any} row Object that represents a row in the spreadsheet
- * @param {Array<any>} resultsList List of rows that contain duplicate values
- */
-// const checkForDuplicates = (
-//   cellValue: string,
-//   valueHash: any,
-//   row: any,
-//   resultsList: Array<any>,
-// ): void => {
-//   if (valueHash[cellValue]) {
-//     resultsList.push({ ...valueHash[cellValue], ...row});
-//   }
-// }
 
 /**
  * Create an array of objects that contain the desired columns from each spreadsheet.
@@ -202,7 +152,7 @@ export const displayRelevantColumns = (
       result.push(row);
     });
   });
-  console.log('res cols', resColArr1, resColArr2, result);
+
   return result;
 }
 

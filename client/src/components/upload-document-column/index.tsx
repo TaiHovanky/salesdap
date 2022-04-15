@@ -9,7 +9,8 @@ import {
   RadioGroup,
   Chip,
   TextField,
-  Autocomplete
+  Autocomplete,
+  Grid
 } from '@mui/material';
 import { Attachment } from '@mui/icons-material';
 import { connect } from 'react-redux';
@@ -57,7 +58,6 @@ const UploadDocumentColumn = ({
     event: SyntheticEvent<Element, Event>,
     newValue: Array<string>
   ) => {
-     console.log('handleComparisonColumnFieldChange', newValue);
     dispatch(changeComparisonColumn(newValue, index));
   };
 
@@ -119,100 +119,87 @@ const UploadDocumentColumn = ({
       console.log('err', err);
     }
   };
-  console.log('upload docs', selectedDocument);
 
   const autocompleteOptions: Array<string> = selectedDocument && selectedDocument.data && selectedDocument.data[0] ?
     Array.from(Object.keys(selectedDocument.data[0])) :
     [];
 
   return (
-    <form style={{ width: '100%', marginTop: '1.5rem' }}>
-      {/* <Grid
+    <>
+      <Grid
+        item
         container
-        spacing={2}
-        justifyContent="center"
+        xs={4}
+        p={0}
+        sx={{ height: '100%' }}
+        direction="column"
+        justifyContent="start"
         alignItems="center"
-        sx={{ height: '80%' }}
       >
-        <Grid
-          item
-          container
-          xs={6}
-          p={0}
-          sx={{ height: '100%' }}
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-        > */}
-          <div style={{ height: '100px' }}>
-            {!!user.pinnedFile && index === 0 && <FormControl>
-              <RadioGroup
-                aria-labelledby="demo-controlled-radio-buttons-group"
-                name="controlled-radio-buttons-group"
-                value={fileSource}
-                onChange={handleFileTypeChange}
-                sx={{ marginBottom: '1rem' }}
-              >
-                <FormControlLabel value="upload" control={<Radio />} label="Upload a file" />
-                <FormControlLabel value="pinned" control={<Radio />} label="Use your pinned file" />
-              </RadioGroup>
-            </FormControl>}
-          </div>
-          {fileSource === 'upload' ?
-            <div style={{ height: '80px' }}>
-              <Fab
-                variant="extended"
-                aria-label="add"
-                sx={{ margin: '0 auto' }}
-                onClick={handleFileSelectionBtnClick}
-              >
-                <AttachFile sx={{ mr: 1 }} />
-                Select File
-              </Fab>
-              <input
-                type="file"
-                ref={inputFileRef}
-                className="file-input"
-                onChange={validateFileSelection}
-                name="sales_file"
-              />
-              <div style={{ height: '2rem', marginTop: '1rem' }}>
-                {selectedDocument && selectedDocument.name &&
-                  <Typography variant="subtitle1">
-                    {selectedDocument.name}
-                  </Typography>
-                }
-              </div>
-            </div> :
-            <div style={{ height: '80px' }}>
-              <Typography variant="subtitle1">Pinned File:</Typography>
-              <Chip onClick={handlePinnedFileClick} icon={<Attachment />} label={user.pinnedFile} />
+        <Typography variant='h6' sx={{ marginTop: '2rem' }}>
+          {index === 0 ? 'My accounts' : 'Customer\'s accounts'}
+        </Typography>
+        <div style={{ height: '100px' }}>
+          {!!user.pinnedFile && index === 0 && <FormControl>
+            <RadioGroup
+              aria-labelledby="demo-controlled-radio-buttons-group"
+              name="controlled-radio-buttons-group"
+              value={fileSource}
+              onChange={handleFileTypeChange}
+              sx={{ marginBottom: '1rem' }}
+            >
+              <FormControlLabel value="upload" control={<Radio />} label="Upload a file" />
+              <FormControlLabel value="pinned" control={<Radio />} label="Use your pinned file" />
+            </RadioGroup>
+          </FormControl>}
+        </div>
+        {fileSource === 'upload' ?
+          <div style={{ height: '80px' }}>
+            <Fab
+              variant="extended"
+              aria-label="add"
+              sx={{ margin: '0 auto' }}
+              onClick={handleFileSelectionBtnClick}
+            >
+              <AttachFile sx={{ mr: 1 }} />
+              Select File
+            </Fab>
+            <input
+              type="file"
+              ref={inputFileRef}
+              className="file-input"
+              onChange={validateFileSelection}
+              name="sales_file"
+            />
+            <div style={{ height: '2rem', marginTop: '1rem' }}>
+              {selectedDocument && selectedDocument.name &&
+                <Typography variant="subtitle1">
+                  {selectedDocument.name}
+                </Typography>
+              }
             </div>
-          }
-          {/* <TextField
-            required
-            id="standard-basic"
-            label="Column to find duplicate values in"
+          </div> :
+          <div style={{ height: '80px' }}>
+            <Typography variant="subtitle1">Pinned File:</Typography>
+            <Chip onClick={handlePinnedFileClick} icon={<Attachment />} label={user.pinnedFile} />
+          </div>
+        }
+        <Autocomplete
+          multiple={true}
+          options={autocompleteOptions}
+          onChange={handleComparisonColumnFieldChange}
+          value={comparisonColumn}
+          sx={{ width: '100%', margin: '1.5rem 0' }}
+          renderInput={(params) => (<TextField
+            {...params}
             variant="standard"
-            sx={{ width: '100%', margin: '1.5rem 0' }}
-            onChange={handleComparisonColumnFieldChange}
-            value={comparisonColumn}
-          /> */}
-          <Autocomplete
-            multiple={true}
-            options={autocompleteOptions}
-            onChange={handleComparisonColumnFieldChange}
-            value={comparisonColumn}
-            sx={{ width: '100%', margin: '1.5rem 0' }}
-            renderInput={(params) => (<TextField
-              {...params}
-              variant="standard"
-              helperText={`Columns from file ${index === 0 ? 'A' : 'B'} that will be compared with columns
-              from file ${index === 0 ? 'B' : 'A'} to determine match. Hint: the more unique a column's value is
-              to a company, the better (DUNS number, company website, etc.).`}
-            />)}
-          />
-    </form>
+            helperText={`Columns from file ${index === 0 ? 'A' : 'B'} that will be compared with columns
+            from file ${index === 0 ? 'B' : 'A'} to determine match. Limit: 3 columns. Hint: the more unique a column's value is
+            to a company, the better (DUNS number, company website, etc.).`}
+          />)}
+        />
+      </Grid>
+    </>
   );
 }
 

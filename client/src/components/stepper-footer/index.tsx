@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Box,
   Button,
+  Paper
 } from '@mui/material';
 import { connect } from 'react-redux';
 
@@ -23,17 +24,16 @@ const StepperFooter = ({ steps, activeStep, dispatch }: StepperFooterProps) => {
   };
 
   return (
-    <Box sx={{
+    <Paper sx={{
+      position: 'fixed',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      zIndex: 1060,
       display: 'flex',
       flexDirection: 'row',
-      pt: 2,
-      paddingBottom: '1rem',
-      margin: '0 24px',
-      // position: 'fixed',
-      bottom: 0,
-      right: 0,
-      left: 0
-    }}>
+      padding: '0.75rem'
+    }} elevation={3}>
       <Button
         disabled={activeStep === 0}
         onClick={handleBack}
@@ -48,7 +48,7 @@ const StepperFooter = ({ steps, activeStep, dispatch }: StepperFooterProps) => {
       >
         Next
       </Button>
-    </Box>
+    </Paper>
   );
 }
 

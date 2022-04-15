@@ -9,7 +9,7 @@ const DuplicatesTable = ({ duplicatesData }: any) => {
       container
       justifyContent="center"
       alignItems="center"
-      sx={{ height: '90%', marginTop: '3.5rem', padding: '0 2rem' }}
+      sx={{ height: '100%', margin: '3.5rem 0 4.5rem 0', padding: '0 1rem' }}
     >
       <Grid
         item
@@ -17,7 +17,7 @@ const DuplicatesTable = ({ duplicatesData }: any) => {
         xs={12}
         md={12}
         p={0}
-        sx={{ height: '95%', width: '100%' }}
+        sx={{ height: '100%', width: '100%' }}
         direction="column"
         justifyContent="start"
         alignItems="center"
@@ -30,9 +30,10 @@ const DuplicatesTable = ({ duplicatesData }: any) => {
           columnAutoWidth={true}
           showBorders={true}
           width="100%"
+          height="100%"
           rowAlternationEnabled={true}
         >
-          <Column dataField="precision" groupIndex={0} sortOrder="desc"/>
+          <Column dataField="precision" groupIndex={0} sortOrder="desc" name="Precision of match" />
           {duplicatesData && duplicatesData[0] && Array.from(Object.keys(duplicatesData[0]))
             .map((colName: string, index: number) => <Column dataField={colName} key={index} />)}
           <Paging defaultPageSize={25} />

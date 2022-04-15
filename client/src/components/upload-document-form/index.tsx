@@ -4,7 +4,7 @@ import {
   Fab
 } from '@mui/material';
 import axios from 'axios';
-import DataGrid, { ColumnChooser, ColumnFixing, Paging, Pager } from 'devextreme-react/data-grid';
+// import DataGrid, { ColumnChooser, ColumnFixing, Paging, Pager } from 'devextreme-react/data-grid';
 import { Upload } from '@mui/icons-material';
 import { connect } from 'react-redux';
 import UploadDocumentColumn from '../upload-document-column';
@@ -81,10 +81,9 @@ const UploadDocumentForm = ({
     formData.append('resultColumns1', resultColumns1.join());
     formData.append('resultColumns2', resultColumns2.join());
 
-    axios.post('/api/v1/uploadfile', formData)
+    axios.post('http://localhost:3001/api/v1/uploadfile', formData)
       .then((res) => {
         dispatch(hideError());
-        console.log('res', res.data);
         dispatch(uploadDocumentSuccess(res.data));
         dispatch(setIsLoading(false));
         dispatch(changeStep(activeStep += 1));
@@ -103,93 +102,72 @@ const UploadDocumentForm = ({
       <Grid
         container
         spacing={2}
+        direction="row"
         justifyContent="space-between"
-        alignItems="center"
-        // sx={{ height: '90%' }}
+        alignItems="start"
       >
-        <Grid
-          item
-          container
-          xs={4}
-          p={0}
-          sx={{ height: '100%' }}
-          direction="column"
-          justifyContent="start"
-          alignItems="center"
-        >
-          <UploadDocumentColumn
-            comparisonColumn={comparisonColumn1}
-            index={0}
-            selectedDocument={selectedDocument1}
-            fileSource={fileSource1}
-          />
-          {/* <div style={{ width: '100%'}}>
-            <DataGrid
-              id="gridContainer"
-              dataSource={selectedDocument1.data}
-              allowColumnReordering={true}
-              allowColumnResizing={true}
-              columnAutoWidth={true}
-              showBorders={true}
-              ref={dataGrid1}
-            >
-              <ColumnChooser enabled={true} height={150} />
-              <ColumnFixing enabled={true} />
-              <Paging defaultPageSize={2} />
-              <Pager
-                visible={true}
-                displayMode={"full"}
-                showPageSizeSelector={false}
-                showInfo={true}
-                showNavigationButtons={true}
-              />
-            </DataGrid>
-          </div> */}
-        </Grid>
-        <Grid
-          item
-          container
-          xs={4}
-          p={0}
-          sx={{ height: '100%' }}
-          direction="column"
-          justifyContent="start"
-          alignItems="center"
-        >
-          <UploadDocumentColumn
-            comparisonColumn={comparisonColumn2}
-            index={1}
-            selectedDocument={selectedDocument2}
-            fileSource={fileSource2}
-          />
-          {/* <div style={{ width: '100%'}}>
-            <DataGrid
-              id="gridContainer"
-              dataSource={selectedDocument2.data}
-              allowColumnReordering={true}
-              allowColumnResizing={true}
-              columnAutoWidth={true}
-              showBorders={true}
-              ref={dataGrid2}
-            >
-              <ColumnChooser enabled={true} height={150} />
-              <ColumnFixing enabled={true} />
-              <Paging defaultPageSize={2} />
-              <Pager
-                visible={true}
-                displayMode={"full"}
-                showPageSizeSelector={false}
-                showInfo={true}
-                showNavigationButtons={true}
-              />
-            </DataGrid>
-          </div> */}
-        </Grid>
+        <UploadDocumentColumn
+          comparisonColumn={comparisonColumn1}
+          index={0}
+          selectedDocument={selectedDocument1}
+          fileSource={fileSource1}
+        />
+        {/* <div style={{ width: '100%'}}>
+          <DataGrid
+            id="gridContainer"
+            dataSource={selectedDocument1.data}
+            allowColumnReordering={true}
+            allowColumnResizing={true}
+            columnAutoWidth={true}
+            showBorders={true}
+            ref={dataGrid1}
+          >
+            <ColumnChooser enabled={true} height={150} />
+            <ColumnFixing enabled={true} />
+            <Paging defaultPageSize={2} />
+            <Pager
+              visible={true}
+              displayMode={"full"}
+              showPageSizeSelector={false}
+              showInfo={true}
+              showNavigationButtons={true}
+            />
+          </DataGrid>
+        </div> */}
+        <UploadDocumentColumn
+          comparisonColumn={comparisonColumn2}
+          index={1}
+          selectedDocument={selectedDocument2}
+          fileSource={fileSource2}
+        />
+        {/* <div style={{ width: '100%'}}>
+          <DataGrid
+            id="gridContainer"
+            dataSource={selectedDocument2.data}
+            allowColumnReordering={true}
+            allowColumnResizing={true}
+            columnAutoWidth={true}
+            showBorders={true}
+            ref={dataGrid2}
+          >
+            <ColumnChooser enabled={true} height={150} />
+            <ColumnFixing enabled={true} />
+            <Paging defaultPageSize={2} />
+            <Pager
+              visible={true}
+              displayMode={"full"}
+              showPageSizeSelector={false}
+              showInfo={true}
+              showNavigationButtons={true}
+            />
+          </DataGrid>
+        </div> */}
       </Grid>
       <Grid
         container
         justifyContent="space-around"
         alignItems="center"
+        sx={{ marginBottom: '4.5rem' }}
       >
         <Grid
           item
