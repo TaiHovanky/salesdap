@@ -19,8 +19,8 @@ export const parseJSONFromFile = (file: any): Array<any> => {
  * a duplicate value is found, both rows from each spreadsheet are added to the results.
  * @param {Array<any>} salesData1 Spreadsheet data in the form of an array
  * @param {Array<any>} salesData2 Spreadsheet data in the form of an array
- * @param {string} comparisonColumn1 Column that will be compared to comparisonColumn2
- * @param {string} comparisonColumn2 
+ * @param {string} comparisonColumns1 Column that will be compared to comparisonColumns2
+ * @param {string} comparisonColumns2 
  * @returns List of rows with duplicate data in the comparison columns
  */
 export const findDuplicates = (

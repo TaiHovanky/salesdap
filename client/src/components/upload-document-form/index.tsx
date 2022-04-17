@@ -1,45 +1,37 @@
 import React, { useRef, useEffect } from 'react';
-import {
-  Grid,
-  Fab
-} from '@mui/material';
-import axios from 'axios';
-// import DataGrid, { ColumnChooser, ColumnFixing, Paging, Pager } from 'devextreme-react/data-grid';
+import { Grid, Fab } from '@mui/material';
 import { Upload } from '@mui/icons-material';
-import { connect } from 'react-redux';
+import DataGrid, { ColumnChooser, ColumnFixing, Paging, Pager } from 'devextreme-react/data-grid';
 import UploadDocumentColumn from '../upload-document-column';
-import { uploadDocumentSuccess } from '../../state/actions/document';
-import { changeStep } from '../../state/actions/step-progress';
-import { showError, hideError } from '../../state/actions/alert';
-import { setIsLoading } from '../../state/actions/loading';
+import { DocumentState } from '../../state/reducers/document';
+import { UserState } from '../../state/reducers/user';
 
 interface UploadDocumentFormProps {
-  dispatch: any;
-  activeStep: number;
-  selectedDocument1: any;
-  selectedDocument2: any;
-  comparisonColumn1: Array<string>;
-  comparisonColumn2: Array<string>;
-  resultColumns1: Array<string>;
-  resultColumns2: Array<string>;
-  fileSource1: string;
-  fileSource2: string;
+  document: DocumentState;
+  handleUploadAndCompare: any;
+  validateAndSetFileSelection: any;
+  handleFileTypeChange: any;
+  user: UserState;
 }
 
 const UploadDocumentForm = ({
-  dispatch,
-  activeStep,
-  selectedDocument1,
-  selectedDocument2,
-  comparisonColumn1,
-  comparisonColumn2,
-  resultColumns1,
-  resultColumns2,
-  fileSource1,
-  fileSource2,
+  document,
+  handleUploadAndCompare,
+  validateAndSetFileSelection,
+  handleFileTypeChange,
+  user
 }: UploadDocumentFormProps): any => {
   const dataGrid1 = useRef<any>(null);
   const dataGrid2 = useRef<any>(null);
+
+  const {
+    selectedDocument1,
+    selectedDocument2,
+    comparisonColumns1,
+    comparisonColumns2,
+    fileSource1,
+    fileSource2
+  } = document;
 
   useEffect(() => {
     // `current.instance` points to the UI component instance
@@ -51,51 +43,8 @@ const UploadDocumentForm = ({
     }
   }, [selectedDocument1.data.length, selectedDocument2.data.length]);
 
-  /**
-   * Puts the selected file and column name into a FormData instance,
-   * sends it to the server, and then changes to the next step where
-   * the duplicates will be displayed
-   */
-  const handleUpload = () => {
-    dispatch(setIsLoading(true));
-    const formData = new FormData();
-    if (selectedDocument1 && selectedDocument1.name) {
-      const docBlob1 = new Blob([JSON.stringify(selectedDocument1.data)], { type: 'application/json' });
-      formData.append("sales_file1", docBlob1, selectedDocument1.name);
-    }
-
-    if (selectedDocument2 && selectedDocument2.name) {
-      const docBlob2 = new Blob([JSON.stringify(selectedDocument2.data)], { type: 'application/json' });
-      formData.append("sales_file2", docBlob2, selectedDocument2.name);
-    }
-    // let resultColumns1;
-    // let resultColumns2;
-    // if (dataGrid1 && dataGrid1.current && dataGrid1.current.instance) {
-    //   resultColumns1 = dataGrid1.current.instance.getVisibleColumns().map((col: any) => col.dataField);
-    // }
-    // if (dataGrid1 && dataGrid2.current && dataGrid2.current.instance) {
-    //   resultColumns2 = dataGrid2.current.instance.getVisibleColumns().map((col: any) => col.dataField);
-    // }
-    formData.append('comparisonColumn1', comparisonColumn1.join());
-    formData.append('comparisonColumn2', comparisonColumn2.join());
-    formData.append('resultColumns1', resultColumns1.join());
-    formData.append('resultColumns2', resultColumns2.join());
-
-    axios.post('/api/v1/uploadfile', formData)
-      .then((res) => {
-        dispatch(hideError());
-        dispatch(uploadDocumentSuccess(res.data));
-        dispatch(setIsLoading(false));
-        dispatch(changeStep(activeStep += 1));
-      })
-      .catch((err: any) => {
-        dispatch(setIsLoading(false));
-        dispatch(showError(`File upload and comparison failed. ${err}`));
-      });
-  };
-
   const isSubmitBtnEnabled = selectedDocument1 && selectedDocument2 &&
-    comparisonColumn1 && comparisonColumn2;
+    comparisonColumns1 && comparisonColumns2;
 
   return (
     <>
@@ -107,12 +56,15 @@ const UploadDocumentForm = ({
         alignItems="start"
       >
         <UploadDocumentColumn
-          comparisonColumn={comparisonColumn1}
+          comparisonColumns={comparisonColumns1}
           index={0}
           selectedDocument={selectedDocument1}
           fileSource={fileSource1}
+          validateAndSetFileSelection={validateAndSetFileSelection}
+          handleFileTypeChange={handleFileTypeChange}
+          user={user}
         />
-        {/* <div style={{ width: '100%'}}>
+        <div style={{ width: '100%'}}>
           <DataGrid
             id="gridContainer"
             dataSource={selectedDocument1.data}
@@ -133,14 +85,17 @@ const UploadDocumentForm = ({
               showNavigationButtons={true}
             />
           </DataGrid>
-        </div> */}
+        </div>
         <UploadDocumentColumn
-          comparisonColumn={comparisonColumn2}
+          comparisonColumns={comparisonColumns2}
           index={1}
           selectedDocument={selectedDocument2}
           fileSource={fileSource2}
+          validateAndSetFileSelection={validateAndSetFileSelection}
+          handleFileTypeChange={handleFileTypeChange}
+          user={user}
         />
-        {/* <div style={{ width: '100%'}}>
+        <div style={{ width: '100%'}}>
           <DataGrid
             id="gridContainer"
             dataSource={selectedDocument2.data}
@@ -161,7 +116,7 @@ const UploadDocumentForm = ({
               showNavigationButtons={true}
             />
           </DataGrid>
-        </div> */}
+        </div>
       </Grid>
       <Grid
         container
@@ -183,7 +138,7 @@ const UploadDocumentForm = ({
             aria-label="add"
             sx={{ marginTop: '2rem' }}
             disabled={!isSubmitBtnEnabled}
-            onClick={handleUpload}
+            onClick={handleUploadAndCompare}
           >
             <Upload sx={{ mr: 1 }} />
             Upload and Compare
@@ -194,17 +149,4 @@ const UploadDocumentForm = ({
   );
 };
 
-const mapStateToProps = (state: any) => ({
-  activeStep: state.stepProgress.step,
-  selectedDocument1: state.document.selectedDocument1,
-  selectedDocument2: state.document.selectedDocument2,
-  comparisonColumn1: state.document.comparisonColumn1,
-  comparisonColumn2: state.document.comparisonColumn2,
-  resultColumns1: state.document.resultColumns1,
-  resultColumns2: state.document.resultColumns2,
-  fileSource1: state.document.fileSource1,
-  fileSource2: state.document.fileSource2,
-  user: state.user
-});
-
-export default connect(mapStateToProps)(UploadDocumentForm);
+export default UploadDocumentForm;

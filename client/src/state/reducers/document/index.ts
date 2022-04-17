@@ -12,12 +12,12 @@ interface SelectedDocument {
   name: string;
 }
 
-interface DocumentState {
+export interface DocumentState {
   duplicatesData: Array<any>;
   selectedDocument1: SelectedDocument;
   selectedDocument2: SelectedDocument;
-  comparisonColumn1: Array<string>;
-  comparisonColumn2: Array<string>;
+  comparisonColumns1: Array<string>;
+  comparisonColumns2: Array<string>;
   resultColumns1: Array<string>;
   resultColumns2: Array<string>;
   fileSource1: string;
@@ -29,8 +29,8 @@ const initialState: DocumentState = {
   duplicatesData: [],
   selectedDocument1: { data: [], name: '' },
   selectedDocument2: { data: [], name: '' },
-  comparisonColumn1: [],
-  comparisonColumn2: [],
+  comparisonColumns1: [],
+  comparisonColumns2: [],
   resultColumns1: [],
   resultColumns2: [],
   fileSource1: 'upload',
@@ -42,9 +42,9 @@ export const documentReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case CHANGE_COMPARISON_COLUMN:
       if (action.index === 0) {
-        return { ...state, comparisonColumn1: action.payload, resultColumns1: action.payload };
+        return { ...state, comparisonColumns1: action.payload, resultColumns1: action.payload };
       } else {
-        return { ...state, comparisonColumn2: action.payload, resultColumns2: action.payload}
+        return { ...state, comparisonColumns2: action.payload, resultColumns2: action.payload}
       }
     case CHANGE_RESULT_COLUMNS:
       if (action.index === 0) {

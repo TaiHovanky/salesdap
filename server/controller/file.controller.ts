@@ -9,8 +9,8 @@ import db from '../db';
 
 export const uploadAndCompareFiles = async (req: any, res: any) => {
   const {
-    comparisonColumn1,
-    comparisonColumn2,
+    comparisonColumns1,
+    comparisonColumns2,
     resultColumns1,
     resultColumns2,
   } = req.body;
@@ -20,12 +20,12 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
     const salesData2: Array<any> = parseJSONFromFile(req.files.sales_file2[0].path);
 
     /* Create list of rows where there is a duplicate value that is shared between the specified columns
-      (comparisonColumn1 and comparisonColumn2) */
+      (comparisonColumns1 and comparisonColumns2) */
     const duplicatesList: Array<any> = findDuplicates(
       salesData1,
       salesData2,
-      comparisonColumn1.split(','),
-      comparisonColumn2.split(',')
+      comparisonColumns1.split(','),
+      comparisonColumns2.split(',')
     );
 
     /* Create array of objects (rows) that only contain the columns that the user wants to see
