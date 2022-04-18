@@ -64,7 +64,7 @@ const Register = ({ dispatch }: any) => {
           'Content-Type': 'multipart/form-data'
         }
       };
-      axios.post('/api/v1/register', formData, config)
+      axios.post('http://localhost:3001/api/v1/register', formData, config)
         .then((res) => {
           dispatch(hideError());
           dispatch(updateUser(res.data));

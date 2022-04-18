@@ -18,6 +18,7 @@ const initialState = {
 export const emailTemplateReducer = (state = initialState, action: any) => {
   switch(action.type) {
     case UPDATE_EMAIL_TEMPLATE:
+      console.log('updating template?', action.payload);
       return { ...state, template: action.payload };
     default:
       return state;

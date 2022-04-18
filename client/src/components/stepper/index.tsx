@@ -6,12 +6,11 @@ import {
   StepLabel,
   Container
 } from '@mui/material';
-import { connect } from 'react-redux';
 
-import UploadDocumentForm from '../upload-document-form';
-import DuplicatesTable from '../duplicates-table';
-import EmailTemplate from '../email-template';
-import StepperFooter from '../stepper-footer';
+import UploadDocumentFormContainer from '../../containers/upload-document-form';
+import DuplicatesTableContainer from '../../containers/duplicates-table';
+import EmailTemplateContainer from '../../containers/email-template';
+import StepperFooterContainer from '../../containers/stepper-footer';
 
 const steps = ['Upload document', 'View duplicates', 'Email customers'];
 
@@ -23,7 +22,7 @@ const HorizontalLinearStepper = ({ activeStep }: Props) => {
   return (
     <>
       <Box sx={{ width: '100%', height: '100%', marginTop: '3.5vh' }}>
-        <Stepper activeStep={activeStep} sx={{ marginLeft: '25%', marginRight: '25%'}}>
+        <Stepper nonLinear={true} activeStep={activeStep} sx={{ marginLeft: '25%', marginRight: '25%'}}>
           {steps.map((label: string) => {
             const stepProps: { completed?: boolean } = {};
             const labelProps: {
@@ -39,32 +38,28 @@ const HorizontalLinearStepper = ({ activeStep }: Props) => {
         {activeStep === 0 &&
           <React.Fragment>
             <Container sx={{ height: '100%' }}>
-              <UploadDocumentForm />
+              <UploadDocumentFormContainer />
             </Container>
           </React.Fragment>
         }
         {activeStep === 1 &&
           <React.Fragment>
             <Container sx={{ height: '100%', width: '100%', maxWidth: '100%' }} maxWidth={false}>
-              <DuplicatesTable />
+              <DuplicatesTableContainer />
             </Container>
           </React.Fragment>
         }
         {activeStep === 2 &&
           <React.Fragment>
             <Container sx={{ height: '100%', width: '100%' }}>
-              <EmailTemplate />
+              <EmailTemplateContainer />
             </Container>
           </React.Fragment>
         }
       </Box>
-      <StepperFooter steps={steps} />
+      <StepperFooterContainer steps={steps} />
     </>
   );
 }
 
-const mapStateToProps = (state: any) => ({
-  activeStep: state.stepProgress.step
-});
-
-export default connect(mapStateToProps)(HorizontalLinearStepper);
+export default HorizontalLinearStepper;

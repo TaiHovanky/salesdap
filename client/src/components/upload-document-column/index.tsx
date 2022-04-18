@@ -1,10 +1,10 @@
 import React from 'react';
 import { Typography, Grid } from '@mui/material';
 import { UserState } from '../../state/reducers/user';
-import FileSelectionField from '../file-selection-field';
-import PinnedFileChip from '../pinned-file-chip';
-import ComparisonColumnAutocomplete from '../comparison-column-autocomplete';
-import FileSourceRadio from '../file-source-radio';
+import FileSelectionFieldContainer from '../../containers/file-selection-field';
+import PinnedFileChipContainer from '../../containers/pinned-file-chip';
+import FileSourceRadioContainer from '../../containers/file-source-radio';
+import ComparisonColumnAutocompleteContainer from '../../containers/comparison-column-autocomplete';
 
 interface UploadDocumentColumnProps {
   selectedDocument: any;
@@ -12,8 +12,6 @@ interface UploadDocumentColumnProps {
   fileSource: string;
   index: number;
   user: UserState;
-  validateAndSetFileSelection: any;
-  handleFileTypeChange: any;
 }
 
 const UploadDocumentColumn = ({
@@ -22,47 +20,29 @@ const UploadDocumentColumn = ({
   fileSource,
   index,
   user,
-  validateAndSetFileSelection,
-  handleFileTypeChange
 }: UploadDocumentColumnProps) => {
   return (
     <>
-      <Grid
-        item
-        container
-        xs={4}
-        p={0}
-        sx={{ height: '100%' }}
-        direction="column"
-        justifyContent="start"
-        alignItems="center"
-      >
-        <Typography variant='h6' sx={{ marginTop: '2rem' }}>
-          {index === 0 ? 'My accounts' : 'Customer\'s accounts'}
-        </Typography>
-        <div style={{ height: '100px' }}>
-          {!!user.pinnedFile && index === 0 && <FileSourceRadio
-            fileSource={fileSource}
-            handleFileTypeChange={handleFileTypeChange}
-            index={index}
-          />}
-        </div>
-        <div style={{ height: '80px' }}>
-          {fileSource === 'upload' ?
-            <FileSelectionField
-              selectedDocument={selectedDocument}
-              validateAndSetFileSelection={validateAndSetFileSelection}
-              index={index}
-            /> :
-            <PinnedFileChip user={user} />
-          }
-        </div>
-        <ComparisonColumnAutocomplete
-          selectedDocument={selectedDocument}
-          comparisonColumns={comparisonColumns}
+      <Typography variant='h6' sx={{ marginTop: '2rem' }}>
+        {index === 0 ? 'My accounts' : 'Customer\'s accounts'}
+      </Typography>
+      <div style={{ height: '100px' }}>
+        {!!user.pinnedFile && index === 0 && <FileSourceRadioContainer
+          fileSource={fileSource}
           index={index}
-        />
-      </Grid>
+        />}
+      </div>
+      <div style={{ height: '80px' }}>
+        {fileSource === 'upload' ?
+          <FileSelectionFieldContainer selectedDocument={selectedDocument} index={index} /> :
+          <PinnedFileChipContainer />
+        }
+      </div>
+      <ComparisonColumnAutocompleteContainer
+        selectedDocument={selectedDocument}
+        comparisonColumns={comparisonColumns}
+        index={index}
+      />
     </>
   );
 }

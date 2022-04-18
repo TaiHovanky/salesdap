@@ -1,44 +1,28 @@
-import React, { SyntheticEvent } from 'react';
-import {
-  Fab,
-  Typography,
-  FormControlLabel,
-  FormControl,
-  Radio,
-  RadioGroup,
-  Chip,
-  TextField,
-  Autocomplete,
-  Grid
-} from '@mui/material';
+import React from 'react';
+import { TextField, Autocomplete } from '@mui/material';
 
 interface Props {
   selectedDocument: any;
   comparisonColumns: Array<string>;
+  changeComparisonColumn: any;
   index: number;
 }
 
-const ComparisonColumnAutocomplete = ({ selectedDocument, comparisonColumns, index }: Props) => {
+const ComparisonColumnAutocomplete = ({
+  selectedDocument,
+  comparisonColumns,
+  changeComparisonColumn,
+  index
+}: Props) => {
   const autocompleteOptions: Array<string> = selectedDocument && selectedDocument.data && selectedDocument.data[0] ?
     Array.from(Object.keys(selectedDocument.data[0])) :
     [];
-
-  /**
-   * As the user types in the Column field, update its value
-   * @param event
-   */
-  //  const handleComparisonColumnFieldChange = (
-  //   event: SyntheticEvent<Element, Event>,
-  //   newValue: Array<string>
-  // ) => {
-  //   dispatch(changeComparisonColumn(newValue, index));
-  // };
 
   return (
     <Autocomplete
       multiple={true}
       options={autocompleteOptions}
-      onChange={(event, newValue) => changeComparisonColumn(event, newValue)}
+      onChange={(event, newValue) => changeComparisonColumn(event, newValue, index)}
       value={comparisonColumns}
       sx={{ width: '100%', margin: '1.5rem 0' }}
       renderInput={(params: any) => (<TextField

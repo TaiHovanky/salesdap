@@ -1,12 +1,12 @@
 import React from 'react';
-import Stepper from '../../components/stepper';
+import StepperContainer from '../../containers/stepper';
 import NavBar from '../../components/nav-bar';
 
 const Home = () => {
   return (
     <>
       <NavBar />
-      <Stepper />
+      <StepperContainer />
     </>
   );
 }

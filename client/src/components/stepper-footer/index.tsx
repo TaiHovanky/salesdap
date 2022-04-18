@@ -4,25 +4,20 @@ import {
   Button,
   Paper
 } from '@mui/material';
-import { connect } from 'react-redux';
-
-import { changeStep } from '../../state/actions/step-progress';
 
 interface StepperFooterProps {
   steps: Array<string>;
+  handleNext: any;
+  handleBack: any;
   activeStep: number;
-  dispatch: any;
 }
 
-const StepperFooter = ({ steps, activeStep, dispatch }: StepperFooterProps) => {
-  const handleNext = () => {
-    dispatch(changeStep(activeStep += 1));
-  };
-
-  const handleBack = () => {
-    dispatch(changeStep(activeStep -= 1));
-  };
-
+const StepperFooter = ({
+  steps,
+  activeStep,
+  handleBack,
+  handleNext
+}: StepperFooterProps) => {
   return (
     <Paper sx={{
       position: 'fixed',
@@ -52,8 +47,4 @@ const StepperFooter = ({ steps, activeStep, dispatch }: StepperFooterProps) => {
   );
 }
 
-const mapStateToProps = (state: any) => ({
-  activeStep: state.stepProgress.step
-});
-
-export default connect(mapStateToProps)(StepperFooter);
+export default StepperFooter;

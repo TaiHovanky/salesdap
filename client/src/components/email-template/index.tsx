@@ -1,26 +1,20 @@
-import React, { useRef, ChangeEvent } from 'react';
+import React, { useRef } from 'react';
 import {
   Grid,
   TextField,
   Fab
 } from '@mui/material';
 import { Download, ContentCopy } from '@mui/icons-material';
-import { connect } from 'react-redux';
 import { downloadSpreadsheetFromJSON } from '../../utils/spreadsheet.utils';
-import { updateEmailTemplate } from '../../state/actions/email-template';
 
 interface Props {
   duplicatesData: Array<any>;
   template: string;
-  dispatch: any;
+  handleTemplateChange: any;
 }
 
-const EmailTemplate = ({ duplicatesData, template, dispatch }: Props) => {
+const EmailTemplate = ({ duplicatesData, template, handleTemplateChange }: Props) => {
   const textAreaRef = useRef<any>(null);
-
-  const handleTemplateChange = (event: ChangeEvent<HTMLInputElement>) => {
-    dispatch(updateEmailTemplate(event.target.value));
-  }
 
   const handleResultsDownload = () => {
     downloadSpreadsheetFromJSON(duplicatesData);
@@ -86,9 +80,4 @@ const EmailTemplate = ({ duplicatesData, template, dispatch }: Props) => {
   );
 }
 
-const mapStateToProps = (state: any) => ({
-  duplicatesData: state.document.duplicatesData,
-  template: state.emailTemplate.template
-});
-
-export default connect(mapStateToProps)(EmailTemplate);
+export default EmailTemplate;

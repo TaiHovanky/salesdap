@@ -41,7 +41,7 @@ const ForgotPassword = () => {
         }
       };
       setLoading(true);
-      axios.post('/api/v1/forgotpassword', formData, config)
+      axios.post('http://localhost:3001/api/v1/forgotpassword', formData, config)
         .then(() => {
           setLoading(false);
           setForgotPasswordError('');
