@@ -25,9 +25,8 @@ const ComparisonColumnAutocompleteContainer = ({
     setComparisonColumnsError(newValue, index)
   };
 
-  const handleComparisonColumnsBlur = (event: any, x: any, y: any) => {
-    console.log('blur', x, y, event);
-    setComparisonColumnsError(event.target.outerText, index)
+  const handleComparisonColumnsBlur = () => {
+    setComparisonColumnsError(comparisonColumns, index)
   };
 
   return (

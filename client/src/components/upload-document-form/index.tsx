@@ -127,7 +127,7 @@ const UploadDocumentForm = ({
             index={0}
           />
           <div style={{ width: '100%'}}>
-            <Typography variant="subtitle1" sx={{ margin: '2rem 0 0 0'}}>
+            <Typography variant="subtitle1" sx={{ margin: '2.5rem 0 0 0'}}>
               Click and drag columns that are NOT wanted in results table to Unwanted Columns in the data grid below
             </Typography>
             <DataGrid
@@ -170,7 +170,7 @@ const UploadDocumentForm = ({
             index={1}
           />
           <div style={{ width: '100%'}}>
-            <Typography variant="subtitle1" sx={{ margin: '2rem 0 0 0'}}>
+            <Typography variant="subtitle1" sx={{ margin: '2.5rem 0 0 0'}}>
               Click and drag columns that are NOT wanted in results table to Unwanted Columns in the data grid below
             </Typography>
             <DataGrid
