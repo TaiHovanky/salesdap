@@ -3,8 +3,8 @@ import {
   Box,
   Stepper,
   Step,
-  StepLabel,
-  Container
+  StepButton,
+  Container,
 } from '@mui/material';
 
 import UploadDocumentFormContainer from '../../containers/upload-document-form';
@@ -16,21 +16,22 @@ const steps = ['Upload document', 'View duplicates', 'Email customers'];
 
 interface Props {
   activeStep: number;
+  changeStep: any;
 }
 
-const HorizontalLinearStepper = ({ activeStep }: Props) => {
+const HorizontalLinearStepper = ({ activeStep, changeStep }: Props) => {
   return (
     <>
       <Box sx={{ width: '100%', height: '100%', marginTop: '3.5vh' }}>
         <Stepper nonLinear={true} activeStep={activeStep} sx={{ marginLeft: '25%', marginRight: '25%'}}>
-          {steps.map((label: string) => {
+          {steps.map((label: string, index: number) => {
             const stepProps: { completed?: boolean } = {};
             const labelProps: {
               optional?: React.ReactNode;
             } = {};
             return (
               <Step key={label} {...stepProps}>
-                <StepLabel {...labelProps}>{label}</StepLabel>
+                <StepButton onClick={() => changeStep(index)} {...labelProps}>{label}</StepButton>
               </Step>
             );
           })}

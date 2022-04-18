@@ -1,18 +1,31 @@
 import React, { useRef, useEffect } from 'react';
+import axios from 'axios';
 import UploadDocumentColumnContainer from '../../containers/upload-document-column';
-import { Grid, Fab } from '@mui/material';
-import { Upload } from '@mui/icons-material';
 import DataGrid, { ColumnChooser, ColumnFixing, Paging, Pager } from 'devextreme-react/data-grid';
+import { Grid, Fab, Typography } from '@mui/material';
+import { Upload } from '@mui/icons-material';
 import { DocumentState } from '../../state/reducers/document';
 
 interface UploadDocumentFormProps {
   document: DocumentState;
-  handleUploadAndCompare: any;
+  // handleUploadAndCompare: any;
+  activeStep: number;
+  showError: any;
+  hideError: any;
+  uploadDocumentSuccess: any;
+  setIsLoading: any;
+  changeStep: any;
 }
 
 const UploadDocumentForm = ({
   document,
-  handleUploadAndCompare,
+  // handleUploadAndCompare,
+  activeStep,
+  showError,
+  hideError,
+  uploadDocumentSuccess,
+  setIsLoading,
+  changeStep,
 }: UploadDocumentFormProps): any => {
   const dataGrid1 = useRef<any>(null);
   const dataGrid2 = useRef<any>(null);
@@ -22,6 +35,8 @@ const UploadDocumentForm = ({
     selectedDocument2,
     comparisonColumns1,
     comparisonColumns2,
+    comparisonColumns1Error,
+    comparisonColumns2Error,
     fileSource1,
     fileSource2
   } = document;
@@ -35,6 +50,52 @@ const UploadDocumentForm = ({
       dataGrid2.current.instance.showColumnChooser();
     }
   }, [selectedDocument1.data.length, selectedDocument2.data.length]);
+
+  /**
+   * Puts the selected file and column name into a FormData instance,
+   * sends it to the server, and then changes to the next step where
+   * the duplicates will be displayed
+   * Note: because we use the dataGrid ref to get the resultColumns, we're breaking from the pattern
+   * of smart container/dumb component here.
+   */
+   const handleUploadAndCompare = () => {
+    setIsLoading(true);
+    const formData = new FormData();
+    if (selectedDocument1 && selectedDocument1.name) {
+      const docBlob1 = new Blob([JSON.stringify(selectedDocument1.data)], { type: 'application/json' });
+      formData.append("sales_file1", docBlob1, selectedDocument1.name);
+    }
+
+    if (selectedDocument2 && selectedDocument2.name) {
+      const docBlob2 = new Blob([JSON.stringify(selectedDocument2.data)], { type: 'application/json' });
+      formData.append("sales_file2", docBlob2, selectedDocument2.name);
+    }
+    let resultColumns1;
+    let resultColumns2;
+    if (dataGrid1 && dataGrid1.current && dataGrid1.current.instance) {
+      resultColumns1 = dataGrid1.current.instance.getVisibleColumns().map((col: any) => col.dataField);
+    }
+    if (dataGrid1 && dataGrid2.current && dataGrid2.current.instance) {
+      resultColumns2 = dataGrid2.current.instance.getVisibleColumns().map((col: any) => col.dataField);
+    }
+    formData.append('comparisonColumns1', comparisonColumns1.join());
+    formData.append('comparisonColumns2', comparisonColumns2.join());
+    formData.append('resultColumns1', resultColumns1.join());
+    formData.append('resultColumns2', resultColumns2.join());
+
+    axios.post('http://localhost:3001/api/v1/uploadfile', formData)
+      .then((res: any) => {
+        hideError();
+        uploadDocumentSuccess(res.data);
+        setIsLoading(false);
+        changeStep(activeStep += 1);
+      })
+      .catch((err: any) => {
+        setIsLoading(false);
+        showError(`File upload and comparison failed. ${err}`);
+      });
+  };
+
 
   const isSubmitBtnEnabled = selectedDocument1 && selectedDocument2 &&
     comparisonColumns1 && comparisonColumns2;
@@ -60,11 +121,15 @@ const UploadDocumentForm = ({
         >
           <UploadDocumentColumnContainer
             comparisonColumns={comparisonColumns1}
+            comparisonColumnsError={comparisonColumns1Error}
             selectedDocument={selectedDocument1}
             fileSource={fileSource1}
             index={0}
           />
           <div style={{ width: '100%'}}>
+            <Typography variant="subtitle1" sx={{ margin: '2rem 0 0 0'}}>
+              Click and drag columns that are NOT wanted in results table to Unwanted Columns in the data grid below
+            </Typography>
             <DataGrid
               id="gridContainer"
               dataSource={selectedDocument1.data}
@@ -99,11 +164,15 @@ const UploadDocumentForm = ({
         >
           <UploadDocumentColumnContainer
             comparisonColumns={comparisonColumns2}
+            comparisonColumnsError={comparisonColumns2Error}
             selectedDocument={selectedDocument2}
             fileSource={fileSource2}
             index={1}
           />
           <div style={{ width: '100%'}}>
+            <Typography variant="subtitle1" sx={{ margin: '2rem 0 0 0'}}>
+              Click and drag columns that are NOT wanted in results table to Unwanted Columns in the data grid below
+            </Typography>
             <DataGrid
               id="gridContainer"
               dataSource={selectedDocument2.data}

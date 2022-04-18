@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Grid } from '@mui/material';
+import { Typography } from '@mui/material';
 import { UserState } from '../../state/reducers/user';
 import FileSelectionFieldContainer from '../../containers/file-selection-field';
 import PinnedFileChipContainer from '../../containers/pinned-file-chip';
@@ -9,6 +9,7 @@ import ComparisonColumnAutocompleteContainer from '../../containers/comparison-c
 interface UploadDocumentColumnProps {
   selectedDocument: any;
   comparisonColumns: Array<string>;
+  comparisonColumnsError: string;
   fileSource: string;
   index: number;
   user: UserState;
@@ -17,6 +18,7 @@ interface UploadDocumentColumnProps {
 const UploadDocumentColumn = ({
   selectedDocument,
   comparisonColumns,
+  comparisonColumnsError,
   fileSource,
   index,
   user,
@@ -41,6 +43,7 @@ const UploadDocumentColumn = ({
       <ComparisonColumnAutocompleteContainer
         selectedDocument={selectedDocument}
         comparisonColumns={comparisonColumns}
+        comparisonColumnsError={comparisonColumnsError}
         index={index}
       />
     </>

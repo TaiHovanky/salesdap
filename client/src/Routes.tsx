@@ -47,7 +47,7 @@ const Routes = ({ alert, loading }: Props) => {
         >
           {alert.message}
         </Alert>}
-        <Backdrop open={loading} sx={{ zIndex: 1060 }}>
+        <Backdrop open={loading} sx={{ zIndex: 1550 }}>
           <CircularProgress color="inherit" />
         </Backdrop>
       </main>

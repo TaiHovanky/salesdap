@@ -7,6 +7,7 @@ export const PIN_FILE = 'PIN_FILE';
 export const PIN_FILE_FAILURE = 'PIN_FILE_FAILURE';
 export const PIN_FILE_SUCCESS = 'PIN_FILE_SUCCESS';
 export const SET_FILE_SOURCE = 'SET_FILE_SOURCE';
+export const SET_COMPARISON_COLUMNS_ERROR = 'SET_COMPARISON_COLUMNS_ERROR';
 
 export const setIsLoading = (isLoading: boolean) => ({
   type: SET_IS_LOADING,
@@ -56,3 +57,17 @@ export const setFileSource = (index: number, value: string) => ({
   index,
   payload: value
 });
+
+export const setComparisonColumnsError = (value: Array<string>, index: number) => {
+  let payload = '';
+  if (!value || !value.length) {
+    payload = 'Required';
+  } else if (value.length > 3) {
+    payload = 'Can only compare 3 columns in spreadsheet';
+  }
+  return {
+    type: SET_COMPARISON_COLUMNS_ERROR,
+    payload,
+    index
+  }
+}

@@ -15,3 +15,7 @@ code {
 .dx-popup-normal {
   transform: translate(0px, 70px) !important;
 }
+
+.MuiAutocomplete-popper {
+  z-index: 1540 !important;
+}

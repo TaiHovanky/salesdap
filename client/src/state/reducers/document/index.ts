@@ -1,10 +1,10 @@
 import {
-  SET_IS_LOADING,
   UPLOAD_DOCUMENT_SUCCESS,
   SELECT_DOCUMENT,
   CHANGE_COMPARISON_COLUMN,
   CHANGE_RESULT_COLUMNS,
-  SET_FILE_SOURCE
+  SET_FILE_SOURCE,
+  SET_COMPARISON_COLUMNS_ERROR
 } from '../../actions/document';
 
 interface SelectedDocument {
@@ -22,7 +22,8 @@ export interface DocumentState {
   resultColumns2: Array<string>;
   fileSource1: string;
   fileSource2: string;
-  loading: boolean;
+  comparisonColumns1Error: string;
+  comparisonColumns2Error: string;
 }
 
 const initialState: DocumentState = {
@@ -35,16 +36,31 @@ const initialState: DocumentState = {
   resultColumns2: [],
   fileSource1: 'upload',
   fileSource2: 'upload',
-  loading: false,
+  comparisonColumns1Error: '',
+  comparisonColumns2Error: '',
 };
 
 export const documentReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case CHANGE_COMPARISON_COLUMN:
       if (action.index === 0) {
-        return { ...state, comparisonColumns1: action.payload, resultColumns1: action.payload };
+        return {
+          ...state,
+          comparisonColumns1: action.payload,
+          resultColumns1: action.payload,
+        };
       } else {
-        return { ...state, comparisonColumns2: action.payload, resultColumns2: action.payload}
+        return {
+          ...state,
+          comparisonColumns2: action.payload,
+          resultColumns2: action.payload,
+        };
+      }
+    case SET_COMPARISON_COLUMNS_ERROR:
+      if (action.index === 0) {
+        return { ...state, comparisonColumns1Error: action.payload };
+      } else {
+        return { ...state, comparisonColumns2Error: action.payload}
       }
     case CHANGE_RESULT_COLUMNS:
       if (action.index === 0) {
@@ -82,12 +98,9 @@ export const documentReducer = (state = initialState, action: any) => {
           fileSource2: action.payload
         };
       }
-    case SET_IS_LOADING:
-      return { ...state, loading: action.payload };
     case UPLOAD_DOCUMENT_SUCCESS:
       return {
         ...state,
-        loading: false,
         duplicatesData: action.payload
       };
     default:
