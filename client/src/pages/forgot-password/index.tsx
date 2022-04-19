@@ -1,22 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Box,
   Fab,
   TextField,
-  CircularProgress,
-  Backdrop,
   Grid,
   Typography,
-  Alert,
 } from '@mui/material';
-import axios from 'axios';
 import { useFormik } from 'formik';
 import NavBar from '../../components/nav-bar';
 
-const ForgotPassword = () => {
-  const [loading, setLoading] = useState(false);
-  const [forgotPasswordError, setForgotPasswordError] = useState('');
+interface Props {
+  onSubmit: any;
+}
 
+const ForgotPassword = ({ onSubmit }: Props) => {
   const validate = (values: any) => {
     const errors: any = {};
   
@@ -32,26 +29,7 @@ const ForgotPassword = () => {
       email: '',
     },
     validate,
-    onSubmit: (values: any) => {
-      const formData = new FormData();
-      formData.append('email', values.email);
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      };
-      setLoading(true);
-      axios.post('http://localhost:3001/api/v1/forgotpassword', formData, config)
-        .then(() => {
-          setLoading(false);
-          setForgotPasswordError('');
-        })
-        .catch((err: any) => {
-          console.log('err', err);
-          setLoading(false);
-          setForgotPasswordError('Wrong email or password');
-        });
-    },
+    onSubmit
   });
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = formik;
@@ -124,23 +102,9 @@ const ForgotPassword = () => {
                 </Grid>
               </Grid>
             </form>
-
-            {!!forgotPasswordError &&
-              <Alert
-                severity="error"
-                variant="standard"
-                sx={{ marginTop: '2rem', borderRadius: '10px', width: '100%' }}
-              >
-                {forgotPasswordError}
-              </Alert>
-            }
           </Grid>
         </Grid>
       </Box>
-
-      <Backdrop open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
     </>
   );
 };

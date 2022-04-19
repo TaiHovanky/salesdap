@@ -139,7 +139,7 @@ const UploadDocumentForm = ({
               showBorders={true}
               ref={dataGrid1}
             >
-              <ColumnChooser enabled={true} height={150} />
+              <ColumnChooser enabled={true} height={150} title="Unwanted columns" />
               <ColumnFixing enabled={true} />
               <Paging defaultPageSize={2} />
               <Pager
@@ -182,7 +182,7 @@ const UploadDocumentForm = ({
               showBorders={true}
               ref={dataGrid2}
             >
-              <ColumnChooser enabled={true} height={150} />
+              <ColumnChooser enabled={true} height={150} title="Unwanted columns" />
               <ColumnFixing enabled={true} />
               <Paging defaultPageSize={2} />
               <Pager

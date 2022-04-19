@@ -13,7 +13,7 @@ import { useFormik } from 'formik';
 import { connect } from 'react-redux';
 import NavBar from '../../components/nav-bar';
 import { updateUser } from '../../state/actions/user';
-import EmailCapture from '../email-capture';
+import EmailCaptureContainer from '../../containers/email-capture';
 import { showError, hideError } from '../../state/actions/alert';
 import { setIsLoading } from '../../state/actions/loading';
 
@@ -164,7 +164,7 @@ const Login = ({ dispatch }: any) => {
       </Box>
 
       <Dialog open={isEmailCaptureModalOpen} onClose={handleClose}>
-        <EmailCapture onClose={handleClose} />
+        <EmailCaptureContainer onClose={handleClose} />
       </Dialog>
     </>
   );

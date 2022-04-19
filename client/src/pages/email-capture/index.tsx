@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import {
   Box,
   Grid,
@@ -11,17 +10,14 @@ import {
   IconButton,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import { connect } from 'react-redux';
 import { useFormik } from 'formik';
-import { setIsLoading } from '../../state/actions/loading';
-import { showError, hideError } from '../../state/actions/alert';
 
-interface EmailCaptureProps {
+interface Props {
   onClose: any;
-  dispatch: any;
+  onSubmit: any;
 }
 
-const EmailCapture = ({ onClose, dispatch }: EmailCaptureProps) => {
+const EmailCapture = ({ onClose, onSubmit }: Props) => {
 
   const validate = (values: any) => {
     const errors: any = {};
@@ -38,28 +34,7 @@ const EmailCapture = ({ onClose, dispatch }: EmailCaptureProps) => {
       email: ''
     },
     validate,
-    onSubmit: (values: any) => {
-      dispatch(setIsLoading(true));
-      const formData = new FormData();
-      formData.append('email', values.email);
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      };
-
-      axios.post('http://localhost:3001/api/v1/email', formData, config)
-        .then(() => {
-          dispatch(hideError());
-          dispatch(setIsLoading(false));
-          onClose();
-        })
-        .catch((err: any) => {
-          console.log('email err', err);
-          dispatch(setIsLoading(false));
-          dispatch(showError('Waitlist registration failed. Please try again.'))
-        });
-    }
+    onSubmit
   });
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = formik;
@@ -123,4 +98,4 @@ const EmailCapture = ({ onClose, dispatch }: EmailCaptureProps) => {
   );
 }
 
-export default connect()(EmailCapture);
+export default EmailCapture;

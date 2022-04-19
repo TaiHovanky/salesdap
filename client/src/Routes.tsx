@@ -11,7 +11,7 @@ import Register from './pages/register';
 import Login from './pages/login';
 import Profile from './pages/profile';
 import PasswordReset from './pages/password-reset';
-import ForgotPassword from './pages/forgot-password';
+import ForgotPasswordContainer from './containers/forgot-password';
 import PrivateRoute from './components/private-route'; // set everything to private after testing
 import { AlertState } from './state/reducers/alert';
 
@@ -31,7 +31,7 @@ const Routes = ({ alert, loading }: Props) => {
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
           <PrivateRoute exact path="/profile" component={Profile} />
-          <Route exact path="/forgot-password" component={ForgotPassword} />
+          <Route exact path="/forgot-password" component={ForgotPasswordContainer} />
           <Route path="/password-reset/:token" component={PasswordReset} />
         </Switch>
         {alert.isOpen && <Alert

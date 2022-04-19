@@ -1,4 +1,3 @@
-export const SET_IS_LOADING = 'SET_IS_LOADING';
 export const UPLOAD_DOCUMENT_SUCCESS = 'UPLOAD_DOCUMENT_SUCCESS';
 export const SELECT_DOCUMENT = 'SELECT_DOCUMENT';
 export const CHANGE_COMPARISON_COLUMN = 'CHANGE_COMPARISON_COLUMN';
@@ -8,11 +7,6 @@ export const PIN_FILE_FAILURE = 'PIN_FILE_FAILURE';
 export const PIN_FILE_SUCCESS = 'PIN_FILE_SUCCESS';
 export const SET_FILE_SOURCE = 'SET_FILE_SOURCE';
 export const SET_COMPARISON_COLUMNS_ERROR = 'SET_COMPARISON_COLUMNS_ERROR';
-
-export const setIsLoading = (isLoading: boolean) => ({
-  type: SET_IS_LOADING,
-  payload: isLoading
-});
 
 export const uploadDocumentSuccess = (duplicatesData: any) => ({
   type: UPLOAD_DOCUMENT_SUCCESS,
@@ -31,12 +25,6 @@ export const changeComparisonColumn = (value: Array<string>, index: number) => (
   payload: value,
   index
 });
-
-// export const changeResultColumns = (value: Array<string>, index: number) => ({
-//   type: CHANGE_RESULT_COLUMNS,
-//   payload: value,
-//   index
-// }); <-- might not need while using autocomplete
 
 // export const pinFile = () => ({
 //   type: PIN_FILE
