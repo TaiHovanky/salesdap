@@ -1,4 +1,11 @@
 import './App.css';
+import Home from './pages/home';
+import Register from './pages/register';
+import LoginContainer from './containers/login';
+import Profile from './pages/profile';
+import PasswordResetContainer from './containers/password-reset';
+import ForgotPasswordContainer from './containers/forgot-password';
+import PrivateRoute from './components/private-route'; // set everything to private after testing
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import {
   Alert,
@@ -6,13 +13,6 @@ import {
   CircularProgress
 } from '@mui/material';
 import { connect } from 'react-redux';
-import Home from './pages/home';
-import Register from './pages/register';
-import Login from './pages/login';
-import Profile from './pages/profile';
-import PasswordReset from './pages/password-reset';
-import ForgotPasswordContainer from './containers/forgot-password';
-import PrivateRoute from './components/private-route'; // set everything to private after testing
 import { AlertState } from './state/reducers/alert';
 
 interface Props {
@@ -25,14 +25,13 @@ const Routes = ({ alert, loading }: Props) => {
   return (
     <BrowserRouter>
       <main>
-        {/* <PrimaryAppBarContainer /> */}
         <Switch>
           <Route exact path="/home" component={Home} />
-          <Route exact path="/login" component={Login} />
+          <Route exact path="/login" component={LoginContainer} />
           <Route exact path="/register" component={Register} />
           <PrivateRoute exact path="/profile" component={Profile} />
           <Route exact path="/forgot-password" component={ForgotPasswordContainer} />
-          <Route path="/password-reset/:token" component={PasswordReset} />
+          <Route path="/password-reset/:token" component={PasswordResetContainer} />
         </Switch>
         {alert.isOpen && <Alert
           variant="standard"

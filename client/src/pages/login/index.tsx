@@ -7,20 +7,17 @@ import {
   Typography,
   Dialog
 } from '@mui/material';
-import axios from 'axios';
-import { useHistory, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { connect } from 'react-redux';
 import NavBar from '../../components/nav-bar';
-import { updateUser } from '../../state/actions/user';
 import EmailCaptureContainer from '../../containers/email-capture';
-import { showError, hideError } from '../../state/actions/alert';
-import { setIsLoading } from '../../state/actions/loading';
 
-const Login = ({ dispatch }: any) => {
+interface Props {
+  onSubmit: any;
+}
+
+const Login = ({ onSubmit }: Props) => {
   const [isEmailCaptureModalOpen, setIsEmailCaptureModalOpen] = useState(true);
-
-  const history = useHistory();
 
   const handleClose = (event: any) => {
     setIsEmailCaptureModalOpen(false);
@@ -45,30 +42,7 @@ const Login = ({ dispatch }: any) => {
       password: ''
     },
     validate,
-    onSubmit: (values: any) => {
-      dispatch(setIsLoading(true));
-      const formData = new FormData();
-      formData.append('email', values.email);
-      formData.append('password', values.password);
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      };
-
-      axios.post('http://localhost:3001/api/v1/login', formData, config)
-        .then((res: any) => {
-          dispatch(hideError());
-          dispatch(updateUser(res.data));
-          dispatch(setIsLoading(false));
-          history.push('/home');
-        })
-        .catch((err: any) => {
-          console.log('err', err);
-          dispatch(setIsLoading(false));
-          dispatch(showError('Wrong email or password'));
-        });
-    },
+    onSubmit
   });
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = formik;
@@ -170,4 +144,4 @@ const Login = ({ dispatch }: any) => {
   );
 };
 
-export default connect()(Login);
+export default Login;

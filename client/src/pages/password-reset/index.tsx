@@ -1,32 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Box,
   Fab,
   TextField,
-  CircularProgress,
-  Backdrop,
   Grid,
   Typography,
-  Alert,
 } from '@mui/material';
-import axios from 'axios';
-import { useHistory, useParams } from 'react-router-dom';
 import { useFormik } from 'formik';
 import NavBar from '../../components/nav-bar';
 
-const PasswordReset = () => {
-  const [loading, setLoading] = useState(false);
-  const [passwordResetError, setPasswordResetError] = useState('');
-  const history = useHistory();
-  const params: any = useParams();
+interface Props {
+  onSubmit: any;
+}
 
-  useEffect(() => {
-    axios.post('http://localhost:3001/api/v1/resetpassword', { token: params.token })
-      .catch((err) => {
-        history.push('/login');
-      });
-  }, [params, history]);
-
+const PasswordReset = ({ onSubmit }: Props) => {
   const validate = (values: any) => {
     const errors: any = {};
     if (!values.email) {
@@ -55,27 +42,7 @@ const PasswordReset = () => {
       confirmPassword: '',
     },
     validate,
-    onSubmit: (values: any) => {
-      const formData = new FormData();
-      formData.append('email', values.email);
-      formData.append('password', values.password);
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      };
-      setLoading(true);
-      axios.post('http://localhost:3001/api/v1/updatepassword', formData, config)
-        .then((res) => {
-          setLoading(false);
-          setPasswordResetError('');
-          history.push('/login');
-        })
-        .catch((err: any) => {
-          setLoading(false);
-          setPasswordResetError('Password reset failed. Please try again.')
-        });
-    },
+    onSubmit
   });
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = formik;
@@ -171,26 +138,12 @@ const PasswordReset = () => {
                   >
                     Reset Password
                   </Fab>
-
-                  {!!passwordResetError &&
-                    <Alert
-                      severity="error"
-                      variant="standard"
-                      sx={{ marginTop: '2rem', borderRadius: '10px', width: '100%' }}
-                    >
-                      {passwordResetError}
-                    </Alert>
-                  }
                 </Grid>
               </Grid>
             </form>
           </Grid>
         </Grid>
       </Box>
-
-      <Backdrop open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
     </>
   );
 };
