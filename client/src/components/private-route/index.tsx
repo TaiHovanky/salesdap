@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route, Redirect, useLocation } from 'react-router-dom';
-import { connect } from 'react-redux';
 
 const PrivateRoute = (props: any) => {
   const location = useLocation();
@@ -17,8 +16,4 @@ const PrivateRoute = (props: any) => {
   );
 };
 
-const mapStateToProps = (state: any) => ({
-  user: state.user
-});
-
-export default connect(mapStateToProps)(PrivateRoute);
+export default PrivateRoute;

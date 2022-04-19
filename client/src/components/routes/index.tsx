@@ -30,7 +30,7 @@ const Routes = ({ alert, loading, user }: Props) => {
           <Route exact path="/home" component={HomeContainer} />
           <Route exact path="/login" component={LoginContainer} />
           <Route exact path="/register" component={RegisterContainer} />
-          <PrivateRoute exact path="/profile" component={ProfileContainer} />
+          <PrivateRoute exact path="/profile" component={ProfileContainer} user={user} />
           <Route exact path="/forgot-password" component={ForgotPasswordContainer} />
           <Route path="/password-reset/:token" component={PasswordResetContainer} />
         </Switch>
