@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import NavBar from '../../components/nav-bar';
 import {
   Box,
   Grid,
@@ -33,7 +32,6 @@ const Profile = ({
 
   return (
     <>
-      <NavBar />
       <Box sx={{ width: '100%', height: '80vh', marginTop: '3.5vh' }}>
         <Grid
           container

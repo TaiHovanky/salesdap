@@ -1,5 +1,6 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import axios from 'axios';
+import Profile from '../../pages/profile';
 import {
   createFileLink,
   getPinnedFile
@@ -10,7 +11,6 @@ import { UserState } from '../../state/reducers/user';
 import { checkIsValidFileType } from '../../utils/validate-file-type';
 import { showError, hideError } from '../../state/actions/alert';
 import { setIsLoading } from '../../state/actions/loading';
-import Profile from '../../pages/profile';
 
 interface Props {
   user: UserState;

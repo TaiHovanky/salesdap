@@ -12,14 +12,13 @@ import {
 } from '@mui/material';
 import { Handshake, AccountCircle } from '@mui/icons-material';
 import { Link, useHistory } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { UserState } from '../../state/reducers/user';
 
-interface NavBarProps {
+interface Props {
   user: UserState
 }
 
-const NavBar = ({ user }: NavBarProps) => {
+const NavBar = ({ user }: Props) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const history = useHistory();
 
@@ -103,8 +102,4 @@ const NavBar = ({ user }: NavBarProps) => {
   );
 }
 
-const mapStateToProps = (state: any) => ({
-  user: state.user
-});
-
-export default connect(mapStateToProps)(NavBar);
+export default NavBar;

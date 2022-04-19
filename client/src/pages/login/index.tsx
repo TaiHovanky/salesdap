@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import EmailCaptureContainer from '../../containers/email-capture';
 import {
   Box,
   Fab,
@@ -9,8 +10,6 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
-import NavBar from '../../components/nav-bar';
-import EmailCaptureContainer from '../../containers/email-capture';
 
 interface Props {
   onSubmit: any;
@@ -52,7 +51,6 @@ const Login = ({ onSubmit }: Props) => {
 
   return (
     <>
-      <NavBar />
       <Box sx={{ width: '100%', height: '80vh', marginTop: '3.5vh' }}>
         <Grid
           container

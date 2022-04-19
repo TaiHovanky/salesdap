@@ -1,5 +1,5 @@
 import React from 'react';
-import Stepper from '../../components/stepper';
+import Home from '../../pages/home';
 import { connect } from 'react-redux';
 import { changeStep } from '../../state/actions/step-progress';
 
@@ -8,9 +8,9 @@ interface Props {
   changeStep: any;
 }
 
-const StepperContainer = ({ activeStep, changeStep }: Props) => {
+const HomeContainer = ({ activeStep, changeStep }: Props) => {
   return (
-    <Stepper activeStep={activeStep} changeStep={changeStep} />
+    <Home activeStep={activeStep} changeStep={changeStep} />
   );
 }
 
@@ -22,4 +22,4 @@ const mapDispatchToProps = (dispatch: any) => ({
   changeStep: (newStep: number) => dispatch(changeStep(newStep))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(StepperContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(HomeContainer);

@@ -7,7 +7,6 @@ import {
   Typography,
 } from '@mui/material';
 import { useFormik } from 'formik';
-import NavBar from '../../components/nav-bar';
 
 interface Props {
   onSubmit: any;
@@ -52,7 +51,6 @@ const PasswordReset = ({ onSubmit }: Props) => {
 
   return (
     <>
-      <NavBar />
       <Box sx={{ width: '100%', height: '80vh', marginTop: '3.5vh' }}>
         <Grid
           container

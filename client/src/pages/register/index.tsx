@@ -6,17 +6,14 @@ import {
   Grid,
   Typography,
 } from '@mui/material';
-import axios from 'axios';
-import { useHistory, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { connect } from 'react-redux';
-import NavBar from '../../components/nav-bar';
-import { updateUser } from '../../state/actions/user';
-import { showError, hideError } from '../../state/actions/alert';
-import { setIsLoading } from '../../state/actions/loading';
 
-const Register = ({ dispatch }: any) => {
-  const history = useHistory();
+interface Props {
+  onSubmit: any;
+}
+
+const Register = ({ onSubmit }: Props) => {
 
   const validate = (values: any) => {
     const errors: any = {};
@@ -51,32 +48,7 @@ const Register = ({ dispatch }: any) => {
       company: ''
     },
     validate,
-    onSubmit: (values: any) => {
-      dispatch(setIsLoading(true));
-      const formData = new FormData();
-      formData.append('email', values.email);
-      formData.append('password', values.password);
-      formData.append('firstname', values.firstName);
-      formData.append('lastname', values.lastName);
-      formData.append('company', values.company);
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      };
-      axios.post('http://localhost:3001/api/v1/register', formData, config)
-        .then((res) => {
-          dispatch(hideError());
-          dispatch(updateUser(res.data));
-          dispatch(setIsLoading(false));
-          history.push('/home');
-        })
-        .catch((err: any) => {
-          console.log('err', err);
-          dispatch(setIsLoading(false));
-          dispatch(showError(`Registration failed. Please try again. ${err}`));
-        });
-    },
+    onSubmit
   });
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = formik;
@@ -86,8 +58,7 @@ const Register = ({ dispatch }: any) => {
 
   return (
     <>
-      <NavBar />
-      <Box sx={{ width: '100%', height: '80vh', marginTop: '3.5vh' }}>
+      <Box sx={{ width: '100%', height: '85vh', marginTop: '3.5vh' }}>
         <Grid
           container
           spacing={2}
@@ -215,4 +186,4 @@ const Register = ({ dispatch }: any) => {
   );
 };
 
-export default connect()(Register);
+export default Register;
