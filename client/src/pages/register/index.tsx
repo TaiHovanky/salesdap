@@ -177,7 +177,7 @@ const Register = ({ onSubmit }: Props) => {
               </Grid>
             </form>
             <Typography sx={{ marginTop: '2rem' }}>
-              Already have an account? <Link to="/login">Sign in</Link>
+              Already have an account? <Link to="/">Sign in</Link>
             </Typography>
           </Grid>
         </Grid>

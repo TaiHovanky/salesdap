@@ -1,5 +1,4 @@
 import * as React from 'react';
-import axios from 'axios';
 import {
   AppBar,
   Box,
@@ -15,10 +14,11 @@ import { Link, useHistory } from 'react-router-dom';
 import { UserState } from '../../state/reducers/user';
 
 interface Props {
-  user: UserState
+  user: UserState;
+  handleLogout: any;
 }
 
-const NavBar = ({ user }: Props) => {
+const NavBar = ({ user, handleLogout }: Props) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const history = useHistory();
 
@@ -29,15 +29,6 @@ const NavBar = ({ user }: Props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const handleLogout = () => {
-    axios.post('/api/v1/logout')
-      .then(() => {
-        handleClose();
-        history.push('/');
-      })
-      .catch((err) => console.log('logout err', err));
-  }
 
   const handleHomeClick = () => {
     history.push('/home');

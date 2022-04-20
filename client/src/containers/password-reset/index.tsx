@@ -19,7 +19,7 @@ const PasswordResetContainer = ({ setIsLoading, showError, hideError }: Props) =
   useEffect(() => {
     axios.post('/api/v1/resetpassword', { token: params.token })
       .catch((err) => {
-        history.push('/login');
+        history.push('/');
       });
   }, [params, history]);
 
@@ -37,7 +37,7 @@ const PasswordResetContainer = ({ setIsLoading, showError, hideError }: Props) =
       .then((res) => {
         hideError();
         setIsLoading(false);
-        history.push('/login');
+        history.push('/');
       })
       .catch((err: any) => {
         setIsLoading(false);

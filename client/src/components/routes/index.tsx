@@ -5,7 +5,7 @@ import ProfileContainer from '../../containers/profile';
 import PasswordResetContainer from '../../containers/password-reset';
 import ForgotPasswordContainer from '../../containers/forgot-password';
 import PrivateRoute from '../private-route'; // set everything to private after testing
-import NavBar from '../nav-bar';
+import NavBarContainer from '../../containers/nav-bar';
 import {
   Alert,
   Backdrop,
@@ -25,10 +25,10 @@ const Routes = ({ alert, loading, user }: Props) => {
   return (
     <BrowserRouter>
       <main>
-        <NavBar user={user} />
+        <NavBarContainer user={user} />
         <Switch>
-          <Route exact path="/home" component={HomeContainer} />
-          <Route exact path="/login" component={LoginContainer} />
+          <PrivateRoute exact path="/home" component={HomeContainer} user={user} />
+          <Route exact path="/" component={LoginContainer} />
           <Route exact path="/register" component={RegisterContainer} />
           <PrivateRoute exact path="/profile" component={ProfileContainer} user={user} />
           <Route exact path="/forgot-password" component={ForgotPasswordContainer} />

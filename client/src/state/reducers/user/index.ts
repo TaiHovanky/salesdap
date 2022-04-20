@@ -9,7 +9,7 @@ export interface UserState {
   pinnedFile: string;
 }
 
-const initialState: UserState = {
+export const initialState: UserState = {
   firstname: '',
   lastname: '',
   email: '',
