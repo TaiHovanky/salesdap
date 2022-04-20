@@ -98,7 +98,8 @@ const UploadDocumentForm = ({
 
 
   const isSubmitBtnEnabled = selectedDocument1 && selectedDocument2 &&
-    comparisonColumns1 && comparisonColumns2;
+    comparisonColumns1.length && comparisonColumns2.length &&
+    !comparisonColumns1Error && !comparisonColumns2Error;
 
   return (
     <>

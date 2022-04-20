@@ -34,9 +34,9 @@ const FileSourceRadioContainer = ({
     if (event.target.value === 'pinned') {
       setIsLoading(true);
       try {
-        const pinnedFileBlob = await getPinnedFile(user.pinnedFile);
+        const pinnedFileBlob = await getPinnedFile(user.pinnedFileId);
         const wsDataObj: Array<any> = await createJSONFromSpreadsheet(pinnedFileBlob.data);
-        selectDocument(wsDataObj, index, user.pinnedFile);
+        selectDocument(wsDataObj, index, user.pinnedFileId);
         hideError();
         setIsLoading(false);
       } catch (err: any) {

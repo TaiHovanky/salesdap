@@ -156,7 +156,7 @@ export const displayRelevantColumns = (
   return result;
 }
 
-export const storeFile = (file: any) => new Promise((resolve, reject) => {
+export const storeFile = (file: any, pinnedFileId: string) => new Promise((resolve, reject) => {
   const fileBuffer = fs.readFileSync(file.path);
 
   const s3 = new AWS.S3({
@@ -166,7 +166,7 @@ export const storeFile = (file: any) => new Promise((resolve, reject) => {
 
   const params: any = {
     Bucket: process.env.AWS_BUCKET_NAME,
-    Key: `${file.originalname}-${new Date().getTime()}`,
+    Key: pinnedFileId,
     Body: fileBuffer
   };
 
@@ -178,7 +178,7 @@ export const storeFile = (file: any) => new Promise((resolve, reject) => {
   });
 });
 
-export const readPinnedFile = (filename: string) => new Promise((resolve, reject) => {
+export const readPinnedFile = (pinnedFileId: string) => new Promise((resolve, reject) => {
   const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -186,7 +186,7 @@ export const readPinnedFile = (filename: string) => new Promise((resolve, reject
 
   const params: any = {
     Bucket: process.env.AWS_BUCKET_NAME,
-    Key: `${filename}`,
+    Key: pinnedFileId,
   };
 
   s3.getObject(params, (err, data) => {

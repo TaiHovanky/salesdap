@@ -31,20 +31,20 @@ export const downloadSpreadsheetFromJSON = async (data: Array<any>) => {
   writeFile(workbook, 'account-mapping.xls');
 }
 
-export const createFileLink = (data: any, pinnedFile: any) => {
+export const createFileLink = (data: any, pinnedFileName: string) => {
   const url = window.URL.createObjectURL(new Blob([data]));
   const link = document.createElement('a');
   link.href = url;
-  link.setAttribute('download', pinnedFile);
+  link.setAttribute('download', pinnedFileName);
   document.body.appendChild(link);
   link.click();
 }
 
-export const getPinnedFile = (filename: string) => {
-  return axios.get('/api/v1/viewpinnedfile',
+export const getPinnedFile = (pinnedFileId: string) => {
+  return axios.get('http://localhost:3001/api/v1/viewpinnedfile',
     {
       responseType: 'blob',
-      params: { filename }
+      params: { pinnedFileId }
     }
   );
 }

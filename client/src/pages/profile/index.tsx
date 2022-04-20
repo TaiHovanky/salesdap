@@ -56,7 +56,7 @@ const Profile = ({
               <Typography variant="subtitle1" sx={{ marginBottom: '2rem' }}>Email: {user.email}</Typography>
               <Typography variant="subtitle1" sx={{ marginBottom: '2rem' }}>Company: {user.company}</Typography>
               <Typography variant="subtitle1">Pinned File:</Typography>
-              <Chip onClick={handlePinnedFileClick} icon={<Attachment />} label={user.pinnedFile} />
+              <Chip onClick={handlePinnedFileClick} icon={<Attachment />} label={user.pinnedFileName} />
               <Grid
                 item
                 container

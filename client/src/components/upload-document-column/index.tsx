@@ -29,7 +29,7 @@ const UploadDocumentColumn = ({
         {index === 0 ? 'My accounts' : 'Customer\'s accounts'}
       </Typography>
       <div style={{ height: '100px' }}>
-        {!!user.pinnedFile && index === 0 && <FileSourceRadioContainer
+        {!!user.pinnedFileName && index === 0 && <FileSourceRadioContainer
           fileSource={fileSource}
           index={index}
         />}

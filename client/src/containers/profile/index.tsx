@@ -28,9 +28,9 @@ const ProfileContainer = ({
   const handlePinnedFileClick = async () => {
     try {
       setIsLoading(true);
-      const pinnedFileData = await getPinnedFile(user.pinnedFile);
+      const pinnedFileData = await getPinnedFile(user.pinnedFileId);
       setIsLoading(false);
-      createFileLink(pinnedFileData.data, user.pinnedFile);
+      createFileLink(pinnedFileData.data, user.pinnedFileName);
     } catch (err: any) {
       console.log('err', err);
       setIsLoading(false);
@@ -70,7 +70,7 @@ const ProfileContainer = ({
         user.email
       );
     }
-    axios.post('/api/v1/pinfile', formData)
+    axios.post('http://localhost:3001/api/v1/pinfile', formData)
       .then(() => {
         pinFileSuccess(file.name);
         hideError();

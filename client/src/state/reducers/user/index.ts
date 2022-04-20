@@ -6,7 +6,8 @@ export interface UserState {
   lastname: string;
   email: string;
   company: string;
-  pinnedFile: string;
+  pinnedFileName: string;
+  pinnedFileId: string;
 }
 
 export const initialState: UserState = {
@@ -14,7 +15,8 @@ export const initialState: UserState = {
   lastname: '',
   email: '',
   company: '',
-  pinnedFile: ''
+  pinnedFileName: '',
+  pinnedFileId: ''
 }
 
 export const userReducer = (state = initialState, action: any) => {
@@ -26,7 +28,8 @@ export const userReducer = (state = initialState, action: any) => {
         firstname: action.payload.firstname,
         lastname: action.payload.lastname,
         company: action.payload.company,
-        pinnedFile: action.payload.pinned_filename
+        pinnedFileName: action.payload.pinned_filename,
+        pinnedFileId: action.payload.pinned_file_id
       };
     case PIN_FILE_SUCCESS:
       return {

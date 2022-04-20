@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import {
   findDuplicates,
   parseJSONFromFile,
@@ -41,10 +42,14 @@ export const pinFile = (req: any, res: any) => {
   if (req.files && req.files.sales_file) {
     const file = req.files.sales_file[0];
     const { email } = req.body;
+    const pinned_file_id: string = uuidv4();
   
-    storeFile(file)
+    storeFile(file, pinned_file_id)
       .then(() => {
-        db('users').update({ pinned_filename: file.originalname }).where({ email })
+        db('users').update({
+          pinned_filename: file.originalname,
+          pinned_file_id
+        }).where({ email })
           .then(() => res.status(200).send('File pinned successfully'));
       })
       .catch((err: any) => {
@@ -57,8 +62,8 @@ export const pinFile = (req: any, res: any) => {
 }
 
 export const viewPinnedFile = (req: any, res: any) => {
-  const { filename } = req.params;
-  readPinnedFile(filename)
+  const { pinnedFileId } = req.params;
+  readPinnedFile(pinnedFileId)
     .then((data) => res.status(200).send(data))
     .catch((err: any) => {
       res.status(400).send();
