@@ -81,7 +81,7 @@ const NavBar = ({ user, handleLogout }: Props) => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem>
+              <MenuItem onClick={handleClose}>
                 <Link style={{ color: 'black', textDecoration: 'none' }} to="/profile">Profile</Link>
               </MenuItem>
               <MenuItem onClick={handleLogout}>Logout</MenuItem>

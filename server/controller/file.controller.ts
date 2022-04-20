@@ -43,14 +43,17 @@ export const pinFile = (req: any, res: any) => {
     const file = req.files.sales_file[0];
     const { email } = req.body;
     const pinned_file_id: string = uuidv4();
+    const fileMetadata: any = {
+      pinned_filename: file.originalname,
+      pinned_file_id
+    }
   
     storeFile(file, pinned_file_id)
       .then(() => {
-        db('users').update({
-          pinned_filename: file.originalname,
-          pinned_file_id
-        }).where({ email })
-          .then(() => res.status(200).send('File pinned successfully'));
+        db('users').update(fileMetadata).where({ email })
+          .then(() => {
+            res.status(200).json(fileMetadata);
+          });
       })
       .catch((err: any) => {
         res.status(400).send();
@@ -62,7 +65,7 @@ export const pinFile = (req: any, res: any) => {
 }
 
 export const viewPinnedFile = (req: any, res: any) => {
-  const { pinnedFileId } = req.params;
+  const { pinnedFileId } = req.query;
   readPinnedFile(pinnedFileId)
     .then((data) => res.status(200).send(data))
     .catch((err: any) => {

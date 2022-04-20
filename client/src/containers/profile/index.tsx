@@ -17,13 +17,15 @@ interface Props {
   setIsLoading: any;
   showError: any;
   hideError: any;
+  pinFileSuccess: any;
 }
 
 const ProfileContainer = ({
   user,
   setIsLoading,
   showError,
-  hideError
+  hideError,
+  pinFileSuccess
 }: Props) => {
   const handlePinnedFileClick = async () => {
     try {
@@ -71,8 +73,8 @@ const ProfileContainer = ({
       );
     }
     axios.post('http://localhost:3001/api/v1/pinfile', formData)
-      .then(() => {
-        pinFileSuccess(file.name);
+      .then((res: any) => {
+        pinFileSuccess(res.data);
         hideError();
         setIsLoading(false);
       })
@@ -100,7 +102,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   showError: (message: string) => dispatch(showError(message)),
   hideError: () => dispatch(hideError()),
   setIsLoading: (isLoading: boolean) => dispatch(setIsLoading(isLoading)),
-  pinFileSuccess: (filename: string) => dispatch(pinFileSuccess(filename))
+  pinFileSuccess: (fileMetadata: any) => dispatch(pinFileSuccess(fileMetadata))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileContainer);

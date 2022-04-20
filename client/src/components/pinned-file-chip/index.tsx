@@ -16,6 +16,7 @@ interface Props {
 
 const PinnedFileChip = ({ user }: Props) => {
   const handlePinnedFileClick = async () => {
+    console.log('user pinned file id', user.pinnedFileId);
     try {
       const pinnedFileData = await getPinnedFile(user.pinnedFileId);
       createFileLink(pinnedFileData.data, user.pinnedFileName);
