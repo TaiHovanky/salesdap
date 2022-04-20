@@ -11,23 +11,20 @@ interface Props {
   duplicatesData: Array<any>;
   template: string;
   handleTemplateChange: any;
+  handleCopyEmailTemplate: any;
 }
 
-const EmailTemplate = ({ duplicatesData, template, handleTemplateChange }: Props) => {
+const EmailTemplate = ({
+  duplicatesData,
+  template,
+  handleTemplateChange,
+  handleCopyEmailTemplate
+}: Props) => {
   const textAreaRef = useRef<any>(null);
 
   const handleResultsDownload = () => {
     downloadSpreadsheetFromJSON(duplicatesData);
   }
-
-  const handleCopyEmailTemplate = async (event: any) => {
-    try {
-      await navigator.clipboard.writeText(template);
-      console.log('Page URL copied to clipboard');
-    } catch (err) {
-      console.error('Failed to copy: ', err);
-    }
-  };
 
   return (
     <Grid

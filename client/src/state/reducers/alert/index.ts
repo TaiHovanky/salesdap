@@ -34,7 +34,7 @@ export const alertReducer = (state: AlertState = initialState, action: any) => {
       return {
         ...state,
         isOpen: true,
-        alertType: 'error',
+        alertType: 'success',
         message: action.payload
       };
     case HIDE_SUCCESS:

@@ -12,9 +12,10 @@ code {
     monospace;
 }
 
-.dx-popup-normal {
-  transform: translate(0px, 70px) !important;
-}
+/* .dx-popup-normal {
+  position: relative !important;
+  margin-top: 13rem !important;
+} */
 
 .MuiAutocomplete-popper {
   z-index: 1540 !important;

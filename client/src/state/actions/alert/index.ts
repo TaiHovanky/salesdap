@@ -12,7 +12,7 @@ export const hideError = () => ({
   type: HIDE_ERROR
 });
 
-export const showSucess = (successMessage: string) => ({
+export const showSuccess = (successMessage: string) => ({
   type: SHOW_SUCCESS,
   payload: successMessage
 });

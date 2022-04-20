@@ -25,7 +25,6 @@ const FileSelectionFieldContainer = ({
   index
 }: Props) => {
 
-
   /**
    * When the user selects a document, validate the file type
    * @param event 

@@ -2,17 +2,26 @@ import React from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { setIsLoading } from '../../state/actions/loading';
-import { showError, hideError } from '../../state/actions/alert';
+import { showError, hideError, showSuccess, hideSuccess } from '../../state/actions/alert';
 import EmailCapture from '../../pages/email-capture';
 
 interface Props {
   onClose: any;
   showError: any;
   hideError: any;
+  showSuccess: any;
+  hideSuccess: any;
   setIsLoading: any;
 }
 
-const EmailCaptureContainer = ({ onClose, showError, hideError, setIsLoading }: Props) => {
+const EmailCaptureContainer = ({
+  onClose,
+  showError,
+  hideError,
+  showSuccess,
+  hideSuccess,
+  setIsLoading
+}: Props) => {
   const onSubmit = (values: any) => {
     setIsLoading(true);
     const formData = new FormData();
@@ -28,11 +37,18 @@ const EmailCaptureContainer = ({ onClose, showError, hideError, setIsLoading }: 
         hideError();
         setIsLoading(false);
         onClose();
+        showSuccess('Successfully registered to waitlist!');
+        setTimeout(() => {
+          hideSuccess();
+        }, 5000);
       })
       .catch((err: any) => {
         console.log('email err', err);
         setIsLoading(false);
         showError('Waitlist registration failed. Please try again.');
+        setTimeout(() => {
+          hideError();
+        }, 5000)
       });
   }
 
@@ -44,6 +60,8 @@ const EmailCaptureContainer = ({ onClose, showError, hideError, setIsLoading }: 
 const mapDispatchToProps = (dispatch: any) => ({
   showError: (message: string) => dispatch(showError(message)),
   hideError: () => dispatch(hideError()),
+  showSuccess: (successMsg: string) => dispatch(showSuccess(successMsg)),
+  hideSuccess: () => dispatch(hideSuccess()),
   setIsLoading: (isLoading: boolean) => dispatch(setIsLoading(isLoading)),
 });
 
