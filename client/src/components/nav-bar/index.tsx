@@ -31,7 +31,7 @@ const NavBar = ({ user }: Props) => {
   };
 
   const handleLogout = () => {
-    axios.post('http://localhost:3001/api/v1/logout')
+    axios.post('/api/v1/logout')
       .then(() => {
         handleClose();
         history.push('/');

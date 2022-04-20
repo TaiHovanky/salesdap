@@ -70,7 +70,7 @@ const ProfileContainer = ({
         user.email
       );
     }
-    axios.post('http://localhost:3001/api/v1/pinfile', formData)
+    axios.post('/api/v1/pinfile', formData)
       .then(() => {
         pinFileSuccess(file.name);
         hideError();
