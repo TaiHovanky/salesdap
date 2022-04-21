@@ -5,7 +5,7 @@ export const CHANGE_RESULT_COLUMNS = 'CHANGE_RESULT_COLUMNS';
 export const PIN_FILE_SUCCESS = 'PIN_FILE_SUCCESS';
 export const SET_FILE_SOURCE = 'SET_FILE_SOURCE';
 export const SET_COMPARISON_COLUMNS_ERROR = 'SET_COMPARISON_COLUMNS_ERROR';
-export const SET_VISIBLE_COLUMNS = 'SET_VISIBLE_COLUMNS';
+export const SET_ALL_COLUMNS = 'SET_ALL_COLUMNS';
 
 export const uploadDocumentSuccess = (duplicatesData: any) => ({
   type: UPLOAD_DOCUMENT_SUCCESS,
@@ -15,15 +15,13 @@ export const uploadDocumentSuccess = (duplicatesData: any) => ({
 export const selectDocument = (
   document: any,
   index: number,
-  name: string,
-  columns: Array<string>
+  name: string
 ) => {
   return {
     type: SELECT_DOCUMENT,
     payload: document,
     index,
-    name,
-    columns
+    name
   };
 }
 
@@ -58,8 +56,8 @@ export const setComparisonColumnsError = (value: Array<string>, index: number) =
   }
 }
 
-export const setVisibleColumns = (columns: Array<string>, index: number) => ({
-  type: SET_VISIBLE_COLUMNS,
+export const setAllColumns = (columns: Array<string>, index: number) => ({
+  type: SET_ALL_COLUMNS,
   payload: columns,
   index
 });

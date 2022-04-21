@@ -36,9 +36,7 @@ const FileSourceRadioContainer = ({
       try {
         const pinnedFileBlob = await getPinnedFile(user.pinnedFileId);
         const wsDataObj: Array<any> = await createJSONFromSpreadsheet(pinnedFileBlob.data);
-        const columns: Array<string> = wsDataObj && wsDataObj.length ?
-          Array.from(Object.keys(wsDataObj[0])) : [];
-        selectDocument(wsDataObj, index, user.pinnedFileId, columns);
+        selectDocument(wsDataObj, index, user.pinnedFileId);
         hideError();
         setIsLoading(false);
       } catch (err: any) {
@@ -68,7 +66,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   showError: (message: string) => dispatch(showError(message)),
   hideError: () => dispatch(hideError()),
   setIsLoading: (isLoading: boolean) => dispatch(setIsLoading(isLoading)),
-  selectDocument: (wsDataObj: any, index: number, filename: string, columns: Array<string>) => dispatch(selectDocument(wsDataObj, index, filename, columns)),
+  selectDocument: (wsDataObj: any, index: number, filename: string) => dispatch(selectDocument(wsDataObj, index, filename)),
   setFileSource: (index: number, event: any) => dispatch(setFileSource(index, event))
 });
 

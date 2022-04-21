@@ -5,14 +5,13 @@ import {
   CHANGE_RESULT_COLUMNS,
   SET_FILE_SOURCE,
   SET_COMPARISON_COLUMNS_ERROR,
-  SET_VISIBLE_COLUMNS
+  SET_ALL_COLUMNS
 } from '../../actions/document';
 
 interface SelectedDocument {
   data: Array<any>;
   name: string;
   allColumns: Array<string>;
-  visibleColumns: Array<string>;
 }
 
 export interface DocumentState {
@@ -34,14 +33,12 @@ const initialState: DocumentState = {
   selectedDocument1: {
     data: [],
     name: '',
-    allColumns: [],
-    visibleColumns: []
+    allColumns: []
   },
   selectedDocument2: {
     data: [],
     name: '',
-    allColumns: [],
-    visibleColumns: []
+    allColumns: []
   },
   comparisonColumns1: [],
   comparisonColumns2: [],
@@ -87,8 +84,7 @@ export const documentReducer = (state = initialState, action: any) => {
           ...state,
           selectedDocument1: {
             data: action.payload,
-            name: action.name,
-            allColumns: action.columns
+            name: action.name
           }
         };
       } else {
@@ -96,26 +92,25 @@ export const documentReducer = (state = initialState, action: any) => {
           ...state,
           selectedDocument2: {
             data: action.payload,
-            name: action.name,
-            allColumns: action.columns
+            name: action.name
           }
         };
       }
-    case SET_VISIBLE_COLUMNS:
+    case SET_ALL_COLUMNS:
       if (action.index === 0) {
         return {
           ...state,
           selectedDocument1: {
             ...state.selectedDocument1,
-            visibleColumns: action.payload
+            allColumns: action.payload
           }
         };
       } else {
         return {
           ...state,
           selectedDocument2: {
-            ...state.selectedDocument1,
-            visibleColumns: action.payload
+            ...state.selectedDocument2,
+            allColumns: action.payload
           }
         };
       }

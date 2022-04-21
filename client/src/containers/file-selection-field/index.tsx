@@ -40,9 +40,7 @@ const FileSelectionFieldContainer = ({
     if (isValidDocType) {
       hideError();
       const wsDataObj: Array<any> = await createJSONFromSpreadsheet(document);
-      const columns: Array<string> = wsDataObj && wsDataObj.length ?
-        Array.from(Object.keys(wsDataObj[0])) : [];
-      selectDocument(wsDataObj, index, document.name, columns);
+      selectDocument(wsDataObj, index, document.name);
       setIsLoading(false);
     } else {
       showError('Invalid file type. Only .xls, .xlsx, or .csv files can be processed.');
@@ -62,7 +60,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   showError: (message: string) => dispatch(showError(message)),
   hideError: () => dispatch(hideError()),
   setIsLoading: (isLoading: boolean) => dispatch(setIsLoading(isLoading)),
-  selectDocument: (wsDataObj: any, index: number, filename: string, columns: Array<string>) => dispatch(selectDocument(wsDataObj, index, filename, columns)),
+  selectDocument: (wsDataObj: any, index: number, filename: string) => dispatch(selectDocument(wsDataObj, index, filename)),
 });
 
 export default connect(null, mapDispatchToProps)(FileSelectionFieldContainer);
