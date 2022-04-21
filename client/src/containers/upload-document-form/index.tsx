@@ -2,7 +2,7 @@ import React from 'react';
 import UploadDocumentForm from '../../components/upload-document-form';
 import { connect } from 'react-redux';
 import { DocumentState } from '../../state/reducers/document';
-import { uploadDocumentSuccess } from '../../state/actions/document';
+import { uploadDocumentSuccess, setVisibleColumns } from '../../state/actions/document';
 import { changeStep } from '../../state/actions/step-progress';
 import { showError, hideError } from '../../state/actions/alert';
 import { setIsLoading } from '../../state/actions/loading';
@@ -15,6 +15,7 @@ interface Props {
   uploadDocumentSuccess: any;
   setIsLoading: any;
   changeStep: any;
+  setVisibleColumns: any;
 }
 
 const UploadDocumentFormContainer = ({
@@ -25,6 +26,7 @@ const UploadDocumentFormContainer = ({
   uploadDocumentSuccess,
   setIsLoading,
   changeStep,
+  setVisibleColumns
 }: Props) => {
   return (
     <UploadDocumentForm
@@ -35,6 +37,7 @@ const UploadDocumentFormContainer = ({
       setIsLoading={setIsLoading}
       changeStep={changeStep}
       activeStep={activeStep}
+      setVisibleColumns={setVisibleColumns}
     />
   );
 }
@@ -50,6 +53,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   uploadDocumentSuccess: (data: any) => dispatch(uploadDocumentSuccess(data)),
   setIsLoading: (isLoading: boolean) => dispatch(setIsLoading(isLoading)),
   changeStep: (activeStep: number) => dispatch(changeStep(activeStep)),
+  setVisibleColumns: (columns: Array<string>, index: number) => dispatch(setVisibleColumns(columns, index))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UploadDocumentFormContainer);

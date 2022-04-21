@@ -15,7 +15,7 @@ const NavBarContainer = ({ user }: Props) => {
   const history = useHistory();
 
   const handleLogout = () => {
-    // axios.post('/api/v1/logout') <-- until AWS Redis stuff gets setup, keep this commented
+    // axios.post('http://localhost:3001/api/v1/logout') <-- until AWS Redis stuff gets setup, keep this commented
     //   .then(() => {
         // hideError();
         updateUser({...initialState});

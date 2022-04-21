@@ -15,6 +15,7 @@ interface UploadDocumentFormProps {
   uploadDocumentSuccess: any;
   setIsLoading: any;
   changeStep: any;
+  setVisibleColumns: any;
 }
 
 const UploadDocumentForm = ({
@@ -26,6 +27,7 @@ const UploadDocumentForm = ({
   uploadDocumentSuccess,
   setIsLoading,
   changeStep,
+  setVisibleColumns
 }: UploadDocumentFormProps): any => {
   const dataGrid1 = useRef<any>(null);
   const dataGrid2 = useRef<any>(null);
@@ -43,13 +45,20 @@ const UploadDocumentForm = ({
 
   useEffect(() => {
     // `current.instance` points to the UI component instance
-    if (dataGrid1 && dataGrid1.current && dataGrid1.current.instance && selectedDocument1.data.length) {
-      dataGrid1.current.instance.showColumnChooser();
+    const currentDataGrid1 = dataGrid1.current;
+    const currentDataGrid2 = dataGrid2.current;
+    if (currentDataGrid1 && currentDataGrid1.instance && selectedDocument1.data.length) {
+      currentDataGrid1.instance.showColumnChooser();
     }
-    if (dataGrid2 && dataGrid2.current && dataGrid2.current.instance && selectedDocument2.data.length) {
-      dataGrid2.current.instance.showColumnChooser();
+    if (currentDataGrid2 && currentDataGrid2.instance && selectedDocument2.data.length) {
+      currentDataGrid2.instance.showColumnChooser();
     }
-  }, [selectedDocument1.data.length, selectedDocument2.data.length]);
+    return () => {
+      console.log('use effect unmount', currentDataGrid1.instance.getVisibleColumns());
+      setVisibleColumns(currentDataGrid1.instance.getVisibleColumns(), 0);
+      setVisibleColumns(currentDataGrid2.instance.getVisibleColumns(), 1);
+    };
+  }, [selectedDocument1.data.length, selectedDocument2.data.length, setVisibleColumns]);
 
   /**
    * Puts the selected file and column name into a FormData instance,
@@ -83,7 +92,7 @@ const UploadDocumentForm = ({
     formData.append('resultColumns1', resultColumns1.join());
     formData.append('resultColumns2', resultColumns2.join());
 
-    axios.post('/api/v1/uploadfile', formData)
+    axios.post('http://localhost:3001/api/v1/uploadfile', formData)
       .then((res: any) => {
         hideError();
         uploadDocumentSuccess(res.data);
