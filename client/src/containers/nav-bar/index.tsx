@@ -8,10 +8,11 @@ import NavBar from '../../components/nav-bar';
 import { UserState, initialState } from '../../state/reducers/user';
 
 interface Props {
-  user: UserState
+  user: UserState;
+  hideError: any;
 }
 
-const NavBarContainer = ({ user }: Props) => {
+const NavBarContainer = ({ user, hideError }: Props) => {
   const history = useHistory();
 
   const handleLogout = () => {
@@ -31,7 +32,7 @@ const NavBarContainer = ({ user }: Props) => {
   }
 
   return (
-    <NavBar user={user} handleLogout={handleLogout} />
+    <NavBar user={user} handleLogout={handleLogout} hideError={hideError} />
   );
 };
 

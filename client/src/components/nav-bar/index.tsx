@@ -16,9 +16,10 @@ import { UserState } from '../../state/reducers/user';
 interface Props {
   user: UserState;
   handleLogout: any;
+  hideError: any;
 }
 
-const NavBar = ({ user, handleLogout }: Props) => {
+const NavBar = ({ user, handleLogout, hideError }: Props) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const history = useHistory();
 
@@ -27,11 +28,18 @@ const NavBar = ({ user, handleLogout }: Props) => {
   };
 
   const handleClose = () => {
+    hideError();
     setAnchorEl(null);
   };
 
   const handleHomeClick = () => {
+    hideError();
     history.push('/home');
+  }
+
+  const logoutAndClose = () => {
+    handleClose();
+    handleLogout();
   }
 
   return (
@@ -84,7 +92,7 @@ const NavBar = ({ user, handleLogout }: Props) => {
               <MenuItem onClick={handleClose}>
                 <Link style={{ color: 'black', textDecoration: 'none' }} to="/profile">Profile</Link>
               </MenuItem>
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              <MenuItem onClick={logoutAndClose}>Logout</MenuItem>
             </Menu>
           </>}
         </Toolbar>

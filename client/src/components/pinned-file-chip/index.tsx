@@ -4,27 +4,14 @@ import {
   Chip,
 } from '@mui/material';
 import { Attachment } from '@mui/icons-material';
-import {
-  createFileLink,
-  getPinnedFile
-} from '../../utils/spreadsheet.utils';
 import { UserState } from '../../state/reducers/user';
 
 interface Props {
   user: UserState;
+  handlePinnedFileClick: any;
 }
 
-const PinnedFileChip = ({ user }: Props) => {
-  const handlePinnedFileClick = async () => {
-    console.log('user pinned file id', user.pinnedFileId);
-    try {
-      const pinnedFileData = await getPinnedFile(user.pinnedFileId);
-      createFileLink(pinnedFileData.data, user.pinnedFileName);
-    } catch (err: any) {
-      console.log('err', err);
-    }
-  };
-
+const PinnedFileChip = ({ user, handlePinnedFileClick }: Props) => {
   return (
     <>
       <Typography variant="subtitle1">Pinned File:</Typography>

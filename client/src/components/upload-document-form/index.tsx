@@ -1,31 +1,31 @@
 import React, { useRef, useEffect } from 'react';
 import axios from 'axios';
 import UploadDocumentColumnContainer from '../../containers/upload-document-column';
-import DataGrid, { ColumnChooser, ColumnFixing, Paging, Pager } from 'devextreme-react/data-grid';
+import DataGrid, { ColumnChooser, ColumnFixing, Paging, Pager, Column } from 'devextreme-react/data-grid';
 import { Grid, Fab, Typography } from '@mui/material';
 import { Upload } from '@mui/icons-material';
 import { DocumentState } from '../../state/reducers/document';
 
 interface UploadDocumentFormProps {
   document: DocumentState;
-  // handleUploadAndCompare: any;
   activeStep: number;
   showError: any;
   hideError: any;
   uploadDocumentSuccess: any;
   setIsLoading: any;
   changeStep: any;
+  setAllColumns: any;
 }
 
 const UploadDocumentForm = ({
   document,
-  // handleUploadAndCompare,
   activeStep,
   showError,
   hideError,
   uploadDocumentSuccess,
   setIsLoading,
   changeStep,
+  setAllColumns
 }: UploadDocumentFormProps): any => {
   const dataGrid1 = useRef<any>(null);
   const dataGrid2 = useRef<any>(null);
@@ -43,13 +43,19 @@ const UploadDocumentForm = ({
 
   useEffect(() => {
     // `current.instance` points to the UI component instance
-    if (dataGrid1 && dataGrid1.current && dataGrid1.current.instance && selectedDocument1.data.length) {
-      dataGrid1.current.instance.showColumnChooser();
+    const currentDataGrid1 = dataGrid1.current;
+    const currentDataGrid2 = dataGrid2.current;
+    if (currentDataGrid1 && currentDataGrid1.instance && selectedDocument1.data.length) {
+      currentDataGrid1.instance.showColumnChooser();
     }
-    if (dataGrid2 && dataGrid2.current && dataGrid2.current.instance && selectedDocument2.data.length) {
-      dataGrid2.current.instance.showColumnChooser();
+    if (currentDataGrid2 && currentDataGrid2.instance && selectedDocument2.data.length) {
+      currentDataGrid2.instance.showColumnChooser();
     }
-  }, [selectedDocument1.data.length, selectedDocument2.data.length]);
+    return () => {
+      setAllColumns(currentDataGrid1.instance.state().columns, 0);
+      setAllColumns(currentDataGrid2.instance.state().columns, 1);
+    };
+  }, [selectedDocument1.data.length, selectedDocument2.data.length, setAllColumns]);
 
   /**
    * Puts the selected file and column name into a FormData instance,
@@ -91,8 +97,12 @@ const UploadDocumentForm = ({
         changeStep(activeStep += 1);
       })
       .catch((err: any) => {
+        console.log('err', err);
         setIsLoading(false);
-        showError(`File upload and comparison failed. ${err}`);
+        showError('File upload and comparison failed.');
+        setTimeout(() => {
+          hideError();
+        }, 5000)
       });
   };
 
@@ -133,13 +143,16 @@ const UploadDocumentForm = ({
             </Typography>
             <DataGrid
               id="gridContainer"
-              dataSource={selectedDocument1.data}
+              dataSource={selectedDocument1.columnChooserGridData}
               allowColumnReordering={true}
               allowColumnResizing={true}
               columnAutoWidth={true}
               showBorders={true}
               ref={dataGrid1}
             >
+              {selectedDocument1.allColumns ? selectedDocument1.allColumns.map((colProps: any, colIdx: number) => (
+                <Column {...colProps} key={`col-${colIdx}-0`} />
+              )) : []}
               <ColumnChooser enabled={true} height={150} title="Unwanted columns" />
               <ColumnFixing enabled={true} />
               <Paging defaultPageSize={2} />
@@ -176,13 +189,16 @@ const UploadDocumentForm = ({
             </Typography>
             <DataGrid
               id="gridContainer"
-              dataSource={selectedDocument2.data}
+              dataSource={selectedDocument2.columnChooserGridData}
               allowColumnReordering={true}
               allowColumnResizing={true}
               columnAutoWidth={true}
               showBorders={true}
               ref={dataGrid2}
             >
+              {selectedDocument2.allColumns ? selectedDocument2.allColumns.map((colProps: any, colIdx: number) => (
+                <Column {...colProps} key={`col-${colIdx}-1`} />
+              )) : []}
               <ColumnChooser enabled={true} height={150} title="Unwanted columns" />
               <ColumnFixing enabled={true} />
               <Paging defaultPageSize={2} />

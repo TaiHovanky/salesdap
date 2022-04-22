@@ -45,7 +45,10 @@ const RegisterContainer = ({
       .catch((err: any) => {
         console.log('err', err);
         setIsLoading(false);
-        showError(`Registration failed. Please try again. ${err}`);
+        showError('Registration failed.');
+        setTimeout(() => {
+          hideError();
+        }, 5000)
       });
   }
 

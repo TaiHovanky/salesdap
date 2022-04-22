@@ -24,7 +24,7 @@ const StepperFooter = ({
       bottom: 0,
       left: 0,
       right: 0,
-      zIndex: 1060,
+      zIndex: 1510,
       display: 'flex',
       flexDirection: 'row',
       padding: '0.75rem'

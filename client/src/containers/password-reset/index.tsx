@@ -34,14 +34,18 @@ const PasswordResetContainer = ({ setIsLoading, showError, hideError }: Props) =
     };
     setIsLoading(true);
     axios.post('/api/v1/updatepassword', formData, config)
-      .then((res) => {
+      .then(() => {
         hideError();
         setIsLoading(false);
         history.push('/');
       })
       .catch((err: any) => {
+        console.log('err', err);
         setIsLoading(false);
-        showError('Password reset failed. Please try again.')
+        showError('Password reset failed. Please try again.');
+        setTimeout(() => {
+          hideError();
+        }, 5000);
       });
   };
 

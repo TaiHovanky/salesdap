@@ -36,7 +36,7 @@ const ProfileContainer = ({
     } catch (err: any) {
       console.log('err', err);
       setIsLoading(false);
-      showError(`Failed to download pinned file. ${err}`);
+      showError('Failed to download pinned file.');
     }
   };
 
@@ -81,7 +81,10 @@ const ProfileContainer = ({
       .catch((err) => {
         console.log(err);
         setIsLoading(false);
-        showError(`Failed to pin file. ${err}`);
+        showError('Failed to pin file.');
+        setTimeout(() => {
+          hideError();
+        }, 5000)
       });
   }
 

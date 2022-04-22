@@ -38,7 +38,7 @@ const Home = ({ activeStep, changeStep }: Props) => {
         </Stepper>
         {activeStep === 0 &&
           <React.Fragment>
-            <Container sx={{ height: '100%', paddingBottom: '3rem' }}>
+            <Container sx={{ height: '100%', paddingBottom: '2rem' }}>
               <UploadDocumentFormContainer />
             </Container>
           </React.Fragment>

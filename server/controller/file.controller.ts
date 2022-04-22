@@ -67,7 +67,7 @@ export const pinFile = (req: any, res: any) => {
 export const viewPinnedFile = (req: any, res: any) => {
   const { pinnedFileId } = req.query;
   readPinnedFile(pinnedFileId)
-    .then((data) => res.status(200).send(data))
+    .then((data: any) => res.status(200).send(data))
     .catch((err: any) => {
       res.status(400).send();
       console.log('failed to get pinned file: ', err);
