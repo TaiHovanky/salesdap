@@ -19,13 +19,20 @@ const RoutesContainer = ({
   hideError,
   hideSuccess
 }: Props) => {
+  const handleAlertClose = () => {
+    if (alert.alertType === 'error') {
+      hideError();
+    } else if (alert.alertType === 'success') {
+      hideSuccess();
+    }
+  };
+
   return (
     <Routes
       alert={alert}
       loading={loading}
       user={user}
-      hideError={hideError}
-      hideSuccess={hideSuccess}
+      handleAlertClose={handleAlertClose}
     />
   );
 }

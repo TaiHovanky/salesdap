@@ -19,25 +19,15 @@ interface Props {
   alert: AlertState;
   loading: boolean;
   user: UserState;
-  hideError: any;
-  hideSuccess: any;
+  handleAlertClose: any;
 }
 
 const Routes = ({
   alert,
   loading,
   user,
-  hideError,
-  hideSuccess
+  handleAlertClose
 }: Props) => {
-  const handleAlertClose = () => {
-    if (alert.alertType === 'error') {
-      hideError();
-    } else if (alert.alertType === 'success') {
-      hideSuccess();
-    }
-  };
-
   return (
     <BrowserRouter>
       <main>
