@@ -12,6 +12,7 @@ interface SelectedDocument {
   data: Array<any>;
   name: string;
   allColumns: Array<string>;
+  columnChooserGridData: Array<any>;
 }
 
 export interface DocumentState {
@@ -33,12 +34,14 @@ const initialState: DocumentState = {
   selectedDocument1: {
     data: [],
     name: '',
-    allColumns: []
+    allColumns: [],
+    columnChooserGridData: []
   },
   selectedDocument2: {
     data: [],
     name: '',
-    allColumns: []
+    allColumns: [],
+    columnChooserGridData: []
   },
   comparisonColumns1: [],
   comparisonColumns2: [],
@@ -84,7 +87,8 @@ export const documentReducer = (state = initialState, action: any) => {
           ...state,
           selectedDocument1: {
             data: action.payload,
-            name: action.name
+            name: action.name,
+            columnChooserGridData: action.columnChooserGridData
           }
         };
       } else {
@@ -92,7 +96,8 @@ export const documentReducer = (state = initialState, action: any) => {
           ...state,
           selectedDocument2: {
             data: action.payload,
-            name: action.name
+            name: action.name,
+            columnChooserGridData: action.columnChooserGridData
           }
         };
       }

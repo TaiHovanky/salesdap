@@ -8,14 +8,15 @@ import NavBar from '../../components/nav-bar';
 import { UserState, initialState } from '../../state/reducers/user';
 
 interface Props {
-  user: UserState
+  user: UserState;
+  hideError: any;
 }
 
-const NavBarContainer = ({ user }: Props) => {
+const NavBarContainer = ({ user, hideError }: Props) => {
   const history = useHistory();
 
   const handleLogout = () => {
-    // axios.post('http://localhost:3001/api/v1/logout') <-- until AWS Redis stuff gets setup, keep this commented
+    // axios.post('/api/v1/logout') <-- until AWS Redis stuff gets setup, keep this commented
     //   .then(() => {
         // hideError();
         updateUser({...initialState});
@@ -31,7 +32,7 @@ const NavBarContainer = ({ user }: Props) => {
   }
 
   return (
-    <NavBar user={user} handleLogout={handleLogout} />
+    <NavBar user={user} handleLogout={handleLogout} hideError={hideError} />
   );
 };
 

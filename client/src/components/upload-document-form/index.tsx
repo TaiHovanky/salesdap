@@ -8,7 +8,6 @@ import { DocumentState } from '../../state/reducers/document';
 
 interface UploadDocumentFormProps {
   document: DocumentState;
-  // handleUploadAndCompare: any;
   activeStep: number;
   showError: any;
   hideError: any;
@@ -20,7 +19,6 @@ interface UploadDocumentFormProps {
 
 const UploadDocumentForm = ({
   document,
-  // handleUploadAndCompare,
   activeStep,
   showError,
   hideError,
@@ -91,7 +89,7 @@ const UploadDocumentForm = ({
     formData.append('resultColumns1', resultColumns1.join());
     formData.append('resultColumns2', resultColumns2.join());
 
-    axios.post('http://localhost:3001/api/v1/uploadfile', formData)
+    axios.post('/api/v1/uploadfile', formData)
       .then((res: any) => {
         hideError();
         uploadDocumentSuccess(res.data);
@@ -99,8 +97,12 @@ const UploadDocumentForm = ({
         changeStep(activeStep += 1);
       })
       .catch((err: any) => {
+        console.log('err', err);
         setIsLoading(false);
-        showError(`File upload and comparison failed. ${err}`);
+        showError('File upload and comparison failed.');
+        setTimeout(() => {
+          hideError();
+        }, 5000)
       });
   };
 
@@ -141,7 +143,7 @@ const UploadDocumentForm = ({
             </Typography>
             <DataGrid
               id="gridContainer"
-              dataSource={selectedDocument1.data}
+              dataSource={selectedDocument1.columnChooserGridData}
               allowColumnReordering={true}
               allowColumnResizing={true}
               columnAutoWidth={true}
@@ -187,7 +189,7 @@ const UploadDocumentForm = ({
             </Typography>
             <DataGrid
               id="gridContainer"
-              dataSource={selectedDocument2.data}
+              dataSource={selectedDocument2.columnChooserGridData}
               allowColumnReordering={true}
               allowColumnResizing={true}
               columnAutoWidth={true}

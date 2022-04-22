@@ -35,7 +35,7 @@ const RegisterContainer = ({
         'Content-Type': 'multipart/form-data'
       }
     };
-    axios.post('http://localhost:3001/api/v1/register', formData, config)
+    axios.post('/api/v1/register', formData, config)
       .then((res) => {
         hideError();
         updateUser(res.data);
@@ -45,7 +45,10 @@ const RegisterContainer = ({
       .catch((err: any) => {
         console.log('err', err);
         setIsLoading(false);
-        showError(`Registration failed. Please try again. ${err}`);
+        showError('Registration failed.');
+        setTimeout(() => {
+          hideError();
+        }, 5000)
       });
   }
 

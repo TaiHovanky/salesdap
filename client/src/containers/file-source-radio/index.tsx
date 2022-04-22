@@ -43,6 +43,9 @@ const FileSourceRadioContainer = ({
         console.log('err', err);
         showError('Failed to get pinned file for user.');
         setIsLoading(false);
+        setTimeout(() => {
+          hideError();
+        }, 5000);
       }
     } else {
       selectDocument([], index, '');

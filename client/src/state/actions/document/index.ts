@@ -21,7 +21,10 @@ export const selectDocument = (
     type: SELECT_DOCUMENT,
     payload: document,
     index,
-    name
+    name,
+    columnChooserGridData: document.length > 2 ?
+      document.slice(0, 2) :
+      document
   };
 }
 

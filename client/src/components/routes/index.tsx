@@ -19,9 +19,25 @@ interface Props {
   alert: AlertState;
   loading: boolean;
   user: UserState;
+  hideError: any;
+  hideSuccess: any;
 }
 
-const Routes = ({ alert, loading, user }: Props) => {
+const Routes = ({
+  alert,
+  loading,
+  user,
+  hideError,
+  hideSuccess
+}: Props) => {
+  const handleAlertClose = () => {
+    if (alert.alertType === 'error') {
+      hideError();
+    } else if (alert.alertType === 'success') {
+      hideSuccess();
+    }
+  };
+
   return (
     <BrowserRouter>
       <main>
@@ -37,11 +53,16 @@ const Routes = ({ alert, loading, user }: Props) => {
         {alert.isOpen && <Alert
           variant="standard"
           severity={alert.alertType || "error"}
+          onClose={handleAlertClose}
           sx={{
-            margin: '2rem auto 0 auto',
+            position: 'fixed',
+            bottom: '-2%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            zIndex: 1570,
             borderRadius: '10px',
             width: 'fit-content',
-            maxWidth: '50%',
+            maxWidth: '33%',
             flexWrap: 'wrap'
           }}
         >
