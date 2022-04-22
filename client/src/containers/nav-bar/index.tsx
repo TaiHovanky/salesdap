@@ -10,9 +10,10 @@ import { UserState, initialState } from '../../state/reducers/user';
 interface Props {
   user: UserState;
   hideError: any;
+  updateUser: any;
 }
 
-const NavBarContainer = ({ user, hideError }: Props) => {
+const NavBarContainer = ({ user, hideError, updateUser }: Props) => {
   const history = useHistory();
 
   const handleLogout = () => {
