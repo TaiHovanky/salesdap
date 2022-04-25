@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import axios from 'axios';
 import UploadDocumentColumnContainer from '../../containers/upload-document-column';
-import DataGrid, { ColumnChooser, ColumnFixing, Paging, Pager, Column } from 'devextreme-react/data-grid';
-import { Grid, Fab, Typography } from '@mui/material';
+import DataGrid, { Paging, Pager, Column } from 'devextreme-react/data-grid';
+import { Grid, Fab, Typography, Checkbox } from '@mui/material';
 import { Upload } from '@mui/icons-material';
 import { DocumentState } from '../../state/reducers/document';
 
@@ -15,6 +15,26 @@ interface UploadDocumentFormProps {
   setIsLoading: any;
   changeStep: any;
   setAllColumns: any;
+  handleColumnClick: any;
+}
+
+const renderGridCell = (
+  data: any,
+  handleColumnClick: any,
+  comparisonColumns: Array<string>,
+  index: number
+) => {
+  return (
+    <div>
+      {data.column? data.column.dataField : data}
+      <Checkbox
+        onClick={() => {
+          handleColumnClick(data, index)
+        }}
+        checked={comparisonColumns.indexOf(data) > -1}
+      />
+    </div>
+  );
 }
 
 const UploadDocumentForm = ({
@@ -25,7 +45,8 @@ const UploadDocumentForm = ({
   uploadDocumentSuccess,
   setIsLoading,
   changeStep,
-  setAllColumns
+  setAllColumns,
+  handleColumnClick
 }: UploadDocumentFormProps): any => {
   const dataGrid1 = useRef<any>(null);
   const dataGrid2 = useRef<any>(null);
@@ -42,20 +63,13 @@ const UploadDocumentForm = ({
   } = document;
 
   useEffect(() => {
-    // `current.instance` points to the UI component instance
-    const currentDataGrid1 = dataGrid1.current;
-    const currentDataGrid2 = dataGrid2.current;
-    // if (currentDataGrid1 && currentDataGrid1.instance && selectedDocument1.data.length) {
-    //   currentDataGrid1.instance.showColumnChooser();
-    // }
-    // if (currentDataGrid2 && currentDataGrid2.instance && selectedDocument2.data.length) {
-    //   currentDataGrid2.instance.showColumnChooser();
-    // }
-    return () => {
-      setAllColumns(currentDataGrid1.instance.state().columns, 0);
-      setAllColumns(currentDataGrid2.instance.state().columns, 1);
-    };
-  }, [selectedDocument1.data.length, selectedDocument2.data.length, setAllColumns]);
+    if (selectedDocument1.data && selectedDocument1.data[0]) {
+      setAllColumns(Array.from(Object.keys(selectedDocument1.data[0])), 0);
+    }
+    if (selectedDocument2.data && selectedDocument2.data[0]) {
+      setAllColumns(Array.from(Object.keys(selectedDocument2.data[0])), 1);
+    }
+  }, [selectedDocument1.data, selectedDocument2.data, setAllColumns]);
 
   /**
    * Puts the selected file and column name into a FormData instance,
@@ -76,18 +90,11 @@ const UploadDocumentForm = ({
       const docBlob2 = new Blob([JSON.stringify(selectedDocument2.data)], { type: 'application/json' });
       formData.append("sales_file2", docBlob2, selectedDocument2.name);
     }
-    const resultColumns1: Array<string> = comparisonColumns1;
-    const resultColumns2: Array<string> = comparisonColumns2;
-    // if (dataGrid1 && dataGrid1.current && dataGrid1.current.instance) {
-    //   resultColumns1 = dataGrid1.current.instance.getVisibleColumns().map((col: any) => col.dataField);
-    // }
-    // if (dataGrid1 && dataGrid2.current && dataGrid2.current.instance) {
-    //   resultColumns2 = dataGrid2.current.instance.getVisibleColumns().map((col: any) => col.dataField);
-    // }
+
     formData.append('comparisonColumns1', comparisonColumns1.join());
     formData.append('comparisonColumns2', comparisonColumns2.join());
-    formData.append('resultColumns1', resultColumns1.join());
-    formData.append('resultColumns2', resultColumns2.join());
+    formData.append('resultColumns1', comparisonColumns1.join());
+    formData.append('resultColumns2', comparisonColumns2.join());
 
     axios.post('http://localhost:3001/api/v1/uploadfile', formData)
       .then((res: any) => {
@@ -139,7 +146,7 @@ const UploadDocumentForm = ({
           />
           <div style={{ width: '100%'}}>
             <Typography variant="subtitle1" sx={{ margin: '2.5rem 0 0 0'}}>
-            Example results data based on the columns you have chosen
+              This grid helps visualize the file that was uploaded with 2 example rows. Columns for comparison can be selected by clicking the column headers.
             </Typography>
             <DataGrid
               id="gridContainer"
@@ -150,11 +157,15 @@ const UploadDocumentForm = ({
               showBorders={true}
               ref={dataGrid1}
             >
-              {comparisonColumns1.length ? comparisonColumns1.map((colProps: any, colIdx: number) => {
+              {selectedDocument1.allColumns ? selectedDocument1.allColumns.map((colProps: any, colIdx: number) => {
                 return (
-                  <Column dataField={colProps} key={`col-${colIdx}-0`} />
+                  <Column
+                    dataField={colProps}
+                    key={`col-${colIdx}-0`}
+                    headerCellRender={() => renderGridCell(colProps, handleColumnClick, comparisonColumns1, 0)}
+                  />
                 );
-              }) : [<Column key={'col-0-0-empty'} />]}
+              }) : []}
               <Paging defaultPageSize={2} />
               <Pager
                 visible={true}
@@ -165,17 +176,6 @@ const UploadDocumentForm = ({
               />
             </DataGrid>
           </div>
-        {/* </Grid>
-        <Grid
-          item
-          container
-          xs={5}
-          p={0}
-          sx={{ height: '100%' }}
-          direction="column"
-          justifyContent="start"
-          alignItems="center"
-        > */}
           <UploadDocumentColumnContainer
             comparisonColumns={comparisonColumns2}
             comparisonColumnsError={comparisonColumns2Error}
@@ -185,7 +185,7 @@ const UploadDocumentForm = ({
           />
           <div style={{ width: '100%'}}>
             <Typography variant="subtitle1" sx={{ margin: '2.5rem 0 0 0'}}>
-              Example results data based on the columns you have chosen
+              This grid helps visualize the file that was uploaded with 2 example rows. Columns for comparison can be selected by clicking the column headers.
             </Typography>
             <DataGrid
               id="gridContainer"
@@ -196,11 +196,15 @@ const UploadDocumentForm = ({
               showBorders={true}
               ref={dataGrid2}
             >
-              {comparisonColumns2.length ? comparisonColumns2.map((colProps: any, colIdx: number) => {
+              {selectedDocument2.allColumns ? selectedDocument2.allColumns.map((colProps: any, colIdx: number) => {
                 return (
-                  <Column dataField={colProps} key={`col-${colIdx}-1`} />
+                  <Column
+                    dataField={colProps}
+                    key={`col-${colIdx}-1`}
+                    headerCellRender={() => renderGridCell(colProps, handleColumnClick, comparisonColumns2, 1)}
+                  />
                 );
-              }) : [<Column key={'col-0-1-empty'} />]}
+              }) : []}
               <Paging defaultPageSize={2} />
               <Pager
                 visible={true}
