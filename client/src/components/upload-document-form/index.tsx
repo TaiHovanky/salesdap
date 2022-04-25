@@ -45,12 +45,12 @@ const UploadDocumentForm = ({
     // `current.instance` points to the UI component instance
     const currentDataGrid1 = dataGrid1.current;
     const currentDataGrid2 = dataGrid2.current;
-    if (currentDataGrid1 && currentDataGrid1.instance && selectedDocument1.data.length) {
-      currentDataGrid1.instance.showColumnChooser();
-    }
-    if (currentDataGrid2 && currentDataGrid2.instance && selectedDocument2.data.length) {
-      currentDataGrid2.instance.showColumnChooser();
-    }
+    // if (currentDataGrid1 && currentDataGrid1.instance && selectedDocument1.data.length) {
+    //   currentDataGrid1.instance.showColumnChooser();
+    // }
+    // if (currentDataGrid2 && currentDataGrid2.instance && selectedDocument2.data.length) {
+    //   currentDataGrid2.instance.showColumnChooser();
+    // }
     return () => {
       setAllColumns(currentDataGrid1.instance.state().columns, 0);
       setAllColumns(currentDataGrid2.instance.state().columns, 1);
@@ -89,7 +89,7 @@ const UploadDocumentForm = ({
     formData.append('resultColumns1', resultColumns1.join());
     formData.append('resultColumns2', resultColumns2.join());
 
-    axios.post('/api/v1/uploadfile', formData)
+    axios.post('http://localhost:3001/api/v1/uploadfile', formData)
       .then((res: any) => {
         hideError();
         uploadDocumentSuccess(res.data);
@@ -117,13 +117,13 @@ const UploadDocumentForm = ({
         container
         spacing={2}
         direction="row"
-        justifyContent="space-between"
+        justifyContent="center"
         alignItems="start"
       >
         <Grid
           item
           container
-          xs={5}
+          xs={8}
           p={0}
           sx={{ height: '100%' }}
           direction="column"
@@ -139,7 +139,7 @@ const UploadDocumentForm = ({
           />
           <div style={{ width: '100%'}}>
             <Typography variant="subtitle1" sx={{ margin: '2.5rem 0 0 0'}}>
-              Click and drag columns that are NOT wanted in results table to Unwanted Columns in the data grid below
+            Example results data based on the columns you have chosen
             </Typography>
             <DataGrid
               id="gridContainer"
@@ -150,11 +150,11 @@ const UploadDocumentForm = ({
               showBorders={true}
               ref={dataGrid1}
             >
-              {selectedDocument1.allColumns ? selectedDocument1.allColumns.map((colProps: any, colIdx: number) => (
-                <Column {...colProps} key={`col-${colIdx}-0`} />
-              )) : []}
-              <ColumnChooser enabled={true} height={150} title="Unwanted columns" />
-              <ColumnFixing enabled={true} />
+              {comparisonColumns1.length ? comparisonColumns1.map((colProps: any, colIdx: number) => {
+                return (
+                  <Column dataField={colProps} key={`col-${colIdx}-0`} />
+                );
+              }) : [<Column key={'col-0-0-empty'} />]}
               <Paging defaultPageSize={2} />
               <Pager
                 visible={true}
@@ -165,7 +165,7 @@ const UploadDocumentForm = ({
               />
             </DataGrid>
           </div>
-        </Grid>
+        {/* </Grid>
         <Grid
           item
           container
@@ -175,7 +175,7 @@ const UploadDocumentForm = ({
           direction="column"
           justifyContent="start"
           alignItems="center"
-        >
+        > */}
           <UploadDocumentColumnContainer
             comparisonColumns={comparisonColumns2}
             comparisonColumnsError={comparisonColumns2Error}
@@ -185,7 +185,7 @@ const UploadDocumentForm = ({
           />
           <div style={{ width: '100%'}}>
             <Typography variant="subtitle1" sx={{ margin: '2.5rem 0 0 0'}}>
-              Click and drag columns that are NOT wanted in results table to Unwanted Columns in the data grid below
+              Example results data based on the columns you have chosen
             </Typography>
             <DataGrid
               id="gridContainer"
@@ -196,11 +196,11 @@ const UploadDocumentForm = ({
               showBorders={true}
               ref={dataGrid2}
             >
-              {selectedDocument2.allColumns ? selectedDocument2.allColumns.map((colProps: any, colIdx: number) => (
-                <Column {...colProps} key={`col-${colIdx}-1`} />
-              )) : []}
-              <ColumnChooser enabled={true} height={150} title="Unwanted columns" />
-              <ColumnFixing enabled={true} />
+              {comparisonColumns2.length ? comparisonColumns2.map((colProps: any, colIdx: number) => {
+                return (
+                  <Column dataField={colProps} key={`col-${colIdx}-1`} />
+                );
+              }) : [<Column key={'col-0-1-empty'} />]}
               <Paging defaultPageSize={2} />
               <Pager
                 visible={true}
