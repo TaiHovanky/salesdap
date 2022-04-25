@@ -70,36 +70,27 @@ export const documentReducer = (state = initialState, action: any) => {
         };
       }
     case SET_COMPARISON_COLUMNS_ERROR:
-      let errorMsg: Array<string> = [];
-      let comparisonColumns1Error = state.comparisonColumns1Error;
-      let comparisonColumns2Error = state.comparisonColumns2Error;
-      const { payload } = action;
-      if (!payload || !payload.length) {
-        errorMsg.push('Required');
-      } else if (payload.length > 3) {
-        errorMsg.push('Can only compare 3 columns in spreadsheet.');
+      let errorMsg = '';
+      if (
+        !!state.comparisonColumns1.length &&
+        !!state.comparisonColumns2.length &&
+        state.comparisonColumns1.length !== state.comparisonColumns2.length
+      ) {
+        console.log('cols dont match')
+        errorMsg += ' Number of selected columns needs to match';
       }
       if (action.index === 0) {
-        if (payload.length && state.comparisonColumns2.length && payload.length !== state.comparisonColumns2.length) {
-          errorMsg.push(' Number of comparison columns need to match.');
-        } else if (payload.length && state.comparisonColumns2.length && payload.length === state.comparisonColumns2.length) {
-          errorMsg = errorMsg.slice(0, 1);
-          const cc2ErrorArr = state.comparisonColumns2Error.split('. ');
-          const matchErrorIndex = cc2ErrorArr.indexOf(' Number of comparison columns need to match.');
-          comparisonColumns2Error = cc2ErrorArr.slice(0, matchErrorIndex).join('. ');
-          console.log('comparison errors', comparisonColumns2Error, errorMsg);
-        }
-        return { ...state, comparisonColumns1Error: errorMsg.join('. '), comparisonColumns2Error: comparisonColumns2Error };
+        return {
+          ...state,
+          comparisonColumns1Error: action.payload + errorMsg,
+          comparisonColumns2Error: errorMsg
+        };
       } else {
-        if (payload.length && state.comparisonColumns1.length && payload.length !== state.comparisonColumns1.length) {
-          errorMsg.push(' Number of comparison columns need to match.');
-        } else if (payload.length && state.comparisonColumns2.length && payload.length === state.comparisonColumns2.length) {
-          errorMsg = errorMsg.slice(0, 1);
-          const cc1ErrorArr = state.comparisonColumns1Error.split('. ');
-          const matchErrorIndex = cc1ErrorArr.indexOf(' Number of comparison columns need to match.');
-          comparisonColumns1Error = cc1ErrorArr.slice(0, matchErrorIndex).join('. ');
+        return {
+          ...state,
+          comparisonColumns2Error: action.payload + errorMsg,
+          comparisonColumns1Error: errorMsg
         }
-        return { ...state, comparisonColumns2Error: errorMsg.join('. '), comparisonColumns1Error: comparisonColumns1Error };
       }
     case CHANGE_RESULT_COLUMNS:
       if (action.index === 0) {

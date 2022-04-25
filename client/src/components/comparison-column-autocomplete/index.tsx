@@ -1,5 +1,6 @@
 import React from 'react';
-import { TextField, Autocomplete, Typography } from '@mui/material';
+import { TextField, Autocomplete, Typography, Checkbox } from '@mui/material';
+import { CheckBoxOutlineBlank, CheckBox } from '@mui/icons-material';
 
 interface Props {
   selectedDocument: any;
@@ -9,6 +10,9 @@ interface Props {
   handleComparisonColumnFieldChange: any;
   index: number;
 }
+
+const icon = <CheckBoxOutlineBlank fontSize="small" />;
+const checkedIcon = <CheckBox fontSize="small" />;
 
 const ComparisonColumnAutocomplete = ({
   selectedDocument,
@@ -26,10 +30,22 @@ const ComparisonColumnAutocomplete = ({
     <>
       <Autocomplete
         multiple={true}
+        disableCloseOnSelect={true}
         options={autocompleteOptions}
         onChange={handleComparisonColumnFieldChange}
         value={comparisonColumns}
         sx={{ width: '100%', margin: '2.5rem 0 1.5rem 0' }}
+        renderOption={(props, option, { selected }) => (
+          <li {...props}>
+            <Checkbox
+              icon={icon}
+              checkedIcon={checkedIcon}
+              style={{ marginRight: 8 }}
+              checked={selected}
+            />
+            {option}
+          </li>
+        )}
         renderInput={(params: any) => (<TextField
           {...params}
           variant="standard"

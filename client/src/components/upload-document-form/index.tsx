@@ -76,14 +76,14 @@ const UploadDocumentForm = ({
       const docBlob2 = new Blob([JSON.stringify(selectedDocument2.data)], { type: 'application/json' });
       formData.append("sales_file2", docBlob2, selectedDocument2.name);
     }
-    let resultColumns1;
-    let resultColumns2;
-    if (dataGrid1 && dataGrid1.current && dataGrid1.current.instance) {
-      resultColumns1 = dataGrid1.current.instance.getVisibleColumns().map((col: any) => col.dataField);
-    }
-    if (dataGrid1 && dataGrid2.current && dataGrid2.current.instance) {
-      resultColumns2 = dataGrid2.current.instance.getVisibleColumns().map((col: any) => col.dataField);
-    }
+    const resultColumns1: Array<string> = comparisonColumns1;
+    const resultColumns2: Array<string> = comparisonColumns2;
+    // if (dataGrid1 && dataGrid1.current && dataGrid1.current.instance) {
+    //   resultColumns1 = dataGrid1.current.instance.getVisibleColumns().map((col: any) => col.dataField);
+    // }
+    // if (dataGrid1 && dataGrid2.current && dataGrid2.current.instance) {
+    //   resultColumns2 = dataGrid2.current.instance.getVisibleColumns().map((col: any) => col.dataField);
+    // }
     formData.append('comparisonColumns1', comparisonColumns1.join());
     formData.append('comparisonColumns2', comparisonColumns2.join());
     formData.append('resultColumns1', resultColumns1.join());
