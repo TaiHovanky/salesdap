@@ -35,7 +35,7 @@ const DuplicatesTable = ({ duplicatesData }: any) => {
         >
           <Column dataField="precision" groupIndex={0} sortOrder="desc" name="Precision of match" />
           {duplicatesData && duplicatesData[0] && Array.from(Object.keys(duplicatesData[0]))
-            .map((colName: string, index: number) => <Column dataField={colName} key={index} />)}
+            .map((colName: string, index: number) => <Column dataField={colName} key={index} caption={colName.replace('--2', '')} />)}
           <Paging defaultPageSize={25} />
           <Pager
             visible={true}

@@ -66,10 +66,8 @@ const addCellValueToHash = (
     comparisonColumnList.forEach((column) => {
       const cellValue: string = typeof row[column] === 'string' ?
         row[column].toLowerCase().trim() : row[column].toString();;
-      if (cellValue) {
-        if (!valueHash.hasOwnProperty(cellValue)) {
-          valueHash[cellValue] = { row, rowIndex };
-        }
+      if (cellValue && !valueHash.hasOwnProperty(cellValue)) {
+        valueHash[cellValue] = { row, rowIndex };
       }
     });
   });
@@ -87,13 +85,11 @@ const checkForMatches = (
     comparisonColumnList.forEach((column) => {
       const cellValue: string = typeof row[column] === 'string' ?
         row[column].toLowerCase().trim() : row[column].toString();
-      if (cellValue) {
-        if (valueHash[cellValue]) {
-          /* Add the rowIndex for the match to the list of matched indexes. Later, we'll
-          use that list to determine how many columns of that row in file 2 match how many columns
-          in file 1 */
-          matchedIndxesForRow.push(valueHash[cellValue].rowIndex);
-        }
+      if (cellValue && valueHash[cellValue]) {
+        /* Add the rowIndex for the match to the list of matched indexes. Later, we'll
+        use that list to determine how many columns of that row in file 2 match how many columns
+        in file 1 */
+        matchedIndxesForRow.push(valueHash[cellValue].rowIndex);
       }
     });
 
@@ -148,7 +144,13 @@ export const displayRelevantColumns = (
       } else if (categoryIndex === 1) {
         precision = LESS_PRECISE_MATCH;
       }
-      const row = columns.reduce((rowObj, col) => ({ ...rowObj, [col]: item[col] || null }), { precision });
+      const row = columns.reduce((rowObj: any, col: string) => {
+        if (!!rowObj[col]) {
+          return { ...rowObj, [`${col}--2`]: item[col] || null };
+        }
+        return { ...rowObj, [col]: item[col] || null };
+      }, { precision });
+
       result.push(row);
     });
   });
