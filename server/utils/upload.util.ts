@@ -148,7 +148,13 @@ export const displayRelevantColumns = (
       } else if (categoryIndex === 1) {
         precision = LESS_PRECISE_MATCH;
       }
-      const row = columns.reduce((rowObj, col) => ({ ...rowObj, [col]: item[col] || null }), { precision });
+      const row = columns.reduce((rowObj: any, col: string) => {
+        if (!!rowObj[col]) {
+          return { ...rowObj, [`${col}--2`]: item[col] || null };
+        }
+        return { ...rowObj, [col]: item[col] || null };
+      }, { precision });
+
       result.push(row);
     });
   });

@@ -1,9 +1,38 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import DataGrid, { Paging, Pager, Column } from 'devextreme-react/data-grid';
-import { connect } from 'react-redux';
 import { Grid } from '@mui/material';
 
-const DuplicatesTable = ({ duplicatesData }: any) => {
+interface Props {
+  duplicatesData: Array<any>;
+  comparisonColumns1: Array<string>;
+  comparisonColumns2: Array<string>;
+}
+
+const DuplicatesTable = ({ duplicatesData, comparisonColumns1, comparisonColumns2 }: Props) => {
+  const customizeColumns = useCallback((columns) => {
+    columns.push({
+        caption: "My accounts",
+        isBand: true,
+        cssClass: 'my-accounts'
+    });
+    columns.push({
+      caption: "Partner's accounts",
+      isBand: true,
+      cssClass: 'their-accounts'
+    });
+    const comparisonColumns = [...comparisonColumns1, ...comparisonColumns2];
+
+    for (let i = 2; i < columns.length - 1; i++) {
+      if (comparisonColumns[i - 2] === columns[i].caption && i < comparisonColumns1.length + 2) {
+        columns[i].ownerBand = columns.length - 2;
+        columns[i].cssClass = 'my-accounts'
+      } else if (comparisonColumns[i - 2] === columns[i].caption) {
+        columns[i].ownerBand = columns.length - 1;
+        columns[i].cssClass = 'their-accounts'
+      }
+    }
+  }, [comparisonColumns1, comparisonColumns2]);
+
   return (
     <Grid
       container
@@ -25,6 +54,8 @@ const DuplicatesTable = ({ duplicatesData }: any) => {
         <DataGrid
           id="gridContainer"
           dataSource={duplicatesData}
+          customizeColumns={customizeColumns}
+          showColumnLines={true}
           allowColumnReordering={true}
           allowColumnResizing={true}
           columnAutoWidth={true}
@@ -35,7 +66,9 @@ const DuplicatesTable = ({ duplicatesData }: any) => {
         >
           <Column dataField="precision" groupIndex={0} sortOrder="desc" name="Precision of match" />
           {duplicatesData && duplicatesData[0] && Array.from(Object.keys(duplicatesData[0]))
-            .map((colName: string, index: number) => <Column dataField={colName} key={index} />)}
+            .map((colName: string, index: number) => (
+              <Column dataField={colName} key={index} caption={colName.replace('--2', '')} />
+            ))}
           <Paging defaultPageSize={25} />
           <Pager
             visible={true}
@@ -50,8 +83,4 @@ const DuplicatesTable = ({ duplicatesData }: any) => {
   );
 }
 
-const mapStateToProps = (state: any) => ({
-  duplicatesData: state.document.duplicatesData
-});
-
-export default connect(mapStateToProps)(DuplicatesTable);
+export default DuplicatesTable;
