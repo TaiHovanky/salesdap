@@ -28,12 +28,10 @@ const UploadDocumentColumn = ({
       <Typography variant='h6' sx={{ marginTop: '2rem', marginBottom: '1rem' }}>
         {index === 0 ? 'My accounts' : 'Partner\'s accounts'}
       </Typography>
-      {/* <div style={{ height: '100px' }}> */}
-        {!!user.pinnedFileName && index === 0 && <FileSourceRadioContainer
-          fileSource={fileSource}
-          index={index}
-        />}
-      {/* </div> */}
+      {!!user.pinnedFileName && index === 0 && <FileSourceRadioContainer
+        fileSource={fileSource}
+        index={index}
+      />}
       <div style={{ height: '80px' }}>
         {fileSource === 'upload' ?
           <FileSelectionFieldContainer selectedDocument={selectedDocument} index={index} /> :
