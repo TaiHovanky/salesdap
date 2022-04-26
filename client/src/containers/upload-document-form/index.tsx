@@ -6,6 +6,7 @@ import { uploadDocumentSuccess, setAllColumns, changeComparisonColumn } from '..
 import { changeStep } from '../../state/actions/step-progress';
 import { showError, hideError } from '../../state/actions/alert';
 import { setIsLoading } from '../../state/actions/loading';
+import { updateComparisonColumns } from '../../utils/update-comparison-columns';
 
 interface Props {
   activeStep: number;
@@ -31,25 +32,12 @@ const UploadDocumentFormContainer = ({
   changeComparisonColumn
 }: Props) => {
   const handleColumnClick = (col: any, index: number) => {
+    const { comparisonColumns1, comparisonColumns2 } = document;
     let newValue: Array<string> = [];
     if (index === 0) {
-      const { comparisonColumns1 } = document;
-      const indexOfCol = comparisonColumns1.indexOf(col);
-      if (indexOfCol === -1) {
-        newValue = [...comparisonColumns1, col];
-      } else {
-        newValue = [...comparisonColumns1];
-        newValue.splice(indexOfCol, 1);
-      }
+      newValue = updateComparisonColumns(comparisonColumns1, col);
     } else {
-      const { comparisonColumns2 } = document;
-      const indexOfCol = comparisonColumns2.indexOf(col);
-      if (indexOfCol === -1) {
-        newValue = [...comparisonColumns2, col];
-      } else {
-        newValue = [...comparisonColumns2];
-        newValue.splice(indexOfCol, 1);
-      }
+      newValue = updateComparisonColumns(comparisonColumns2, col);
     }
 
     changeComparisonColumn(newValue, index);
