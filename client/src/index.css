@@ -20,3 +20,11 @@ code {
 .MuiAutocomplete-popper {
   z-index: 1540 !important;
 }
+
+.my-accounts {
+  color: blue;
+}
+
+.their-accounts {
+  color: purple;
+}
