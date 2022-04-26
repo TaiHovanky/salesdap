@@ -33,7 +33,7 @@ const Routes = ({
       <main>
         <NavBarContainer user={user} />
         <Switch>
-          <PrivateRoute exact path="/home" component={HomeContainer} user={user} />
+          <Route exact path="/home" component={HomeContainer} />
           <Route exact path="/" component={LoginContainer} />
           <Route exact path="/register" component={RegisterContainer} />
           <PrivateRoute exact path="/profile" component={ProfileContainer} user={user} />

@@ -22,7 +22,7 @@ const ComparisonColumnAutocompleteContainer = ({
 }: Props) => {
   const handleComparisonColumnFieldChange = (_: any, newValue: Array<string>) => {
     changeComparisonColumn(newValue, index);
-    setComparisonColumnsError(newValue, index)
+    // setComparisonColumnsError(newValue, index)
   };
 
   const handleComparisonColumnsBlur = () => {
