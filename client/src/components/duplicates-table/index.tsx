@@ -1,14 +1,21 @@
 import React, { useCallback } from 'react';
-import DataGrid, { Paging, Pager, Column } from 'devextreme-react/data-grid';
+import DataGrid, { Paging, Pager, Column, ColumnChooser } from 'devextreme-react/data-grid';
 import { Grid } from '@mui/material';
+import { UserState } from '../../state/reducers/user';
 
 interface Props {
   duplicatesData: Array<any>;
   comparisonColumns1: Array<string>;
   comparisonColumns2: Array<string>;
+  user: UserState;
 }
 
-const DuplicatesTable = ({ duplicatesData, comparisonColumns1, comparisonColumns2 }: Props) => {
+const DuplicatesTable = ({
+  duplicatesData,
+  comparisonColumns1,
+  comparisonColumns2,
+  user
+}: Props) => {
   const customizeColumns = useCallback((columns) => {
     columns.push({
         caption: "My accounts",
@@ -22,11 +29,11 @@ const DuplicatesTable = ({ duplicatesData, comparisonColumns1, comparisonColumns
     });
     const comparisonColumns = [...comparisonColumns1, ...comparisonColumns2];
 
-    for (let i = 2; i < columns.length - 1; i++) {
-      if (comparisonColumns[i - 2] === columns[i].caption && i < comparisonColumns1.length + 2) {
+    for (let i = 3; i < columns.length - 1; i++) {
+      if (comparisonColumns[i - 3] === columns[i].caption && i < comparisonColumns1.length + 3) {
         columns[i].ownerBand = columns.length - 2;
         columns[i].cssClass = 'my-accounts'
-      } else if (comparisonColumns[i - 2] === columns[i].caption) {
+      } else if (comparisonColumns[i - 3] === columns[i].caption) {
         columns[i].ownerBand = columns.length - 1;
         columns[i].cssClass = 'their-accounts'
       }
@@ -64,10 +71,12 @@ const DuplicatesTable = ({ duplicatesData, comparisonColumns1, comparisonColumns
           height="100%"
           rowAlternationEnabled={true}
         >
-          <Column dataField="precision" groupIndex={0} sortOrder="desc" name="Precision of match" />
+          <ColumnChooser mode="select" enabled={true} allowSearch={true} />
+          <Column dataField="precision" groupIndex={0} sortOrder="desc" name="Precision of match" visible={false} />
+          <Column fixed={true} fixedPosition="left" width={150} calculateCellValue={() => `${user.firstname} ${user.lastname}`} caption="Current User" />
           {duplicatesData && duplicatesData[0] && Array.from(Object.keys(duplicatesData[0]))
-            .map((colName: string, index: number) => (
-              <Column dataField={colName} key={index} caption={colName.replace('--2', '')} />
+            .map((colName: string, colIndex: number) => (
+              <Column dataField={colName} key={colIndex} caption={colName.replace('--2', '')} visible={colIndex !== 0} />
             ))}
           <Paging defaultPageSize={25} />
           <Pager
