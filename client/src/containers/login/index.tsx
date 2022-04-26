@@ -33,7 +33,7 @@ const LoginContainer = ({
       }
     };
 
-    axios.post('http://localhost:3001/api/v1/login', formData, config)
+    axios.post('/api/v1/login', formData, config)
       .then((res: any) => {
         hideError();
         updateUser(res.data);

@@ -96,7 +96,7 @@ const UploadDocumentForm = ({
     formData.append('resultColumns1', comparisonColumns1.join());
     formData.append('resultColumns2', comparisonColumns2.join());
 
-    axios.post('http://localhost:3001/api/v1/uploadfile', formData)
+    axios.post('/api/v1/uploadfile', formData)
       .then((res: any) => {
         hideError();
         uploadDocumentSuccess(res.data);

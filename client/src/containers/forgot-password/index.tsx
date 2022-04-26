@@ -21,7 +21,7 @@ const ForgotPasswordContainer = ({ setIsLoading, showError, hideError }: Props) 
       }
     };
     setIsLoading(true);
-    axios.post('http://localhost:3001/api/v1/forgotpassword', formData, config)
+    axios.post('/api/v1/forgotpassword', formData, config)
       .then(() => {
         setIsLoading(false);
         hideError();
