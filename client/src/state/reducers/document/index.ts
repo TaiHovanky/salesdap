@@ -70,26 +70,26 @@ export const documentReducer = (state = initialState, action: any) => {
         };
       }
     case SET_COMPARISON_COLUMNS_ERROR:
-      let errorMsg = '';
-      if (
-        !!state.comparisonColumns1.length &&
-        !!state.comparisonColumns2.length &&
-        state.comparisonColumns1.length !== state.comparisonColumns2.length
-      ) {
-        console.log('cols dont match')
-        errorMsg += ' Number of selected columns needs to match';
-      }
+      // let errorMsg = '';
+      // if (
+      //   !!state.comparisonColumns1.length &&
+      //   !!state.comparisonColumns2.length &&
+      //   state.comparisonColumns1.length !== state.comparisonColumns2.length
+      // ) {
+      //   console.log('cols dont match')
+      //   errorMsg += ' Number of selected columns needs to match';
+      // }
       if (action.index === 0) {
         return {
           ...state,
-          comparisonColumns1Error: action.payload + errorMsg,
-          comparisonColumns2Error: errorMsg
+          comparisonColumns1Error: action.payload,
+          // comparisonColumns2Error: errorMsg
         };
       } else {
         return {
           ...state,
-          comparisonColumns2Error: action.payload + errorMsg,
-          comparisonColumns1Error: errorMsg
+          comparisonColumns2Error: action.payload,
+          // comparisonColumns1Error: errorMsg
         }
       }
     case CHANGE_RESULT_COLUMNS:
