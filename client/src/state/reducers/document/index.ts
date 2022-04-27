@@ -64,21 +64,19 @@ export const documentReducer = (state = initialState, action: any) => {
       const { payload, index } = action;
       let errorMsg1 = [...state.comparisonColumns1Error];
       let errorMsg2 = [...state.comparisonColumns2Error];
-      
-      if (!!state.comparisonColumns1.length && !!state.comparisonColumns2.length) {
-        if (
-          (index === 0 && payload.length !== state.comparisonColumns2.length) ||
-          (index === 1 && payload.length !== state.comparisonColumns1.length)
-        ) {
-          addMessageToErrorList(errorMsg1, MISMATCHED_COLUMNS_ERR);
-          addMessageToErrorList(errorMsg2, MISMATCHED_COLUMNS_ERR);
-        } else if (
-          (index === 0 && payload.length === state.comparisonColumns2.length) ||
-          (index === 1 && payload.length === state.comparisonColumns1.length)
-        ) {
-          removeMessageFromErrorList(errorMsg1, MISMATCHED_COLUMNS_ERR);
-          removeMessageFromErrorList(errorMsg2, MISMATCHED_COLUMNS_ERR);
-        }
+
+      if (
+        (index === 0 && !!state.comparisonColumns2.length && payload.length !== state.comparisonColumns2.length) ||
+        (index === 1 && !!state.comparisonColumns1.length && payload.length !== state.comparisonColumns1.length)
+      ) {
+        addMessageToErrorList(errorMsg1, MISMATCHED_COLUMNS_ERR);
+        addMessageToErrorList(errorMsg2, MISMATCHED_COLUMNS_ERR);
+      } else if (
+        (index === 0 && payload.length === state.comparisonColumns2.length) ||
+        (index === 1 && payload.length === state.comparisonColumns1.length)
+      ) {
+        removeMessageFromErrorList(errorMsg1, MISMATCHED_COLUMNS_ERR);
+        removeMessageFromErrorList(errorMsg2, MISMATCHED_COLUMNS_ERR);
       }
       if (index === 0) {
         if (payload.length > 3) {

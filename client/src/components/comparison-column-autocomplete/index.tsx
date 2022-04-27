@@ -57,7 +57,7 @@ const ComparisonColumnAutocomplete = ({
           to a company, the better (DUNS number, company website, etc.).`}
         />)}
       />
-      {comparisonColumnsError.length && <Typography variant="caption" sx={{ color: '#d32f2f' }}>{comparisonColumnsError.join('\n')}</Typography>}
+      {!!comparisonColumnsError.length && <Typography variant="caption" sx={{ color: '#d32f2f' }}>{comparisonColumnsError.join('\n')}</Typography>}
     </>
   );
 }
