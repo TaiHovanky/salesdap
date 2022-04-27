@@ -2,10 +2,6 @@
 import * as fs from 'fs';
 import AWS from 'aws-sdk';
 
-const MOST_PRECISE_MATCH = '3 columns matched';
-const LESS_PRECISE_MATCH = '2 columns matched';
-const LEAST_PRECISE_MATCH = '1 column matched';
-
 export const parseJSONFromFile = (file: any): Array<any> => {
   const fileBuffer = fs.readFileSync(file);
   if (fileBuffer) {
@@ -54,7 +50,6 @@ export const findDuplicates = (
  * @param {Array<any>} salesData Spreadsheet data
  * @param {string} comparisonColumn Column that we want cell values for
  * @param {any} valueHash Object containing cell value as key, spreadsheet row as value
- * @param {Array<any>} resultsList List of rows that contain duplicate values
  * @param callback Function that updates results in some way
  */
 const addCellValueToHash = (
@@ -105,57 +100,47 @@ const checkForMatches = (
         possibleMatches[matchedRowIndex] += 1;
       }
     });
-    
+
     Array.from(Object.keys(possibleMatches)).forEach((key) => {
-      // note that key is equal to the rowIndex of file 1. rowIndex in this func is for file 2
-      if (possibleMatches[key] === comparisonColumnList.length) {
-        resultsList[0].push({ ...row, ...salesData1[parseInt(key)] });
-      } else if (possibleMatches[key] === comparisonColumnList.length - 1 && resultsList[1]) {
-        resultsList[1].push({ ...row, ...salesData1[parseInt(key)] });
-      } else if (possibleMatches[key] === comparisonColumnList.length - 2 && resultsList[2]) {
-        resultsList[2].push({ ...row, ...salesData1[parseInt(key)] });
-      }
+      /* possibleMatches[key] is the precision of the match i.e. the number of columns that match between the files.
+      Subtract 1 because of zero-indexing in the resultsList, which is an array of arrays */
+      resultsList[possibleMatches[key] - 1].push({ ...row, ...salesData1[parseInt(key)] });
     });
   });
 }
 
 /**
  * Create an array of objects that contain the desired columns from each spreadsheet.
- * @param duplicatesList List of rows that have a duplicate cell value in the comparison columns
- * @param resultColumns1 Columns from the 1st spreadsheet that user wants to see in results
- * @param resultColumns2 Columns from the 2nd spreadsheet that user wants to see in results
+ * @param {Array<any>} duplicatesList List of rows that have a duplicate cell value in the comparison columns
+ * @param {string} comparisonColumns1 Columns from the 1st spreadsheet that user wants to see in results
+ * @param {string} comparisonColumns2 Columns from the 2nd spreadsheet that user wants to see in results
  * @returns Array of objects that contains properties for desired columns
  */
-export const displayRelevantColumns = (
+export const setUpResultColumns = (
   duplicatesList: Array<any>,
-  resultColumns1: string,
-  resultColumns2: string
+  comparisonColumns1: Array<string>,
+  comparisonColumns2: Array<string>
 ): Array<any> => {
   const result: Array<any> = [];
-  const resColArr1: Array<string> = resultColumns1.split(',');
-  const resColArr2: Array<string> = resultColumns2.split(',');
-  const columns: Array<string> = [...resColArr1, ...resColArr2];
+  const columns: Array<string> = [...comparisonColumns1, ...comparisonColumns2];
 
-  duplicatesList.forEach((category: Array<any>, categoryIndex: number) => {
-    category.forEach((item: any) => {
-      let precision: string = LEAST_PRECISE_MATCH;
-      if (categoryIndex === 0) {
-        precision = MOST_PRECISE_MATCH;
-      } else if (categoryIndex === 1) {
-        precision = LESS_PRECISE_MATCH;
-      }
-      const row = columns.reduce((rowObj: any, col: string) => {
-        if (!!rowObj[col]) {
-          return { ...rowObj, [`${col}--2`]: item[col] || null };
-        }
-        return { ...rowObj, [col]: item[col] || null };
-      }, { precision });
-
+  duplicatesList.forEach((resultsGroupForPrecisionLevel: Array<any>, resultsGroupForPrecisionLevelIdx: number) => {
+    resultsGroupForPrecisionLevel.forEach((item: any) => {
+      const row = createResultRow(columns, item, resultsGroupForPrecisionLevelIdx + 1);
       result.push(row);
     });
   });
 
   return result;
+}
+
+export const createResultRow = (columns: Array<string>, item: any, precision: number) => {
+  return columns.reduce((rowObj: any, col: string) => {
+    if (!!rowObj[col]) {
+      return { ...rowObj, [`${col}--2`]: item[col] || null };
+    }
+    return { ...rowObj, [col]: item[col] || null };
+  }, { precision });
 }
 
 export const storeFile = (file: any, pinnedFileId: string) => new Promise((resolve, reject) => {
