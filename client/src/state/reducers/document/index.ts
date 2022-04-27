@@ -25,8 +25,8 @@ export interface DocumentState {
   resultColumns2: Array<string>;
   fileSource1: string;
   fileSource2: string;
-  comparisonColumns1Error: string;
-  comparisonColumns2Error: string;
+  comparisonColumns1Error: Array<string>;
+  comparisonColumns2Error: Array<string>;
 }
 
 const initialState: DocumentState = {
@@ -49,36 +49,90 @@ const initialState: DocumentState = {
   resultColumns2: [],
   fileSource1: 'upload',
   fileSource2: 'upload',
-  comparisonColumns1Error: '',
-  comparisonColumns2Error: '',
+  comparisonColumns1Error: [],
+  comparisonColumns2Error: [],
 };
+
+const MISMATCHED_COLUMNS_ERR = 'The number of selected columns for each file needs to match.';
+const TOO_MANY_COLUMNS_ERR = 'Limit of 3 columns exceeded.';
+const REQUIRED_ERR = 'At least 1 column is required';
 
 export const documentReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case CHANGE_COMPARISON_COLUMN:
+      let errorMsg1 = [...state.comparisonColumns1Error];
+      let errorMsg2 = [...state.comparisonColumns2Error];
+      const { payload, index } = action;
+      if (!!state.comparisonColumns1.length && !!state.comparisonColumns2.length) {
+        if (
+          (index === 0 && payload.length !== state.comparisonColumns2.length) ||
+          (index === 1 && payload.length !== state.comparisonColumns1.length)
+        ) {
+          console.log('cols dont match')
+          errorMsg1.push(MISMATCHED_COLUMNS_ERR);
+          errorMsg2.push(MISMATCHED_COLUMNS_ERR);
+        } else if (
+          (index === 0 && payload.length === state.comparisonColumns2.length) ||
+          (index === 1 && payload.length === state.comparisonColumns1.length)
+        ) {
+          const errIndex1 = errorMsg1.indexOf(MISMATCHED_COLUMNS_ERR);
+          const errIndex2 = errorMsg1.indexOf(MISMATCHED_COLUMNS_ERR);
+          if (errIndex1 > -1) errorMsg1.splice(errIndex1, 1);
+          if (errIndex2 > -1) errorMsg2.splice(errIndex2, 1);
+        }
+      }
+      if (index === 0) {
+        if (payload.length > 3) {
+          errorMsg1.push(TOO_MANY_COLUMNS_ERR);
+          console.log('-------------payload longer than 3', errorMsg1);
+        } else {
+          console.log('-------------payload shorter than 3');
+          const errIndex = errorMsg1.indexOf(TOO_MANY_COLUMNS_ERR);
+          if (errIndex > -1) errorMsg1.splice(errIndex, 1)
+        }
+        if (payload.length === 0) {
+          errorMsg1.push(REQUIRED_ERR);
+        } else {
+          console.log('splicing req errr', errorMsg1, errorMsg1.indexOf(REQUIRED_ERR))
+          const errIndex = errorMsg1.indexOf(REQUIRED_ERR);
+          if (errIndex > -1) errorMsg1.splice(errIndex, 1);
+        }
+        console.log('errmessage1 after', errorMsg1)
+      } else if (index === 1) {
+        if (payload.length > 3) {
+          console.log('-------------payload longer than 3');
+          errorMsg2.push(TOO_MANY_COLUMNS_ERR)
+        } else {
+          console.log('-------------payload shorter than 3');
+          const errIndex = errorMsg2.indexOf(TOO_MANY_COLUMNS_ERR);
+          if (errIndex > -1) errorMsg2.splice(errIndex, 1);
+        }
+        if (payload.length === 0) {
+          errorMsg2.push(REQUIRED_ERR);
+        } else {
+          const errIndex = errorMsg2.indexOf(REQUIRED_ERR);
+          if (errIndex > -1) errorMsg2.splice(errIndex, 1);
+        }
+      }
+      console.log('error messages', errorMsg1, errorMsg2);
       if (action.index === 0) {
         return {
           ...state,
           comparisonColumns1: action.payload,
           resultColumns1: action.payload,
+          comparisonColumns1Error: errorMsg1,
+          comparisonColumns2Error: errorMsg2
         };
       } else {
         return {
           ...state,
           comparisonColumns2: action.payload,
           resultColumns2: action.payload,
+          comparisonColumns1Error: errorMsg1,
+          comparisonColumns2Error: errorMsg2
         };
       }
     case SET_COMPARISON_COLUMNS_ERROR:
-      // let errorMsg = '';
-      // if (
-      //   !!state.comparisonColumns1.length &&
-      //   !!state.comparisonColumns2.length &&
-      //   state.comparisonColumns1.length !== state.comparisonColumns2.length
-      // ) {
-      //   console.log('cols dont match')
-      //   errorMsg += ' Number of selected columns needs to match';
-      // }
       if (action.index === 0) {
         return {
           ...state,
