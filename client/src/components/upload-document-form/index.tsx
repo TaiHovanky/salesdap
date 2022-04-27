@@ -1,5 +1,4 @@
 import React, { useRef, useEffect } from 'react';
-import axios from 'axios';
 import UploadDocumentColumnContainer from '../../containers/upload-document-column';
 import DataGrid, { Paging, Pager, Column } from 'devextreme-react/data-grid';
 import { Grid, Fab, Typography, Checkbox } from '@mui/material';
@@ -8,14 +7,9 @@ import { DocumentState } from '../../state/reducers/document';
 
 interface UploadDocumentFormProps {
   document: DocumentState;
-  activeStep: number;
-  showError: any;
-  hideError: any;
-  uploadDocumentSuccess: any;
-  setIsLoading: any;
-  changeStep: any;
   setAllColumns: any;
   handleColumnClick: any;
+  handleUploadAndCompare: any;
 }
 
 const renderGridCell = (
@@ -39,14 +33,9 @@ const renderGridCell = (
 
 const UploadDocumentForm = ({
   document,
-  activeStep,
-  showError,
-  hideError,
-  uploadDocumentSuccess,
-  setIsLoading,
-  changeStep,
   setAllColumns,
-  handleColumnClick
+  handleColumnClick,
+  handleUploadAndCompare
 }: UploadDocumentFormProps): any => {
   const dataGrid1 = useRef<any>(null);
   const dataGrid2 = useRef<any>(null);
@@ -71,51 +60,10 @@ const UploadDocumentForm = ({
     }
   }, [selectedDocument1.data, selectedDocument2.data, setAllColumns]);
 
-  /**
-   * Puts the selected file and column name into a FormData instance,
-   * sends it to the server, and then changes to the next step where
-   * the duplicates will be displayed
-   * Note: because we use the dataGrid ref to get the resultColumns, we're breaking from the pattern
-   * of smart container/dumb component here.
-   */
-   const handleUploadAndCompare = () => {
-    setIsLoading(true);
-    const formData = new FormData();
-    if (selectedDocument1 && selectedDocument1.name) {
-      const docBlob1 = new Blob([JSON.stringify(selectedDocument1.data)], { type: 'application/json' });
-      formData.append("sales_file1", docBlob1, selectedDocument1.name);
-    }
-
-    if (selectedDocument2 && selectedDocument2.name) {
-      const docBlob2 = new Blob([JSON.stringify(selectedDocument2.data)], { type: 'application/json' });
-      formData.append("sales_file2", docBlob2, selectedDocument2.name);
-    }
-
-    formData.append('comparisonColumns1', comparisonColumns1.join());
-    formData.append('comparisonColumns2', comparisonColumns2.join());
-    formData.append('resultColumns1', comparisonColumns1.join());
-    formData.append('resultColumns2', comparisonColumns2.join());
-
-    axios.post('/api/v1/uploadfile', formData)
-      .then((res: any) => {
-        hideError();
-        uploadDocumentSuccess(res.data);
-        setIsLoading(false);
-        changeStep(activeStep += 1);
-      })
-      .catch((err: any) => {
-        console.log('err', err);
-        setIsLoading(false);
-        showError('File upload and comparison failed.');
-        setTimeout(() => {
-          hideError();
-        }, 5000)
-      });
-  };
-
-
-  const isSubmitBtnEnabled = selectedDocument1 && selectedDocument2 &&
-    comparisonColumns1.length && comparisonColumns2.length &&
+  /* Validation for whether the Submit button should be enabled or disabled. If documents
+  and columns haven't been selected, the button should be disabled. */
+  const isSubmitBtnEnabled: boolean = selectedDocument1 && selectedDocument2 &&
+    !!comparisonColumns1.length && !!comparisonColumns2.length &&
     !comparisonColumns1Error.length && !comparisonColumns2Error.length;
 
   return (

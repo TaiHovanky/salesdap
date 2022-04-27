@@ -2,7 +2,6 @@ import {
   UPLOAD_DOCUMENT_SUCCESS,
   SELECT_DOCUMENT,
   CHANGE_COMPARISON_COLUMN,
-  CHANGE_RESULT_COLUMNS,
   SET_FILE_SOURCE,
   SET_COMPARISON_COLUMNS_ERROR,
   SET_ALL_COLUMNS
@@ -22,8 +21,6 @@ export interface DocumentState {
   selectedDocument2: SelectedDocument;
   comparisonColumns1: Array<string>;
   comparisonColumns2: Array<string>;
-  resultColumns1: Array<string>;
-  resultColumns2: Array<string>;
   fileSource1: string;
   fileSource2: string;
   comparisonColumns1Error: Array<string>;
@@ -46,17 +43,16 @@ const initialState: DocumentState = {
   },
   comparisonColumns1: [],
   comparisonColumns2: [],
-  resultColumns1: [],
-  resultColumns2: [],
   fileSource1: 'upload',
   fileSource2: 'upload',
   comparisonColumns1Error: [],
   comparisonColumns2Error: [],
 };
 
-const MISMATCHED_COLUMNS_ERR = 'The number of selected columns for each file needs to match.';
-const TOO_MANY_COLUMNS_ERR = 'Limit of 3 columns exceeded.';
-const REQUIRED_ERR = 'At least 1 column is required';
+export const COMPARISON_COLUMNS_LIMIT: number = 5;
+export const MISMATCHED_COLUMNS_ERR: string = 'The number of selected columns for each file needs to match.';
+export const TOO_MANY_COLUMNS_ERR: string = `Limit of ${COMPARISON_COLUMNS_LIMIT} columns exceeded.`;
+export const REQUIRED_ERR: string = 'At least 1 column is required';
 
 export const documentReducer = (state = initialState, action: any) => {
   switch (action.type) {
@@ -79,7 +75,7 @@ export const documentReducer = (state = initialState, action: any) => {
         removeMessageFromErrorList(errorMsg2, MISMATCHED_COLUMNS_ERR);
       }
       if (index === 0) {
-        if (payload.length > 3) {
+        if (payload.length > COMPARISON_COLUMNS_LIMIT) {
           addMessageToErrorList(errorMsg1, TOO_MANY_COLUMNS_ERR);
         } else {
           removeMessageFromErrorList(errorMsg1, TOO_MANY_COLUMNS_ERR);
@@ -90,7 +86,7 @@ export const documentReducer = (state = initialState, action: any) => {
           removeMessageFromErrorList(errorMsg1, REQUIRED_ERR);
         }
       } else if (index === 1) {
-        if (payload.length > 3) {
+        if (payload.length > COMPARISON_COLUMNS_LIMIT) {
           addMessageToErrorList(errorMsg2, TOO_MANY_COLUMNS_ERR);
         } else {
           removeMessageFromErrorList(errorMsg2, TOO_MANY_COLUMNS_ERR);
@@ -106,7 +102,6 @@ export const documentReducer = (state = initialState, action: any) => {
         return {
           ...state,
           comparisonColumns1: action.payload,
-          resultColumns1: action.payload,
           comparisonColumns1Error: errorMsg1,
           comparisonColumns2Error: errorMsg2
         };
@@ -114,7 +109,6 @@ export const documentReducer = (state = initialState, action: any) => {
         return {
           ...state,
           comparisonColumns2: action.payload,
-          resultColumns2: action.payload,
           comparisonColumns1Error: errorMsg1,
           comparisonColumns2Error: errorMsg2
         };
@@ -134,12 +128,6 @@ export const documentReducer = (state = initialState, action: any) => {
           ...state,
           comparisonColumns2Error: errorMsg
         }
-      }
-    case CHANGE_RESULT_COLUMNS:
-      if (action.index === 0) {
-        return { ...state, resultColumns1: action.payload };
-      } else {
-        return { ...state, resultColumns2: action.payload}
       }
     case SELECT_DOCUMENT:
       if (action.index === 0) {
