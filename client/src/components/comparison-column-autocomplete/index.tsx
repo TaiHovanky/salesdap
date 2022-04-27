@@ -33,9 +33,6 @@ const ComparisonColumnAutocomplete = ({
         disableCloseOnSelect={true}
         options={autocompleteOptions}
         onChange={handleComparisonColumnFieldChange}
-        // onInputChange={(x) => {
-        //   console.log('on input change-------------------', x)
-        // }}
         value={comparisonColumns}
         sx={{ width: '100%', margin: '2.5rem 0 1.5rem 0' }}
         renderOption={(props, option, { selected }) => (
@@ -54,7 +51,7 @@ const ComparisonColumnAutocomplete = ({
           variant="standard"
           required={true}
           error={!!comparisonColumnsError.length}
-          // onBlur={handleComparisonColumnsBlur}
+          onBlur={handleComparisonColumnsBlur}
           helperText={`Columns from file ${index === 0 ? 'A' : 'B'} that will be compared with columns
           from file ${index === 0 ? 'B' : 'A'} to determine match. Limit: 3 columns. Hint: the more unique a column's value is
           to a company, the better (DUNS number, company website, etc.).`}

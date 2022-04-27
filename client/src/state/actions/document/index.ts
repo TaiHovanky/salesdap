@@ -46,15 +46,9 @@ export const setFileSource = (index: number, value: string) => ({
 });
 
 export const setComparisonColumnsError = (value: Array<string>, index: number) => {
-  let payload = '';
-  if (!value || !value.length) {
-    payload = 'Required';
-  } else if (value.length > 3) {
-    payload = 'Can only compare 3 columns in spreadsheet';
-  }
   return {
     type: SET_COMPARISON_COLUMNS_ERROR,
-    payload,
+    payload: value,
     index
   }
 }

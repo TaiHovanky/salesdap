@@ -9,3 +9,19 @@ export const updateComparisonColumns = (comparisonColumns: Array<string>, update
   }
   return newValue;
 }
+
+export const addMessageToErrorList = (
+  errorList: Array<string>,
+  errorMessage: string,
+) => {
+  const errMsgIndex = errorList.indexOf(errorMessage);
+  if (errMsgIndex === -1) errorList.push(errorMessage);
+}
+
+export const removeMessageFromErrorList = (
+  errorList: Array<string>,
+  errorMessage: string,
+) => {
+  const errMsgIndex = errorList.indexOf(errorMessage);
+  if (errMsgIndex > -1) errorList.splice(errMsgIndex, 1);
+}
