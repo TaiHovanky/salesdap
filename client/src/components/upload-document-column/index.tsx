@@ -9,7 +9,7 @@ import ComparisonColumnAutocompleteContainer from '../../containers/comparison-c
 interface UploadDocumentColumnProps {
   selectedDocument: any;
   comparisonColumns: Array<string>;
-  comparisonColumnsError: string;
+  comparisonColumnsError: Array<string>;
   fileSource: string;
   index: number;
   user: UserState;

@@ -7,7 +7,7 @@ interface Props {
   user: UserState;
   selectedDocument: any;
   comparisonColumns: Array<string>;
-  comparisonColumnsError: string;
+  comparisonColumnsError: Array<string>;
   fileSource: string;
   index: number;
 }

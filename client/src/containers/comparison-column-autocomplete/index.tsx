@@ -7,7 +7,7 @@ interface Props {
   selectedDocument: any;
   comparisonColumns: Array<string>;
   changeComparisonColumn: any;
-  comparisonColumnsError: string;
+  comparisonColumnsError: Array<string>;
   setComparisonColumnsError: any;
   index: number;
 }

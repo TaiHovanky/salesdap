@@ -7,6 +7,7 @@ import {
   SET_COMPARISON_COLUMNS_ERROR,
   SET_ALL_COLUMNS
 } from '../../actions/document';
+import { addMessageToErrorList, removeMessageFromErrorList } from '../../../utils/update-comparison-columns';
 
 interface SelectedDocument {
   data: Array<any>;
@@ -25,8 +26,8 @@ export interface DocumentState {
   resultColumns2: Array<string>;
   fileSource1: string;
   fileSource2: string;
-  comparisonColumns1Error: string;
-  comparisonColumns2Error: string;
+  comparisonColumns1Error: Array<string>;
+  comparisonColumns2Error: Array<string>;
 }
 
 const initialState: DocumentState = {
@@ -49,47 +50,89 @@ const initialState: DocumentState = {
   resultColumns2: [],
   fileSource1: 'upload',
   fileSource2: 'upload',
-  comparisonColumns1Error: '',
-  comparisonColumns2Error: '',
+  comparisonColumns1Error: [],
+  comparisonColumns2Error: [],
 };
+
+const MISMATCHED_COLUMNS_ERR = 'The number of selected columns for each file needs to match.';
+const TOO_MANY_COLUMNS_ERR = 'Limit of 3 columns exceeded.';
+const REQUIRED_ERR = 'At least 1 column is required';
 
 export const documentReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case CHANGE_COMPARISON_COLUMN:
+      const { payload, index } = action;
+      let errorMsg1 = [...state.comparisonColumns1Error];
+      let errorMsg2 = [...state.comparisonColumns2Error];
+
+      if (
+        (index === 0 && !!state.comparisonColumns2.length && payload.length !== state.comparisonColumns2.length) ||
+        (index === 1 && !!state.comparisonColumns1.length && payload.length !== state.comparisonColumns1.length)
+      ) {
+        addMessageToErrorList(errorMsg1, MISMATCHED_COLUMNS_ERR);
+        addMessageToErrorList(errorMsg2, MISMATCHED_COLUMNS_ERR);
+      } else if (
+        (index === 0 && payload.length === state.comparisonColumns2.length) ||
+        (index === 1 && payload.length === state.comparisonColumns1.length)
+      ) {
+        removeMessageFromErrorList(errorMsg1, MISMATCHED_COLUMNS_ERR);
+        removeMessageFromErrorList(errorMsg2, MISMATCHED_COLUMNS_ERR);
+      }
+      if (index === 0) {
+        if (payload.length > 3) {
+          addMessageToErrorList(errorMsg1, TOO_MANY_COLUMNS_ERR);
+        } else {
+          removeMessageFromErrorList(errorMsg1, TOO_MANY_COLUMNS_ERR);
+        }
+        if (payload.length === 0) {
+          addMessageToErrorList(errorMsg1, REQUIRED_ERR);
+        } else {
+          removeMessageFromErrorList(errorMsg1, REQUIRED_ERR);
+        }
+      } else if (index === 1) {
+        if (payload.length > 3) {
+          addMessageToErrorList(errorMsg2, TOO_MANY_COLUMNS_ERR);
+        } else {
+          removeMessageFromErrorList(errorMsg2, TOO_MANY_COLUMNS_ERR);
+        }
+        if (payload.length === 0) {
+          addMessageToErrorList(errorMsg2, REQUIRED_ERR);
+        } else {
+          removeMessageFromErrorList(errorMsg2, REQUIRED_ERR);
+        }
+      }
+
       if (action.index === 0) {
         return {
           ...state,
           comparisonColumns1: action.payload,
           resultColumns1: action.payload,
+          comparisonColumns1Error: errorMsg1,
+          comparisonColumns2Error: errorMsg2
         };
       } else {
         return {
           ...state,
           comparisonColumns2: action.payload,
           resultColumns2: action.payload,
+          comparisonColumns1Error: errorMsg1,
+          comparisonColumns2Error: errorMsg2
         };
       }
     case SET_COMPARISON_COLUMNS_ERROR:
-      // let errorMsg = '';
-      // if (
-      //   !!state.comparisonColumns1.length &&
-      //   !!state.comparisonColumns2.length &&
-      //   state.comparisonColumns1.length !== state.comparisonColumns2.length
-      // ) {
-      //   console.log('cols dont match')
-      //   errorMsg += ' Number of selected columns needs to match';
-      // }
+      const errorMsg = action.index === 0 ? [...state.comparisonColumns1Error] : [...state.comparisonColumns2Error];
+      if (action.payload.length === 0) {
+        addMessageToErrorList(errorMsg, REQUIRED_ERR);
+      }
       if (action.index === 0) {
         return {
           ...state,
-          comparisonColumns1Error: action.payload,
-          // comparisonColumns2Error: errorMsg
+          comparisonColumns1Error: errorMsg
         };
       } else {
         return {
           ...state,
-          comparisonColumns2Error: action.payload,
-          // comparisonColumns1Error: errorMsg
+          comparisonColumns2Error: errorMsg
         }
       }
     case CHANGE_RESULT_COLUMNS:
