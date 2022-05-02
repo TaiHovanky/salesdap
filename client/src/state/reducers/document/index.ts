@@ -4,7 +4,8 @@ import {
   CHANGE_COMPARISON_COLUMN,
   SET_FILE_SOURCE,
   SET_COMPARISON_COLUMNS_ERROR,
-  SET_ALL_COLUMNS
+  SET_ALL_COLUMNS,
+  SET_FILE_STRUCTURE
 } from '../../actions/document';
 import { addMessageToErrorList, removeMessageFromErrorList } from '../../../utils/update-comparison-columns';
 
@@ -25,6 +26,8 @@ export interface DocumentState {
   fileSource2: string;
   comparisonColumns1Error: Array<string>;
   comparisonColumns2Error: Array<string>;
+  fileStructure1: string;
+  fileStructure2: string;
 }
 
 const initialState: DocumentState = {
@@ -47,6 +50,8 @@ const initialState: DocumentState = {
   fileSource2: 'upload',
   comparisonColumns1Error: [],
   comparisonColumns2Error: [],
+  fileStructure1: 'structured',
+  fileStructure2: 'structured'
 };
 
 export const COMPARISON_COLUMNS_LIMIT: number = 5;
@@ -177,6 +182,18 @@ export const documentReducer = (state = initialState, action: any) => {
         return {
           ...state,
           fileSource2: action.payload
+        };
+      }
+    case SET_FILE_STRUCTURE:
+      if (action.index === 0) {
+        return {
+          ...state,
+          fileStructure1: action.payload
+        };
+      } else {
+        return {
+          ...state,
+          fileStructure2: action.payload
         };
       }
     case UPLOAD_DOCUMENT_SUCCESS:

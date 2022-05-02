@@ -37,8 +37,6 @@ const UploadDocumentForm = ({
   handleColumnClick,
   handleUploadAndCompare
 }: UploadDocumentFormProps): any => {
-  const dataGrid1 = useRef<any>(null);
-  const dataGrid2 = useRef<any>(null);
 
   const {
     selectedDocument1,
@@ -48,17 +46,19 @@ const UploadDocumentForm = ({
     comparisonColumns1Error,
     comparisonColumns2Error,
     fileSource1,
-    fileSource2
+    fileSource2,
+    fileStructure1,
+    fileStructure2
   } = document;
 
-  useEffect(() => {
-    if (selectedDocument1.data && selectedDocument1.data[0]) {
-      setAllColumns(Array.from(Object.keys(selectedDocument1.data[0])), 0);
-    }
-    if (selectedDocument2.data && selectedDocument2.data[0]) {
-      setAllColumns(Array.from(Object.keys(selectedDocument2.data[0])), 1);
-    }
-  }, [selectedDocument1.data, selectedDocument2.data, setAllColumns]);
+  // useEffect(() => {
+  //   if (selectedDocument1.data && selectedDocument1.data[0]) {
+  //     setAllColumns(Array.from(Object.keys(selectedDocument1.data[0])), 0);
+  //   }
+  //   if (selectedDocument2.data && selectedDocument2.data[0]) {
+  //     setAllColumns(Array.from(Object.keys(selectedDocument2.data[0])), 1);
+  //   }
+  // }, [selectedDocument1.data, selectedDocument2.data, setAllColumns]);
 
   /* Validation for whether the Submit button should be enabled or disabled. If documents
   and columns haven't been selected, the button should be disabled. */
@@ -91,8 +91,11 @@ const UploadDocumentForm = ({
             selectedDocument={selectedDocument1}
             fileSource={fileSource1}
             index={0}
+            setAllColumns={setAllColumns}
+            handleColumnClick={handleColumnClick}
+            fileStructure={fileStructure1}
           />
-          <div style={{ width: '100%'}}>
+          {/* <div style={{ width: '100%'}}>
             <Typography variant="subtitle1" sx={{ margin: '2.5rem 0 0 0'}}>
               This grid helps visualize the file that was uploaded with 2 example rows. Columns for comparison can be selected by clicking the column headers.
             </Typography>
@@ -123,15 +126,18 @@ const UploadDocumentForm = ({
                 showNavigationButtons={true}
               />
             </DataGrid>
-          </div>
+          </div> */}
           <UploadDocumentColumnContainer
             comparisonColumns={comparisonColumns2}
             comparisonColumnsError={comparisonColumns2Error}
             selectedDocument={selectedDocument2}
             fileSource={fileSource2}
             index={1}
+            setAllColumns={setAllColumns}
+            handleColumnClick={handleColumnClick}
+            fileStructure={fileStructure2}
           />
-          <div style={{ width: '100%'}}>
+          {/* <div style={{ width: '100%'}}>
             <Typography variant="subtitle1" sx={{ margin: '2.5rem 0 0 0'}}>
               This grid helps visualize the file that was uploaded with 2 example rows. Columns for comparison can be selected by clicking the column headers.
             </Typography>
@@ -162,7 +168,7 @@ const UploadDocumentForm = ({
                 showNavigationButtons={true}
               />
             </DataGrid>
-          </div>
+          </div> */}
         </Grid>
       </Grid>
       <Grid
