@@ -76,9 +76,8 @@ const FileStructureRadio = ({ fileStructure, handleFileStructureChange, index }:
           showBorders={true}
           width="100%"
           height="100%"
-          rowAlternationEnabled={true}
         />
-        <DialogContentText>Unstructured data example:</DialogContentText>
+        <DialogContentText sx={{ marginTop: '1.5rem' }}>Unstructured data example:</DialogContentText>
         <DataGrid 
           id="unstructuredGridContainer"
           dataSource={unstructuredData}
@@ -87,7 +86,6 @@ const FileStructureRadio = ({ fileStructure, handleFileStructureChange, index }:
           showBorders={true}
           width="100%"
           height="100%"
-          rowAlternationEnabled={true}
         >
           <Column caption="" calculateCellValue={(data: any) => data} />
         </DataGrid>

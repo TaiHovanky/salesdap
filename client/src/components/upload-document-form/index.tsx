@@ -12,24 +12,24 @@ interface UploadDocumentFormProps {
   handleUploadAndCompare: any;
 }
 
-const renderGridCell = (
-  data: any,
-  handleColumnClick: any,
-  comparisonColumns: Array<string>,
-  index: number
-) => {
-  return (
-    <div>
-      {data.column? data.column.dataField : data}
-      <Checkbox
-        onClick={() => {
-          handleColumnClick(data, index)
-        }}
-        checked={comparisonColumns.indexOf(data) > -1}
-      />
-    </div>
-  );
-}
+// const renderGridCell = (
+//   data: any,
+//   handleColumnClick: any,
+//   comparisonColumns: Array<string>,
+//   index: number
+// ) => {
+//   return (
+//     <div>
+//       {data.column? data.column.dataField : data}
+//       <Checkbox
+//         onClick={() => {
+//           handleColumnClick(data, index)
+//         }}
+//         checked={comparisonColumns.indexOf(data) > -1}
+//       />
+//     </div>
+//   );
+// }
 
 const UploadDocumentForm = ({
   document,

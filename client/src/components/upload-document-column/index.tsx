@@ -27,6 +27,7 @@ const renderGridCell = (
   comparisonColumns: Array<string>,
   index: number
 ) => {
+  console.log('data renderGridCell', data, comparisonColumns)
   return (
     <div>
       {data.column? data.column.dataField : data}
@@ -99,7 +100,7 @@ const UploadDocumentColumn = ({
               <Column
                 dataField={colProps}
                 key={`col-${colIdx}-1`}
-                headerCellRender={() => renderGridCell(colProps, handleColumnClick, comparisonColumns2, 1)}
+                headerCellRender={() => renderGridCell(colProps, handleColumnClick, comparisonColumns, index)}
               />
             );
           }) : []}
