@@ -7,6 +7,8 @@ interface Props {
   duplicatesData: Array<any>;
   comparisonColumns1: Array<string>;
   comparisonColumns2: Array<string>;
+  fileStructure1: string;
+  fileStructure2: string;
   user: UserState;
 }
 
@@ -14,6 +16,8 @@ const DuplicatesTable = ({
   duplicatesData,
   comparisonColumns1,
   comparisonColumns2,
+  fileStructure1,
+  fileStructure2,
   user
 }: Props) => {
   const customizeColumns = useCallback((columns) => {
@@ -27,10 +31,28 @@ const DuplicatesTable = ({
       isBand: true,
       cssClass: 'their-accounts'
     });
-    const comparisonColumns = [...comparisonColumns1, ...comparisonColumns2];
+    let comparisonColumns: Array<string> = [];
+    let myAccountColumns = [];
+    let partnerAccountColumns = [];
+    if (fileStructure1 === 'structured') {
+      myAccountColumns = [...comparisonColumns1];
+      comparisonColumns = [...comparisonColumns1];
+    } else {
+      myAccountColumns = ['Unstructured Data'];
+      comparisonColumns = ['Unstructured Data'];
+    }
+
+    if (fileStructure2 === 'structured') {
+      partnerAccountColumns = [...comparisonColumns2];
+      comparisonColumns = comparisonColumns.concat(comparisonColumns2);
+    } else {
+      partnerAccountColumns = ['Unstructured Data'];
+      comparisonColumns = comparisonColumns.concat('Unstructured Data');
+    }
+
 
     for (let i = 3; i < columns.length - 1; i++) {
-      if (comparisonColumns[i - 3] === columns[i].caption && i < comparisonColumns1.length + 3) {
+      if (comparisonColumns[i - 3] === columns[i].caption && i < myAccountColumns.length + 3) {
         columns[i].ownerBand = columns.length - 2;
         columns[i].cssClass = 'my-accounts'
       } else if (comparisonColumns[i - 3] === columns[i].caption) {
@@ -75,9 +97,12 @@ const DuplicatesTable = ({
           <Column dataField="precision" groupIndex={0} sortOrder="desc" name="Precision of match" visible={false} />
           <Column fixed={true} fixedPosition="left" width={150} calculateCellValue={() => `${user.firstname} ${user.lastname}`} caption="Current User" />
           {duplicatesData && duplicatesData[0] && Array.from(Object.keys(duplicatesData[0]))
-            .map((colName: string, colIndex: number) => (
-              <Column dataField={colName} key={colIndex} caption={colName.replace('--2', '')} visible={colIndex !== 0} />
-            ))}
+            .map((colName: string, colIndex: number) => {
+              console.log('mapping cols', colName, colIndex);
+              return (
+                <Column dataField={colName} key={colIndex} caption={colName.replace('--2', '')} visible={colIndex !== 0} />
+              );
+            })}
           <Paging defaultPageSize={25} />
           <Pager
             visible={true}

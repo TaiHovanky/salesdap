@@ -9,7 +9,8 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogContentText
+  DialogContentText,
+  Typography
 } from '@mui/material';
 import { Help } from '@mui/icons-material';
 import DataGrid, { Column } from 'devextreme-react/data-grid';
@@ -77,6 +78,8 @@ const FileStructureRadio = ({ fileStructure, handleFileStructureChange, index }:
           width="100%"
           height="100%"
         />
+        <Typography variant="body2">Note that "structured" here is referring to the presence of defined column
+        names.</Typography>
         <DialogContentText sx={{ marginTop: '1.5rem' }}>Unstructured data example:</DialogContentText>
         <DataGrid 
           id="unstructuredGridContainer"
@@ -89,6 +92,9 @@ const FileStructureRadio = ({ fileStructure, handleFileStructureChange, index }:
         >
           <Column caption="" calculateCellValue={(data: any) => data} />
         </DataGrid>
+        <Typography variant="body2">Note that "unstructured" here is referring to the lack of defined column
+        names. If you're uploading an unstructured file, only copy/paste 1 column that you think would lead to the most
+        precise match when mapped to a column from the other file.</Typography>
         </DialogContent>
       </Dialog>
     </>

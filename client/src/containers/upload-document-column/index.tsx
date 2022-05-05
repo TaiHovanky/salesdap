@@ -13,6 +13,7 @@ interface Props {
   handleColumnClick: any;
   setAllColumns: any;
   fileStructure: string;
+  unstructuredData: string;
 }
 
 const UploadDocumentColumnContainer = ({
@@ -24,7 +25,8 @@ const UploadDocumentColumnContainer = ({
   index,
   handleColumnClick,
   setAllColumns,
-  fileStructure
+  fileStructure,
+  unstructuredData
 }: Props) => {
   return (
     <UploadDocumentColumn
@@ -37,6 +39,7 @@ const UploadDocumentColumnContainer = ({
       handleColumnClick={handleColumnClick}
       setAllColumns={setAllColumns}
       fileStructure={fileStructure}
+      unstructuredData={unstructuredData}
     />
   );
 }

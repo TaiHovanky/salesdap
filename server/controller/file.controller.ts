@@ -11,12 +11,26 @@ import db from '../db';
 export const uploadAndCompareFiles = async (req: any, res: any) => {
   const {
     comparisonColumns1,
-    comparisonColumns2
+    comparisonColumns2,
+    fileStructure1,
+    fileStructure2,
+    unstructuredData1,
+    unstructuredData2
   } = req.body;
 
+  let salesData1: Array<any> = [];
+  let salesData2: Array<any> = [];
   try {
-    const salesData1: Array<any> = parseJSONFromFile(req.files.sales_file1[0].path);
-    const salesData2: Array<any> = parseJSONFromFile(req.files.sales_file2[0].path);
+    if (fileStructure1 === 'structured') {
+      salesData1 = parseJSONFromFile(req.files.sales_file1[0].path);
+    } else {
+      salesData1 = unstructuredData1.split('\n');
+    }
+    if (fileStructure2 === 'structured') {
+      salesData2 = parseJSONFromFile(req.files.sales_file2[0].path);
+    } else {
+      salesData2 = unstructuredData2.split('\n');
+    }
 
     /* Create list of rows where there is a duplicate value that is shared between the specified columns
       (comparisonColumns1 and comparisonColumns2) */
@@ -24,7 +38,9 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
       salesData1,
       salesData2,
       comparisonColumns1.split(','),
-      comparisonColumns2.split(',')
+      comparisonColumns2.split(','),
+      fileStructure1,
+      fileStructure2
     );
 
     /* Create array of objects (rows) that only contain the columns that the user wants to see
@@ -32,7 +48,9 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
     const result: Array<any> = setUpResultColumns(
       duplicatesList,
       comparisonColumns1.split(','),
-      comparisonColumns2.split(',')
+      comparisonColumns2.split(','),
+      fileStructure1,
+      fileStructure2
     );
     res.status(200).json(result);
   } catch(err: any) {

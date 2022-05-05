@@ -7,6 +7,7 @@ export const SET_FILE_SOURCE = 'SET_FILE_SOURCE';
 export const SET_FILE_STRUCTURE = 'SET_FILE_STRUCTURE';
 export const SET_COMPARISON_COLUMNS_ERROR = 'SET_COMPARISON_COLUMNS_ERROR';
 export const SET_ALL_COLUMNS = 'SET_ALL_COLUMNS';
+export const CHANGE_UNSTRUCTURED_DATA = 'CHANGE_UNSTRUCTURED_DATA';
 
 export const uploadDocumentSuccess = (duplicatesData: any) => ({
   type: UPLOAD_DOCUMENT_SUCCESS,
@@ -48,6 +49,12 @@ export const setFileSource = (index: number, value: string) => ({
 
 export const setFileStructure = (index: number, value: string) => ({
   type: SET_FILE_STRUCTURE,
+  index,
+  payload: value
+});
+
+export const changeUnstructuredData = (index: number, value: string) => ({
+  type: CHANGE_UNSTRUCTURED_DATA,
   index,
   payload: value
 });

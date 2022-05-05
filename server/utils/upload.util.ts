@@ -23,7 +23,9 @@ export const findDuplicates = (
   salesData1: Array<any>,
   salesData2: Array<any>,
   comparisonColumns1: Array<string>,
-  comparisonColumns2: Array<string>
+  comparisonColumns2: Array<string>,
+  fileStructure1: string,
+  fileStructure2: string
 ): Array<Array<any>> => {
   const valueHash: any = {};
   let resultsList: Array<Array<any>> = comparisonColumns1.map((_) => []);
@@ -32,6 +34,7 @@ export const findDuplicates = (
     salesData1,
     comparisonColumns1,
     valueHash,
+    fileStructure1
   );
   checkForMatches(
     salesData1,
@@ -39,6 +42,8 @@ export const findDuplicates = (
     comparisonColumns2,
     valueHash,
     resultsList,
+    fileStructure1,
+    fileStructure2
   );
 
   return resultsList;
@@ -56,15 +61,24 @@ const addCellValueToHash = (
   salesData: Array<any>,
   comparisonColumnList: Array<string>,
   valueHash: any,
+  fileStructure1: string
 ): void => {
   salesData.forEach((row: any, rowIndex: number) => {
-    comparisonColumnList.forEach((column) => {
-      const cellValue: string = typeof row[column] === 'string' ?
-        row[column].toLowerCase().trim() : row[column].toString();;
+    if (fileStructure1 === 'structured') {
+      comparisonColumnList.forEach((column) => {
+        const cellValue: string = typeof row[column] === 'string' ?
+          row[column].toLowerCase().trim() : row[column].toString();
+        if (cellValue && !valueHash.hasOwnProperty(cellValue)) {
+          valueHash[cellValue] = { row, rowIndex };
+        }
+      });
+    } else {
+      const cellValue: string = typeof row === 'string' ?
+        row.toLowerCase().trim() : row.toString();
       if (cellValue && !valueHash.hasOwnProperty(cellValue)) {
         valueHash[cellValue] = { row, rowIndex };
       }
-    });
+    }
   });
 }
 
@@ -73,20 +87,30 @@ const checkForMatches = (
   salesData2: Array<any>,
   comparisonColumnList: Array<string>,
   valueHash: any,
-  resultsList: Array<Array<any>>
+  resultsList: Array<Array<any>>,
+  fileStructure1: string,
+  fileStructure2: string
 ): void => {
   salesData2.forEach((row: any) => {
     const matchedIndxesForRow: Array<number> = [];
-    comparisonColumnList.forEach((column) => {
-      const cellValue: string = typeof row[column] === 'string' ?
-        row[column].toLowerCase().trim() : row[column].toString();
+    if (fileStructure2 === 'structured') {
+      comparisonColumnList.forEach((column) => {
+        const cellValue: string = typeof row[column] === 'string' ?
+          row[column].toLowerCase().trim() : row[column].toString();
+        if (cellValue && valueHash[cellValue]) {
+          /* Add the rowIndex for the match to the list of matched indexes. Later, we'll
+          use that list to determine how many columns of that row in file 2 match how many columns
+          in file 1 */
+          matchedIndxesForRow.push(valueHash[cellValue].rowIndex);
+        }
+      });
+    } else {
+      const cellValue: string = typeof row === 'string' ?
+        row.toLowerCase().trim() : row.toString();
       if (cellValue && valueHash[cellValue]) {
-        /* Add the rowIndex for the match to the list of matched indexes. Later, we'll
-        use that list to determine how many columns of that row in file 2 match how many columns
-        in file 1 */
         matchedIndxesForRow.push(valueHash[cellValue].rowIndex);
       }
-    });
+    }
 
     const possibleMatches: any = {}; /* Object should contain row indexes (from file 1)
     and a count of how many cells from a row in file 2 matched a cell from file 1. This lets us
@@ -104,9 +128,22 @@ const checkForMatches = (
     Array.from(Object.keys(possibleMatches)).forEach((key) => {
       /* possibleMatches[key] is the precision of the match i.e. the number of columns that match between the files.
       Subtract 1 because of zero-indexing in the resultsList, which is an array of arrays */
-      resultsList[possibleMatches[key] - 1].push({ ...row, ...salesData1[parseInt(key)] });
+      let result: any = {};
+      if (fileStructure1 === 'structured') {
+        result = { ...salesData1[parseInt(key)] };
+      } else {
+        result = { 'Unstructured Data': salesData1[parseInt(key)] };
+      }
+      if (fileStructure2 === 'structured') {
+        result = { ...result, ...row };
+      } else {
+        result = { ...result, 'Unstructured Data': row };
+      }
+      resultsList[possibleMatches[key] - 1].push(result);
     });
   });
+
+  // console.log('dupes reslist', resultsList);
 }
 
 /**
@@ -119,10 +156,22 @@ const checkForMatches = (
 export const setUpResultColumns = (
   duplicatesList: Array<any>,
   comparisonColumns1: Array<string>,
-  comparisonColumns2: Array<string>
+  comparisonColumns2: Array<string>,
+  fileStructure1: string,
+  fileStructure2: string
 ): Array<any> => {
   const result: Array<any> = [];
-  const columns: Array<string> = [...comparisonColumns1, ...comparisonColumns2];
+  let columns: Array<string> = [];
+  if (fileStructure1 === 'structured') {
+    columns = columns.concat(comparisonColumns1);
+  } else {
+    columns.push('Unstructured Data');
+  }
+  if (fileStructure2 === 'structured') {
+    columns = columns.concat(comparisonColumns2);
+  } else {
+    columns.push('Unstructured Data');
+  }
 
   duplicatesList.forEach((resultsGroupForPrecisionLevel: Array<any>, resultsGroupForPrecisionLevelIdx: number) => {
     resultsGroupForPrecisionLevel.forEach((item: any) => {
@@ -139,7 +188,7 @@ export const createResultRow = (columns: Array<string>, item: any, precision: nu
     if (!!rowObj[col]) {
       return { ...rowObj, [`${col}--2`]: item[col] || null };
     }
-    return { ...rowObj, [col]: item[col] || null };
+    return { ...rowObj, [col]: item[col] || item };
   }, { precision });
 }
 
