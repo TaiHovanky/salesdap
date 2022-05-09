@@ -66,6 +66,10 @@ const UploadDocumentColumn = ({
         <Typography variant='h6' sx={{ marginTop: '2rem', marginBottom: '1rem' }}>
           {index === 0 ? 'My accounts' : 'Partner\'s accounts'}
         </Typography>
+        <FileStructureRadioContainer
+          index={index}
+          fileStructure={fileStructure}
+        />
         {!!user.pinnedFileName && index === 0 && <FileSourceRadioContainer
           fileSource={fileSource}
           index={index}
@@ -76,10 +80,6 @@ const UploadDocumentColumn = ({
             <PinnedFileChipContainer />
           }
         </div>
-        <FileStructureRadioContainer
-          index={index}
-          fileStructure={fileStructure}
-        />
         {fileStructure === 'structured' ?
           <>
             <ComparisonColumnAutocompleteContainer
