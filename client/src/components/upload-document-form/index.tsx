@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import UploadDocumentColumnContainer from '../../containers/upload-document-column';
 import { Grid, Fab } from '@mui/material';
 import { Upload } from '@mui/icons-material';
@@ -17,6 +17,7 @@ const UploadDocumentForm = ({
   handleColumnClick,
   handleUploadAndCompare
 }: UploadDocumentFormProps): any => {
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
   const {
     selectedDocument1,
@@ -32,6 +33,10 @@ const UploadDocumentForm = ({
     unstructuredData1,
     unstructuredData2
   } = document;
+
+  const handleOpenPreview = () => {
+    setIsPreviewModalOpen(true);
+  }
 
   /* Validation for whether the Submit button should be enabled or disabled. If documents
   and columns haven't been selected, the button should be disabled. */
@@ -98,9 +103,19 @@ const UploadDocumentForm = ({
         >
           <Fab
             variant="extended"
-            color="primary"
+            // color="primary"
             aria-label="add"
             sx={{ marginTop: '2rem' }}
+            onClick={handleOpenPreview}
+          >
+            <Upload sx={{ mr: 1 }} />
+            Preview Results
+          </Fab>
+          <Fab
+            variant="extended"
+            color="primary"
+            aria-label="add"
+            // sx={{ marginTop: '2rem' }}
             // disabled={!isSubmitBtnEnabled}
             onClick={handleUploadAndCompare}
           >
