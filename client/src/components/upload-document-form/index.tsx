@@ -110,7 +110,7 @@ const UploadDocumentForm = ({
             variant="extended"
             // color="primary"
             aria-label="add"
-            sx={{ marginTop: '2rem', marginBottom: '1rem' }}
+            sx={{ marginTop: '2rem', marginBottom: '1.5rem' }}
             onClick={handleOpenPreview}
           >
             <Upload sx={{ mr: 1 }} />
@@ -129,10 +129,10 @@ const UploadDocumentForm = ({
           </Fab>
         </Grid>
       </Grid>
-      <ResultsPreviewModalContainer
+      {isPreviewModalOpen && <ResultsPreviewModalContainer
         isPreviewModalOpen={isPreviewModalOpen}
         handleClosePreview={handleClosePreview}
-      />
+      />}
     </>
   );
 };

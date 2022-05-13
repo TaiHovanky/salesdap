@@ -132,12 +132,12 @@ const checkForMatches = (
       if (fileStructure1 === 'structured') {
         result = { ...salesData1[parseInt(key)] };
       } else {
-        result = { 'Unstructured Data': salesData1[parseInt(key)] };
+        result = { 'Unstructured Data 1': salesData1[parseInt(key)] };
       }
       if (fileStructure2 === 'structured') {
         result = { ...result, ...row };
       } else {
-        result = { ...result, 'Unstructured Data': row };
+        result = { ...result, 'Unstructured Data 2': row };
       }
       resultsList[possibleMatches[key] - 1].push(result);
     });
@@ -165,12 +165,12 @@ export const setUpResultColumns = (
   if (fileStructure1 === 'structured') {
     columns = columns.concat(comparisonColumns1);
   } else {
-    columns.push('Unstructured Data');
+    columns.push('Unstructured Data 1');
   }
   if (fileStructure2 === 'structured') {
     columns = columns.concat(comparisonColumns2);
   } else {
-    columns.push('Unstructured Data');
+    columns.push('Unstructured Data 2');
   }
 
   duplicatesList.forEach((resultsGroupForPrecisionLevel: Array<any>, resultsGroupForPrecisionLevelIdx: number) => {

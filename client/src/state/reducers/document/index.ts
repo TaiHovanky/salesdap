@@ -191,15 +191,35 @@ export const documentReducer = (state = initialState, action: any) => {
       }
     case SET_FILE_STRUCTURE:
       if (action.index === 0) {
-        return {
-          ...state,
-          fileStructure1: action.payload
-        };
+        if (action.payload === 'structured') {
+          return {
+            ...state,
+            fileStructure1: action.payload,
+            unstructuredData1: '' 
+          };
+        } else {
+          return {
+            ...state,
+            fileStructure1: action.payload,
+            comparisonColumns1: [],
+            selectedDocument1: { ...initialState.selectedDocument1 }
+          }
+        }
       } else {
-        return {
-          ...state,
-          fileStructure2: action.payload
-        };
+        if (action.payload === 'structured') {
+          return {
+            ...state,
+            fileStructure2: action.payload,
+            unstructuredData2: '' 
+          };
+        } else {
+          return {
+            ...state,
+            fileStructure2: action.payload,
+            comparisonColumns2: [],
+            selectedDocument2: { ...initialState.selectedDocument2 }
+          }
+        }
       }
     case CHANGE_UNSTRUCTURED_DATA:
       if (action.index === 0) {

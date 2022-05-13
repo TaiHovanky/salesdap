@@ -1,43 +1,94 @@
 import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
 import DataGrid, { Column } from 'devextreme-react/data-grid';
+import { DocumentState } from '../../state/reducers/document';
 
 interface Props {
   isPreviewModalOpen: boolean;
   handleClosePreview: any;
-  selectedDocument1: any;
-  selectedDocument2: any;
-  comparisonColumns1: Array<string>;
-  comparisonColumns2: Array<string>;
+  document: DocumentState;
 }
 
 const ResultsPreviewModal = ({
   isPreviewModalOpen,
   handleClosePreview,
-  selectedDocument1,
-  selectedDocument2,
-  comparisonColumns1,
-  comparisonColumns2
+  document
 }: Props) => {
   const [resultsData, setResultsData] = useState<Array<any>>([]);
+  const {
+    selectedDocument1,
+    selectedDocument2,
+    comparisonColumns1,
+    comparisonColumns2,
+    fileStructure1,
+    fileStructure2,
+    unstructuredData1,
+    unstructuredData2
+  } = document;
 
   useEffect(() => {
-    const doc1SampleData: Array<any> = selectedDocument1.data.length && selectedDocument1.data.length > 10 ?
-      selectedDocument1.data.slice(0, 10) :
-      selectedDocument1.data;
-    const doc2SampleData: Array<any> = selectedDocument2.data.length && selectedDocument2.data.length > 10 ?
-      selectedDocument2.data.slice(0, 10) :
-      selectedDocument2.data;
-    const columns = [...comparisonColumns1, ...comparisonColumns2];
+    let doc1SampleData: Array<any>;
+    if (fileStructure1 === 'structured') {
+      if (selectedDocument1.data.length && selectedDocument1.data.length > 10) {
+        doc1SampleData = selectedDocument1.data.slice(0, 10);
+      } else {
+        doc1SampleData =  selectedDocument1.data;
+      }
+    } else {
+      if (unstructuredData1.length && unstructuredData1.length > 10) {
+        doc1SampleData = unstructuredData1.split('\n').slice(0, 10);
+      } else {
+        doc1SampleData =  unstructuredData1.split('\n');
+      }
+    }
+    let doc2SampleData: Array<any>;
+    if (fileStructure2 === 'structured') {
+      if (selectedDocument2.data.length && selectedDocument2.data.length > 10) {
+        doc2SampleData = selectedDocument2.data.slice(0, 10);
+      } else {
+        doc2SampleData =  selectedDocument2.data;
+      }
+    } else {
+      if (unstructuredData2.length && unstructuredData2.length > 10) {
+        doc2SampleData = unstructuredData2.split('\n').slice(0, 10);
+      } else {
+        doc2SampleData =  unstructuredData2.split('\n');
+      }
+    }
+
+    let columns: Array<any> = [];
+    if (fileStructure1 === 'structured') {
+      columns = columns.concat([...comparisonColumns1]);
+    } else if (fileStructure1 === 'unstructured') {
+      columns.push('Unstructured Data 1');
+    }
+    if (fileStructure2 === 'structured') {
+      columns = columns.concat([...comparisonColumns2]);
+    } else if (fileStructure2 === 'unstructured') {
+      columns.push('Unstructured Data 2');
+    }
 
     const updatedResultsData = [];
     for (let i = 0; i < 10; i++) {
       
       const row = columns.reduce((rowObj: any, col: string, index: number) => {
-        if (comparisonColumns1.indexOf(col) > -1 && index < comparisonColumns1.length) {
+        if (
+          fileStructure1 === 'structured' &&
+          comparisonColumns1.indexOf(col) > -1 &&
+          index < comparisonColumns1.length
+        ) {
           return { ...rowObj, [col]: doc1SampleData[i][col] || null };
-        } else if (comparisonColumns2.indexOf(col) > -1 && index >= comparisonColumns1.length) {
+        } else if (fileStructure1 === 'unstructured' && index === 0) {
+          return { ...rowObj, 'Unstructured Data 1': doc1SampleData[i] || null }
+        } else if (
+          fileStructure2 === 'structured' &&
+          comparisonColumns2.indexOf(col) > -1 &&
+          ((fileStructure1 === 'structured' && index >= comparisonColumns1.length) ||
+          (fileStructure1 === 'unstructured' && index > 0))
+        ) {
           return { ...rowObj, [col]: doc2SampleData[i][col] || null };
+        } else if (fileStructure2 === 'unstructured') {
+          return { ...rowObj, 'Unstructured Data 2': doc2SampleData[i] || null }
         }
         return { ...rowObj };
       }, {});
@@ -54,7 +105,7 @@ const ResultsPreviewModal = ({
     >
       <DialogTitle>Results Preview</DialogTitle>
       <DialogContent dividers={true}>
-        <DialogContentText>Here's what your results will look like based on the columns you've chosen:</DialogContentText>
+        <DialogContentText sx={{ marginBottom: '1rem' }}>Here's what your results will look like based on the columns you've chosen:</DialogContentText>
         <DataGrid
           id="structuredGridContainer"
           dataSource={resultsData}

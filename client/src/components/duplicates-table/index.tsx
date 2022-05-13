@@ -38,16 +38,16 @@ const DuplicatesTable = ({
       myAccountColumns = [...comparisonColumns1];
       comparisonColumns = [...comparisonColumns1];
     } else {
-      myAccountColumns = ['Unstructured Data'];
-      comparisonColumns = ['Unstructured Data'];
+      myAccountColumns = ['Unstructured Data 1'];
+      comparisonColumns = ['Unstructured Data 1'];
     }
 
     if (fileStructure2 === 'structured') {
       partnerAccountColumns = [...comparisonColumns2];
       comparisonColumns = comparisonColumns.concat(comparisonColumns2);
     } else {
-      partnerAccountColumns = ['Unstructured Data'];
-      comparisonColumns = comparisonColumns.concat('Unstructured Data');
+      partnerAccountColumns = ['Unstructured Data 2'];
+      comparisonColumns = comparisonColumns.concat('Unstructured Data 2');
     }
 
 

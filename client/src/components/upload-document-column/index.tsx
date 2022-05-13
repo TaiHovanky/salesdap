@@ -29,7 +29,6 @@ const renderGridCell = (
   comparisonColumns: Array<string>,
   index: number
 ) => {
-  console.log('data renderGridCell', data, comparisonColumns)
   return (
     <div>
       {data.column? data.column.dataField : data}
