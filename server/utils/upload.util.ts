@@ -47,7 +47,28 @@ export const findDuplicates = (
   );
 
   return resultsList;
-} 
+}
+
+const sanitizeValue = (value: any) => {
+  return typeof value === 'string' ?
+    value.toLowerCase().trim() : value.toString();
+}
+
+const createCellValue = (
+  fileStructure: string,
+  comparisonColumnList: Array<string>,
+  row: any
+) => {
+  let cellValue: string = '';
+  if (fileStructure === 'structured') {
+    comparisonColumnList.forEach((column) => {
+      cellValue = sanitizeValue(row[column]);
+    });
+  } else if (fileStructure === 'unstructured') {
+    cellValue = sanitizeValue(row);
+  }
+  return cellValue;
+}
 
 /**
  * Loop through each row in spreadsheet while examining the cell in the comparison column
@@ -64,20 +85,9 @@ const addCellValueToHash = (
   fileStructure1: string
 ): void => {
   salesData.forEach((row: any, rowIndex: number) => {
-    if (fileStructure1 === 'structured') {
-      comparisonColumnList.forEach((column) => {
-        const cellValue: string = typeof row[column] === 'string' ?
-          row[column].toLowerCase().trim() : row[column].toString();
-        if (cellValue && !valueHash.hasOwnProperty(cellValue)) {
-          valueHash[cellValue] = { row, rowIndex };
-        }
-      });
-    } else {
-      const cellValue: string = typeof row === 'string' ?
-        row.toLowerCase().trim() : row.toString();
-      if (cellValue && !valueHash.hasOwnProperty(cellValue)) {
-        valueHash[cellValue] = { row, rowIndex };
-      }
+    const cellValue: string = createCellValue(fileStructure1, comparisonColumnList, row);
+    if (cellValue && !valueHash.hasOwnProperty(cellValue)) {
+      valueHash[cellValue] = { row, rowIndex };
     }
   });
 }
@@ -93,23 +103,12 @@ const checkForMatches = (
 ): void => {
   salesData2.forEach((row: any) => {
     const matchedIndxesForRow: Array<number> = [];
-    if (fileStructure2 === 'structured') {
-      comparisonColumnList.forEach((column) => {
-        const cellValue: string = typeof row[column] === 'string' ?
-          row[column].toLowerCase().trim() : row[column].toString();
-        if (cellValue && valueHash[cellValue]) {
-          /* Add the rowIndex for the match to the list of matched indexes. Later, we'll
-          use that list to determine how many columns of that row in file 2 match how many columns
-          in file 1 */
-          matchedIndxesForRow.push(valueHash[cellValue].rowIndex);
-        }
-      });
-    } else {
-      const cellValue: string = typeof row === 'string' ?
-        row.toLowerCase().trim() : row.toString();
-      if (cellValue && valueHash[cellValue]) {
-        matchedIndxesForRow.push(valueHash[cellValue].rowIndex);
-      }
+    const cellValue: string = createCellValue(fileStructure1, comparisonColumnList, row);
+    if (cellValue && valueHash[cellValue]) {
+      /* Add the rowIndex for the match to the list of matched indexes. Later, we'll
+      use that list to determine how many columns of that row in file 2 match how many columns
+      in file 1 */
+      matchedIndxesForRow.push(valueHash[cellValue].rowIndex);
     }
 
     const possibleMatches: any = {}; /* Object should contain row indexes (from file 1)
@@ -142,37 +141,55 @@ const checkForMatches = (
       resultsList[possibleMatches[key] - 1].push(result);
     });
   });
-
-  // console.log('dupes reslist', resultsList);
 }
 
 /**
- * Create an array of objects that contain the desired columns from each spreadsheet.
- * @param {Array<any>} duplicatesList List of rows that have a duplicate cell value in the comparison columns
+ * 
+ * @param {string} fileStructure Whether the data input by user is coming from structured file or unstructured list
+ * @param {Array<string>} comparisonColumns Desired columns used for comparison
+ * @param {number} documentNumber Which file do these columns belong to
+ * @returns {Array<string>} Columns that will appear in the final results
+ */
+export const updateColumns = (
+  fileStructure: string,
+  comparisonColumns: Array<string>,
+  documentNumber: number
+): Array<string> => {
+  let columns: Array<string> = [];
+  if (fileStructure === 'structured') {
+    columns = columns.concat([...comparisonColumns]);
+  } else if (fileStructure === 'unstructured') {
+    columns.push(`Unstructured Data ${documentNumber}`);
+  }
+  return columns;
+}
+
+/**
+ * Create a list of the desired columns from each spreadsheet.
  * @param {string} comparisonColumns1 Columns from the 1st spreadsheet that user wants to see in results
  * @param {string} comparisonColumns2 Columns from the 2nd spreadsheet that user wants to see in results
- * @returns Array of objects that contains properties for desired columns
+ * @returns {Array<string>} Array of desired columns
  */
-export const setUpResultColumns = (
-  duplicatesList: Array<any>,
+export const setupResultColumns = (
   comparisonColumns1: Array<string>,
   comparisonColumns2: Array<string>,
   fileStructure1: string,
   fileStructure2: string
-): Array<any> => {
-  const result: Array<any> = [];
+): Array<string> => {
   let columns: Array<string> = [];
-  if (fileStructure1 === 'structured') {
-    columns = columns.concat(comparisonColumns1);
-  } else {
-    columns.push('Unstructured Data 1');
-  }
-  if (fileStructure2 === 'structured') {
-    columns = columns.concat(comparisonColumns2);
-  } else {
-    columns.push('Unstructured Data 2');
-  }
+  columns = updateColumns(fileStructure1, comparisonColumns1, 1);
+  columns = [...columns, ...updateColumns(fileStructure2, comparisonColumns2, 2)];
+  return columns;
+}
 
+/**
+ * 
+ * @param {Array<any>} duplicatesList List of rows that have a duplicate cell value in the comparison columns
+ * @param {Array<string>} columns Array of desired columns
+ * @returns {Array<any>} array of objects (each row in the duplicates table)
+ */
+export const setupResults = (duplicatesList: Array<any>, columns: Array<string>): Array<any>  => {
+  const result: Array<any> = [];
   duplicatesList.forEach((resultsGroupForPrecisionLevel: Array<any>, resultsGroupForPrecisionLevelIdx: number) => {
     resultsGroupForPrecisionLevel.forEach((item: any) => {
       const row = createResultRow(columns, item, resultsGroupForPrecisionLevelIdx + 1);

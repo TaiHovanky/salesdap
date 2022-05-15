@@ -10,7 +10,7 @@ import {
 } from '../../actions/document';
 import { addMessageToErrorList, removeMessageFromErrorList } from '../../../utils/update-comparison-columns';
 
-interface SelectedDocument {
+export interface SelectedDocument {
   data: Array<any>;
   name: string;
   allColumns: Array<string>;

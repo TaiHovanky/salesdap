@@ -108,7 +108,6 @@ const UploadDocumentForm = ({
         >
           <Fab
             variant="extended"
-            // color="primary"
             aria-label="add"
             sx={{ marginTop: '2rem', marginBottom: '1.5rem' }}
             onClick={handleOpenPreview}

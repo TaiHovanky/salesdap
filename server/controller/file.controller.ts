@@ -2,9 +2,10 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   findDuplicates,
   parseJSONFromFile,
-  setUpResultColumns,
   readPinnedFile,
-  storeFile
+  storeFile,
+  setupResultColumns,
+  setupResults
 } from '../utils/upload.util';
 import db from '../db';
 
@@ -43,15 +44,16 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
       fileStructure2
     );
 
-    /* Create array of objects (rows) that only contain the columns that the user wants to see
-      (as specified in resultColumns1 and resultColumns2 */
-    const result: Array<any> = setUpResultColumns(
-      duplicatesList,
+    /* Create array of  columns that the user wants to see */
+    const columns: Array<string> = setupResultColumns(
       comparisonColumns1.split(','),
       comparisonColumns2.split(','),
       fileStructure1,
       fileStructure2
     );
+
+    /* Create array of objects (rows a.k.a duplicates) that only contain the columns that the user wants to see */
+    const result: Array<any> = setupResults(duplicatesList, columns);
     res.status(200).json(result);
   } catch(err: any) {
     res.status(400).send();
