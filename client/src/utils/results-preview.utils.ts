@@ -22,7 +22,7 @@ export const createDocumentSampleRows = (
   return docSampleData;
 }
 
-export const updatePreviewColumnsForDocument = (
+export const updateColumnsForDocument = (
   fileStructure: string,
   comparisonColumns: Array<string>,
   documentNumber: number

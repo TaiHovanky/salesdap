@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
 import DataGrid, { Column } from 'devextreme-react/data-grid';
 import { DocumentState } from '../../state/reducers/document';
-import { createDocumentSampleRows, updatePreviewColumnsForDocument } from '../../utils/results-preview.utils';
+import { createDocumentSampleRows, updateColumnsForDocument } from '../../utils/results-preview.utils';
 
 interface Props {
   isPreviewModalOpen: boolean;
@@ -32,8 +32,8 @@ const ResultsPreviewModal = ({
     const doc2SampleData: Array<any> = createDocumentSampleRows(selectedDocument2, fileStructure2, unstructuredData2);
 
     let columns: Array<any> = [];
-    columns = updatePreviewColumnsForDocument(fileStructure1, comparisonColumns1, 1);
-    columns = [...columns, ...updatePreviewColumnsForDocument(fileStructure2, comparisonColumns2, 2)];
+    columns = updateColumnsForDocument(fileStructure1, comparisonColumns1, 1);
+    columns = [...columns, ...updateColumnsForDocument(fileStructure2, comparisonColumns2, 2)];
 
     const updatedResultsData = [];
     for (let i = 0; i < 10; i++) {

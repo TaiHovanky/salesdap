@@ -143,19 +143,23 @@ export const documentReducer = (state = initialState, action: any) => {
       if (action.index === 0) {
         return {
           ...state,
+          comparisonColumns1: [],
           selectedDocument1: {
             data: action.payload,
             name: action.name,
-            columnChooserGridData: action.columnChooserGridData
+            columnChooserGridData: action.columnChooserGridData,
+            allColumns: []
           }
         };
       } else {
         return {
           ...state,
+          comparisonColumns2: [],
           selectedDocument2: {
             data: action.payload,
             name: action.name,
-            columnChooserGridData: action.columnChooserGridData
+            columnChooserGridData: action.columnChooserGridData,
+            allColumns: []
           }
         };
       }

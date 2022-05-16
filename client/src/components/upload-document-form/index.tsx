@@ -18,6 +18,8 @@ const UploadDocumentForm = ({
   handleColumnClick,
   handleUploadAndCompare
 }: UploadDocumentFormProps): any => {
+  /* For the preview modal, we use local state because we don't need its open state to be
+  persisted when a user goes to another step */
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
   const {

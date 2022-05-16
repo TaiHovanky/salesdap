@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import DataGrid, { Paging, Pager, Column, ColumnChooser } from 'devextreme-react/data-grid';
 import { Grid } from '@mui/material';
 import { UserState } from '../../state/reducers/user';
+import { updateColumnsForDocument } from '../../utils/results-preview.utils';
 
 interface Props {
   duplicatesData: Array<any>;
@@ -31,28 +32,21 @@ const DuplicatesTable = ({
       isBand: true,
       cssClass: 'their-accounts'
     });
+
+    /* Create a list of column names */
     let comparisonColumns: Array<string> = [];
-    let myAccountColumns = [];
-    let partnerAccountColumns = [];
-    if (fileStructure1 === 'structured') {
-      myAccountColumns = [...comparisonColumns1];
-      comparisonColumns = [...comparisonColumns1];
-    } else {
-      myAccountColumns = ['Unstructured Data 1'];
-      comparisonColumns = ['Unstructured Data 1'];
-    }
+    comparisonColumns = updateColumnsForDocument(fileStructure1, comparisonColumns1, 1);
+    comparisonColumns = [...columns, ...updateColumnsForDocument(fileStructure2, comparisonColumns2, 2)];
 
-    if (fileStructure2 === 'structured') {
-      partnerAccountColumns = [...comparisonColumns2];
-      comparisonColumns = comparisonColumns.concat(comparisonColumns2);
-    } else {
-      partnerAccountColumns = ['Unstructured Data 2'];
-      comparisonColumns = comparisonColumns.concat('Unstructured Data 2');
-    }
+    /* userAccountColumnCount is for determining how many columns should have the my-accounts css class
+    and belong to the ownerBand */
+    let userAccountColumnCount = fileStructure1 === 'structured' ?
+      comparisonColumns1.length : 1;
 
-
+    /* Assign the columns belonging to the user to one owner band and CSS class, and the columns belonging to
+    their partner's accounts into another owner band and CSS class */
     for (let i = 3; i < columns.length - 1; i++) {
-      if (comparisonColumns[i - 3] === columns[i].caption && i < myAccountColumns.length + 3) {
+      if (comparisonColumns[i - 3] === columns[i].caption && i < userAccountColumnCount + 3) {
         columns[i].ownerBand = columns.length - 2;
         columns[i].cssClass = 'my-accounts'
       } else if (comparisonColumns[i - 3] === columns[i].caption) {
@@ -98,7 +92,6 @@ const DuplicatesTable = ({
           <Column fixed={true} fixedPosition="left" width={150} calculateCellValue={() => `${user.firstname} ${user.lastname}`} caption="Current User" />
           {duplicatesData && duplicatesData[0] && Array.from(Object.keys(duplicatesData[0]))
             .map((colName: string, colIndex: number) => {
-              console.log('mapping cols', colName, colIndex);
               return (
                 <Column dataField={colName} key={colIndex} caption={colName.replace('--2', '')} visible={colIndex !== 0} />
               );
