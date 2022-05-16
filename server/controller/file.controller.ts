@@ -18,6 +18,7 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
     unstructuredData1,
     unstructuredData2
   } = req.body;
+  // console.log('req body', req.body);
 
   let salesData1: Array<any> = [];
   let salesData2: Array<any> = [];
@@ -32,6 +33,7 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
     } else {
       salesData2 = unstructuredData2.split('\n');
     }
+    // console.log('salesdata', salesData1, salesData2);
 
     /* Create list of rows where there is a duplicate value that is shared between the specified columns
       (comparisonColumns1 and comparisonColumns2) */
@@ -43,6 +45,7 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
       fileStructure1,
       fileStructure2
     );
+    // console.log('duplicates', duplicatesList);
 
     /* Create array of  columns that the user wants to see */
     const columns: Array<string> = setupResultColumns(
@@ -51,6 +54,7 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
       fileStructure1,
       fileStructure2
     );
+    console.log('columns', columns);
 
     /* Create array of objects (rows a.k.a duplicates) that only contain the columns that the user wants to see */
     const result: Array<any> = setupResults(duplicatesList, columns);

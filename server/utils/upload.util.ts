@@ -36,6 +36,7 @@ export const findDuplicates = (
     valueHash,
     fileStructure1
   );
+  // console.log('value hash', valueHash);
   checkForMatches(
     salesData1,
     salesData2,
@@ -103,13 +104,14 @@ const checkForMatches = (
 ): void => {
   salesData2.forEach((row: any) => {
     const matchedIndxesForRow: Array<number> = [];
-    const cellValue: string = createCellValue(fileStructure1, comparisonColumnList, row);
+    const cellValue: string = createCellValue(fileStructure2, comparisonColumnList, row);
     if (cellValue && valueHash[cellValue]) {
       /* Add the rowIndex for the match to the list of matched indexes. Later, we'll
       use that list to determine how many columns of that row in file 2 match how many columns
       in file 1 */
       matchedIndxesForRow.push(valueHash[cellValue].rowIndex);
     }
+    console.log('matched indexes for row', matchedIndxesForRow);
 
     const possibleMatches: any = {}; /* Object should contain row indexes (from file 1)
     and a count of how many cells from a row in file 2 matched a cell from file 1. This lets us
@@ -123,6 +125,8 @@ const checkForMatches = (
         possibleMatches[matchedRowIndex] += 1;
       }
     });
+
+    console.log('possible matches ---------------------------------', possibleMatches);
 
     Array.from(Object.keys(possibleMatches)).forEach((key) => {
       /* possibleMatches[key] is the precision of the match i.e. the number of columns that match between the files.

@@ -5,38 +5,15 @@ import {
   Radio,
   RadioGroup,
   FormLabel,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  Typography
+  IconButton
 } from '@mui/material';
 import { Help } from '@mui/icons-material';
-import DataGrid, { Column } from 'devextreme-react/data-grid';
+import FileStructureHelpModal from '../file-structure-help-modal';
 
 interface Props {
   fileStructure: string;
   handleFileStructureChange: any;
   index: number;
-}
-
-const structuredData = [
-  { 'Account Name': 'Pepsi Co.', Website: 'pepsi.com', 'Account Manager': 'Thomas Henry', DUNS: 123453 },
-  { 'Account Name': 'Tropicana', Website: 'tropicana.com', 'Account Manager': 'Jennifer Shaw', DUNS: 345234 },
-  { 'Account Name': 'Gatorade', Website: 'gatorade.com', 'Account Manager': 'Kim Yi', DUNS: 645345 }
-];
-
-const unstructuredData = [
-  'Pepsi Co.',
-  'Tropicana',
-  'Gatorade'
-];
-
-interface Props {
-  handleFileStructureChange: any;
-  index: number;
-  fileStructure: string;
 }
 
 const FileStructureRadio = ({ fileStructure, handleFileStructureChange, index }: Props) => {
@@ -62,41 +39,7 @@ const FileStructureRadio = ({ fileStructure, handleFileStructureChange, index }:
           <FormControlLabel value="unstructured" control={<Radio />} label="Unstructured" />
         </RadioGroup>
       </FormControl>
-      <Dialog
-        open={isHelpModalOpen}
-        onClose={handleOpenHelpModal}
-      >
-        <DialogTitle>Structured vs. Unstructured Data</DialogTitle>
-        <DialogContent dividers={true}>
-        <DialogContentText>Structured data example:</DialogContentText>
-        <DataGrid
-          id="structuredGridContainer"
-          dataSource={structuredData}
-          showColumnLines={true}
-          columnAutoWidth={true}
-          showBorders={true}
-          width="100%"
-          height="100%"
-        />
-        <Typography variant="body2">Note that "structured" here is referring to the presence of defined column
-        names.</Typography>
-        <DialogContentText sx={{ marginTop: '1.5rem' }}>Unstructured data example:</DialogContentText>
-        <DataGrid 
-          id="unstructuredGridContainer"
-          dataSource={unstructuredData}
-          showColumnLines={true}
-          columnAutoWidth={true}
-          showBorders={true}
-          width="100%"
-          height="100%"
-        >
-          <Column caption="" calculateCellValue={(data: any) => data} />
-        </DataGrid>
-        <Typography variant="body2">Note that "unstructured" here is referring to the lack of defined column
-        names. If you're uploading an unstructured file, only copy/paste 1 column that you think would lead to the most
-        precise match when mapped to a column from the other file.</Typography>
-        </DialogContent>
-      </Dialog>
+      <FileStructureHelpModal isHelpModalOpen={isHelpModalOpen} handleOpenHelpModal={handleOpenHelpModal} />
     </>
   );
 }

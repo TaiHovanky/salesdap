@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Dialog, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
-import DataGrid, { Column } from 'devextreme-react/data-grid';
+import { Dialog, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import DataGrid from 'devextreme-react/data-grid';
 import { DocumentState } from '../../state/reducers/document';
 import { createDocumentSampleRows, updateColumnsForDocument } from '../../utils/results-preview.utils';
 

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Checkbox, TextField, Typography } from '@mui/material';
+import { Checkbox, Typography } from '@mui/material';
 import { UserState } from '../../state/reducers/user';
 import FileSelectionFieldContainer from '../../containers/file-selection-field';
 import PinnedFileChipContainer from '../../containers/pinned-file-chip';
@@ -58,7 +58,7 @@ const UploadDocumentColumn = ({
     if (selectedDocument.data && selectedDocument.data[0]) {
       setAllColumns(Array.from(Object.keys(selectedDocument.data[0])), index);
     }
-  }, [selectedDocument.data, setAllColumns]);
+  }, [selectedDocument.data, setAllColumns, index]);
 
   return (
     <>
