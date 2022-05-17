@@ -10,6 +10,10 @@ interface Props {
   comparisonColumnsError: Array<string>;
   fileSource: string;
   index: number;
+  handleColumnClick: any;
+  setAllColumns: any;
+  fileStructure: string;
+  unstructuredData: string;
 }
 
 const UploadDocumentColumnContainer = ({
@@ -18,7 +22,11 @@ const UploadDocumentColumnContainer = ({
   comparisonColumns,
   comparisonColumnsError,
   fileSource,
-  index
+  index,
+  handleColumnClick,
+  setAllColumns,
+  fileStructure,
+  unstructuredData
 }: Props) => {
   return (
     <UploadDocumentColumn
@@ -28,6 +36,10 @@ const UploadDocumentColumnContainer = ({
       fileSource={fileSource}
       user={user}
       index={index}
+      handleColumnClick={handleColumnClick}
+      setAllColumns={setAllColumns}
+      fileStructure={fileStructure}
+      unstructuredData={unstructuredData}
     />
   );
 }

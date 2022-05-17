@@ -2,6 +2,11 @@
 import * as fs from 'fs';
 import AWS from 'aws-sdk';
 
+/**
+ * Converts the file buffer to JSON object
+ * @param {any} file
+ * @returns {Array<any>} Array of account objects
+ */
 export const parseJSONFromFile = (file: any): Array<any> => {
   const fileBuffer = fs.readFileSync(file);
   if (fileBuffer) {
@@ -9,6 +14,27 @@ export const parseJSONFromFile = (file: any): Array<any> => {
   }
   return [];
 };
+
+/**
+ * 
+ * @param {string} fileStructure Either structured (from Excel file) or unstructured (copy/pasted)
+ * @param {string} unstructuredData Unstructured data that was copied and pasted in
+ * @param {any} filePath File path from formData
+ * @returns {Array<any>} List of accounts
+ */
+export const createSalesDataArray = (
+  fileStructure: string,
+  unstructuredData: string,
+  filePath?: any
+): Array<any> => {
+  let salesData: Array<any> = [];
+  if (fileStructure === 'structured') {
+    salesData = parseJSONFromFile(filePath);
+  } else if (fileStructure === 'unstructured') {
+    salesData = unstructuredData.split('\n');
+  }
+  return salesData;
+}
 
 /**
  * Loop through spreadsheet data and use comparison columns to find duplicate values. If
@@ -23,7 +49,9 @@ export const findDuplicates = (
   salesData1: Array<any>,
   salesData2: Array<any>,
   comparisonColumns1: Array<string>,
-  comparisonColumns2: Array<string>
+  comparisonColumns2: Array<string>,
+  fileStructure1: string,
+  fileStructure2: string
 ): Array<Array<any>> => {
   const valueHash: any = {};
   let resultsList: Array<Array<any>> = comparisonColumns1.map((_) => []);
@@ -32,61 +60,118 @@ export const findDuplicates = (
     salesData1,
     comparisonColumns1,
     valueHash,
+    fileStructure1
   );
+
   checkForMatches(
     salesData1,
     salesData2,
     comparisonColumns2,
     valueHash,
     resultsList,
+    fileStructure1,
+    fileStructure2
   );
 
   return resultsList;
-} 
+}
+
+/**
+ * Converts a value into a lowercase string and removes leading/trailing spaces
+ * @param {any} value Either a cell in formatted data or a row in the unformatted data
+ * @returns {string} Sanitized value
+ */
+const sanitizeValue = (value: any): string => {
+  return typeof value === 'string' ?
+    value.toLowerCase().trim() : value.toString().toLowerCase().trim();
+}
+
+/**
+ * Checks if value hash already has that cell value as a property. If not, then it creates a new
+ * key-value pair, with cell value as the key, { row, rowIndex } as the value
+ * @param {string} cellValue Sanitized value of the cell
+ * @param {any} valueHash Object containing all the cell values and the rows associated
+ * @param {any} row The whole row (usually representing a sales account)
+ * @param {number} rowIndex Index of the row in the spreadsheet
+ */
+const lookUpPropertyAndUpdateValueHash = (cellValue: string, valueHash: any, row: any, rowIndex: number) => {
+  if (cellValue && !valueHash.hasOwnProperty(cellValue)) {
+    valueHash[cellValue] = { row, rowIndex };
+  }
+}
 
 /**
  * Loop through each row in spreadsheet while examining the cell in the comparison column
- * and execute a callback on that cell
+ * and then add that to a hash containing the cell value as a key, and an object containing
+ * the whole row and row index as the value
  * @param {Array<any>} salesData Spreadsheet data
  * @param {string} comparisonColumn Column that we want cell values for
  * @param {any} valueHash Object containing cell value as key, spreadsheet row as value
- * @param callback Function that updates results in some way
  */
 const addCellValueToHash = (
   salesData: Array<any>,
   comparisonColumnList: Array<string>,
   valueHash: any,
+  fileStructure1: string
 ): void => {
   salesData.forEach((row: any, rowIndex: number) => {
-    comparisonColumnList.forEach((column) => {
-      const cellValue: string = typeof row[column] === 'string' ?
-        row[column].toLowerCase().trim() : row[column].toString();;
-      if (cellValue && !valueHash.hasOwnProperty(cellValue)) {
-        valueHash[cellValue] = { row, rowIndex };
-      }
-    });
+    if (fileStructure1 === 'structured') {
+      comparisonColumnList.forEach((column) => {
+        const cellValue: string = sanitizeValue(row[column]);
+        lookUpPropertyAndUpdateValueHash(cellValue, valueHash, row, rowIndex);
+      });
+    } else {
+      const cellValue: string = sanitizeValue(row);
+      lookUpPropertyAndUpdateValueHash(cellValue, valueHash, row, rowIndex);
+    }
   });
 }
 
+const updateMatchedIndexesForRow = (cellValue: string, valueHash: any, matchedIndxesForRow: Array<number>) => {
+  if (cellValue && valueHash[cellValue]) {
+    /* Add the rowIndex for the match to the list of matched indexes. Later, we'll
+    use that list to determine how many columns of that row in file 2 match how many columns
+    in file 1 */
+    matchedIndxesForRow.push(valueHash[cellValue].rowIndex);
+  }
+}
+
+/**
+ * For each row in salesData2 (either the 2nd spreadsheet uploaded, or the unformatted data copied in pasted in
+ * for the partner accounts), create an array (matchedIndexesForRow) and add row indexes for matched rows.
+ * This tracks the number of cells in which there is a match between the row in salesData1 and salesData2.
+ * Then in possibleMatches, create an object with a key-value of rowIndex: number of matched cells - this shows us
+ * the degree of accuracy that a pair of matched rows has. The more cells are matched between them, the likelier it
+ * is a valid match. Then create an object containing properties of both the matching rows in salesData1 and
+ * salesData2 and add the object to the results list.
+ * @param {Array<any>} salesData1 
+ * @param {Array<any>} salesData2 
+ * @param {Array<string>} comparisonColumnList 
+ * @param {any} valueHash 
+ * @param {Array<Array<any>>} resultsList 
+ * @param {string} fileStructure1 
+ * @param {string} fileStructure2 
+ */
 const checkForMatches = (
   salesData1: Array<any>,
   salesData2: Array<any>,
   comparisonColumnList: Array<string>,
   valueHash: any,
-  resultsList: Array<Array<any>>
+  resultsList: Array<Array<any>>,
+  fileStructure1: string,
+  fileStructure2: string
 ): void => {
   salesData2.forEach((row: any) => {
     const matchedIndxesForRow: Array<number> = [];
-    comparisonColumnList.forEach((column) => {
-      const cellValue: string = typeof row[column] === 'string' ?
-        row[column].toLowerCase().trim() : row[column].toString();
-      if (cellValue && valueHash[cellValue]) {
-        /* Add the rowIndex for the match to the list of matched indexes. Later, we'll
-        use that list to determine how many columns of that row in file 2 match how many columns
-        in file 1 */
-        matchedIndxesForRow.push(valueHash[cellValue].rowIndex);
-      }
-    });
+    if (fileStructure2 === 'structured') {
+      comparisonColumnList.forEach((column) => {
+        const cellValue: string = sanitizeValue(row[column]);
+        updateMatchedIndexesForRow(cellValue, valueHash, matchedIndxesForRow);
+      });
+    } else {
+      const cellValue: string = sanitizeValue(row);
+      updateMatchedIndexesForRow(cellValue, valueHash, matchedIndxesForRow);
+    }
 
     const possibleMatches: any = {}; /* Object should contain row indexes (from file 1)
     and a count of how many cells from a row in file 2 matched a cell from file 1. This lets us
@@ -104,26 +189,69 @@ const checkForMatches = (
     Array.from(Object.keys(possibleMatches)).forEach((key) => {
       /* possibleMatches[key] is the precision of the match i.e. the number of columns that match between the files.
       Subtract 1 because of zero-indexing in the resultsList, which is an array of arrays */
-      resultsList[possibleMatches[key] - 1].push({ ...row, ...salesData1[parseInt(key)] });
+      let result: any = {};
+      if (fileStructure1 === 'structured') {
+        result = { ...salesData1[parseInt(key)] };
+      } else {
+        result = { 'Unstructured Data 1': salesData1[parseInt(key)] };
+      }
+      if (fileStructure2 === 'structured') {
+        result = { ...result, ...row };
+      } else {
+        result = { ...result, 'Unstructured Data 2': row };
+      }
+      resultsList[possibleMatches[key] - 1].push(result);
     });
   });
 }
 
 /**
- * Create an array of objects that contain the desired columns from each spreadsheet.
- * @param {Array<any>} duplicatesList List of rows that have a duplicate cell value in the comparison columns
+ * 
+ * @param {string} fileStructure Whether the data input by user is coming from structured file or unstructured list
+ * @param {Array<string>} comparisonColumns Desired columns used for comparison
+ * @param {number} documentNumber Which file do these columns belong to
+ * @returns {Array<string>} Columns that will appear in the final results
+ */
+export const updateColumns = (
+  fileStructure: string,
+  comparisonColumns: Array<string>,
+  documentNumber: number
+): Array<string> => {
+  let columns: Array<string> = [];
+  if (fileStructure === 'structured') {
+    columns = columns.concat([...comparisonColumns]);
+  } else if (fileStructure === 'unstructured') {
+    columns.push(`Unstructured Data ${documentNumber}`);
+  }
+  return columns;
+}
+
+/**
+ * Create a list of the desired columns from each spreadsheet.
  * @param {string} comparisonColumns1 Columns from the 1st spreadsheet that user wants to see in results
  * @param {string} comparisonColumns2 Columns from the 2nd spreadsheet that user wants to see in results
- * @returns Array of objects that contains properties for desired columns
+ * @returns {Array<string>} Array of desired columns
  */
-export const setUpResultColumns = (
-  duplicatesList: Array<any>,
+export const setupResultColumns = (
   comparisonColumns1: Array<string>,
-  comparisonColumns2: Array<string>
-): Array<any> => {
-  const result: Array<any> = [];
-  const columns: Array<string> = [...comparisonColumns1, ...comparisonColumns2];
+  comparisonColumns2: Array<string>,
+  fileStructure1: string,
+  fileStructure2: string
+): Array<string> => {
+  let columns: Array<string> = [];
+  columns = updateColumns(fileStructure1, comparisonColumns1, 1);
+  columns = [...columns, ...updateColumns(fileStructure2, comparisonColumns2, 2)];
+  return columns;
+}
 
+/**
+ * 
+ * @param {Array<any>} duplicatesList List of rows that have a duplicate cell value in the comparison columns
+ * @param {Array<string>} columns Array of desired columns
+ * @returns {Array<any>} array of objects (each row in the duplicates table)
+ */
+export const setupResults = (duplicatesList: Array<any>, columns: Array<string>): Array<any>  => {
+  const result: Array<any> = [];
   duplicatesList.forEach((resultsGroupForPrecisionLevel: Array<any>, resultsGroupForPrecisionLevelIdx: number) => {
     resultsGroupForPrecisionLevel.forEach((item: any) => {
       const row = createResultRow(columns, item, resultsGroupForPrecisionLevelIdx + 1);
@@ -134,15 +262,29 @@ export const setUpResultColumns = (
   return result;
 }
 
+/**
+ * 
+ * @param {Array<string>} columns All of the columns for a result object (columns from both
+ * salesData1 and salesData2)
+ * @param {any} item 1 result in the results list
+ * @param {number} precision Number of matched cells between the 2 rows from salesData1 and salesData2
+ * @returns Result that will be displayed in the duplicates table page
+ */
 export const createResultRow = (columns: Array<string>, item: any, precision: number) => {
   return columns.reduce((rowObj: any, col: string) => {
     if (!!rowObj[col]) {
       return { ...rowObj, [`${col}--2`]: item[col] || null };
     }
-    return { ...rowObj, [col]: item[col] || null };
+    return { ...rowObj, [col]: item[col] || item };
   }, { precision });
 }
 
+/**
+ * Save the file to S3 bucket
+ * @param {any} file File data to be uploaded to S3
+ * @param {string} pinnedFileId Unique ID for the file
+ * @returns 
+ */
 export const storeFile = (file: any, pinnedFileId: string) => new Promise((resolve, reject) => {
   const fileBuffer = fs.readFileSync(file.path);
 
@@ -165,6 +307,11 @@ export const storeFile = (file: any, pinnedFileId: string) => new Promise((resol
   });
 });
 
+/**
+ * Retrieves the pinned file from the S3 bucket
+ * @param {string} pinnedFileId ID of the pinned file from the database
+ * @returns 
+ */
 export const readPinnedFile = (pinnedFileId: string) => new Promise((resolve, reject) => {
   const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,

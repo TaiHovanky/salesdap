@@ -4,11 +4,13 @@ import {
   CHANGE_COMPARISON_COLUMN,
   SET_FILE_SOURCE,
   SET_COMPARISON_COLUMNS_ERROR,
-  SET_ALL_COLUMNS
+  SET_ALL_COLUMNS,
+  SET_FILE_STRUCTURE,
+  CHANGE_UNSTRUCTURED_DATA
 } from '../../actions/document';
 import { addMessageToErrorList, removeMessageFromErrorList } from '../../../utils/update-comparison-columns';
 
-interface SelectedDocument {
+export interface SelectedDocument {
   data: Array<any>;
   name: string;
   allColumns: Array<string>;
@@ -25,6 +27,10 @@ export interface DocumentState {
   fileSource2: string;
   comparisonColumns1Error: Array<string>;
   comparisonColumns2Error: Array<string>;
+  fileStructure1: string;
+  fileStructure2: string;
+  unstructuredData1: string;
+  unstructuredData2: string;
 }
 
 const initialState: DocumentState = {
@@ -47,6 +53,10 @@ const initialState: DocumentState = {
   fileSource2: 'upload',
   comparisonColumns1Error: [],
   comparisonColumns2Error: [],
+  fileStructure1: 'structured',
+  fileStructure2: 'structured',
+  unstructuredData1: '',
+  unstructuredData2: ''
 };
 
 export const COMPARISON_COLUMNS_LIMIT: number = 5;
@@ -133,19 +143,23 @@ export const documentReducer = (state = initialState, action: any) => {
       if (action.index === 0) {
         return {
           ...state,
+          comparisonColumns1: [],
           selectedDocument1: {
             data: action.payload,
             name: action.name,
-            columnChooserGridData: action.columnChooserGridData
+            columnChooserGridData: action.columnChooserGridData,
+            allColumns: []
           }
         };
       } else {
         return {
           ...state,
+          comparisonColumns2: [],
           selectedDocument2: {
             data: action.payload,
             name: action.name,
-            columnChooserGridData: action.columnChooserGridData
+            columnChooserGridData: action.columnChooserGridData,
+            allColumns: []
           }
         };
       }
@@ -177,6 +191,50 @@ export const documentReducer = (state = initialState, action: any) => {
         return {
           ...state,
           fileSource2: action.payload
+        };
+      }
+    case SET_FILE_STRUCTURE:
+      if (action.index === 0) {
+        if (action.payload === 'structured') {
+          return {
+            ...state,
+            fileStructure1: action.payload,
+            unstructuredData1: '' 
+          };
+        } else {
+          return {
+            ...state,
+            fileStructure1: action.payload,
+            comparisonColumns1: [],
+            selectedDocument1: { ...initialState.selectedDocument1 }
+          }
+        }
+      } else {
+        if (action.payload === 'structured') {
+          return {
+            ...state,
+            fileStructure2: action.payload,
+            unstructuredData2: '' 
+          };
+        } else {
+          return {
+            ...state,
+            fileStructure2: action.payload,
+            comparisonColumns2: [],
+            selectedDocument2: { ...initialState.selectedDocument2 }
+          }
+        }
+      }
+    case CHANGE_UNSTRUCTURED_DATA:
+      if (action.index === 0) {
+        return {
+          ...state,
+          unstructuredData1: action.payload
+        };
+      } else {
+        return {
+          ...state,
+          unstructuredData2: action.payload
         };
       }
     case UPLOAD_DOCUMENT_SUCCESS:
