@@ -61,7 +61,7 @@ const ResultsPreviewModal = ({
       }, {});
       updatedResultsData.push(row);
     }
-    console.log('results list', updatedResultsData);
+
     setResultsData(updatedResultsData);
   }, [selectedDocument1, selectedDocument2, comparisonColumns1, comparisonColumns2])
 

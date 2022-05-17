@@ -4,7 +4,7 @@ import AWS from 'aws-sdk';
 
 /**
  * Converts the file buffer to JSON object
- * @param file
+ * @param {any} file
  * @returns {Array<any>} Array of account objects
  */
 export const parseJSONFromFile = (file: any): Array<any> => {
@@ -14,6 +14,27 @@ export const parseJSONFromFile = (file: any): Array<any> => {
   }
   return [];
 };
+
+/**
+ * 
+ * @param {string} fileStructure Either structured (from Excel file) or unstructured (copy/pasted)
+ * @param {string} unstructuredData Unstructured data that was copied and pasted in
+ * @param {any} filePath File path from formData
+ * @returns {Array<any>} List of accounts
+ */
+export const createSalesDataArray = (
+  fileStructure: string,
+  unstructuredData: string,
+  filePath: any
+): Array<any> => {
+  let salesData: Array<any>;
+  if (fileStructure === 'structured') {
+    salesData = parseJSONFromFile(filePath);
+  } else {
+    salesData = unstructuredData.split('\n');
+  }
+  return salesData;
+}
 
 /**
  * Loop through spreadsheet data and use comparison columns to find duplicate values. If

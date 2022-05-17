@@ -1,11 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 import {
   findDuplicates,
-  parseJSONFromFile,
   readPinnedFile,
   storeFile,
   setupResultColumns,
-  setupResults
+  setupResults,
+  createSalesDataArray
 } from '../utils/upload.util';
 import db from '../db';
 
@@ -22,16 +22,8 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
   let salesData1: Array<any> = [];
   let salesData2: Array<any> = [];
   try {
-    if (fileStructure1 === 'structured') {
-      salesData1 = parseJSONFromFile(req.files.sales_file1[0].path);
-    } else {
-      salesData1 = unstructuredData1.split('\n');
-    }
-    if (fileStructure2 === 'structured') {
-      salesData2 = parseJSONFromFile(req.files.sales_file2[0].path);
-    } else {
-      salesData2 = unstructuredData2.split('\n');
-    }
+    salesData1 = createSalesDataArray(fileStructure1, unstructuredData1, req.files.sales_file1[0].path);
+    salesData2 = createSalesDataArray(fileStructure2, unstructuredData2, req.files.sales_file2[0].path);
 
     /* Create list of rows where there is a duplicate value that is shared between the specified columns
       (comparisonColumns1 and comparisonColumns2) */
