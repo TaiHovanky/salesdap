@@ -36,7 +36,7 @@ const DuplicatesTable = ({
     /* Create a list of column names */
     let comparisonColumns: Array<string> = [];
     comparisonColumns = updateColumnsForDocument(fileStructure1, comparisonColumns1, 1);
-    comparisonColumns = [...columns, ...updateColumnsForDocument(fileStructure2, comparisonColumns2, 2)];
+    comparisonColumns = [...comparisonColumns, ...updateColumnsForDocument(fileStructure2, comparisonColumns2, 2)];
 
     /* userAccountColumnCount is for determining how many columns should have the my-accounts css class
     and belong to the ownerBand */
