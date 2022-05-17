@@ -35,25 +35,3 @@ export const updateColumnsForDocument = (
   }
   return columns;
 }
-
-// export const createResultPreviewRow = () => {
-//   if (
-//     fileStructure1 === 'structured' &&
-//     comparisonColumns1.indexOf(col) > -1 &&
-//     index < comparisonColumns1.length
-//   ) {
-//     return { ...rowObj, [col]: doc1SampleData[i][col] || null };
-//   } else if (fileStructure1 === 'unstructured' && index === 0) {
-//     return { ...rowObj, 'Unstructured Data 1': doc1SampleData[i] || null }
-//   } else if (
-//     fileStructure2 === 'structured' &&
-//     comparisonColumns2.indexOf(col) > -1 &&
-//     ((fileStructure1 === 'structured' && index >= comparisonColumns1.length) ||
-//     (fileStructure1 === 'unstructured' && index > 0))
-//   ) {
-//     return { ...rowObj, [col]: doc2SampleData[i][col] || null };
-//   } else if (fileStructure2 === 'unstructured') {
-//     return { ...rowObj, 'Unstructured Data 2': doc2SampleData[i] || null }
-//   }
-//   return { ...rowObj };
-// }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import UploadDocumentColumnContainer from '../../containers/upload-document-column';
 import ResultsPreviewModalContainer from '../../containers/results-preview-modal';
 import { Grid, Fab } from '@mui/material';
-import { Upload } from '@mui/icons-material';
+import { Upload, Preview } from '@mui/icons-material';
 import { DocumentState } from '../../state/reducers/document';
 
 interface UploadDocumentFormProps {
@@ -114,14 +114,13 @@ const UploadDocumentForm = ({
             sx={{ marginTop: '2rem', marginBottom: '1.5rem' }}
             onClick={handleOpenPreview}
           >
-            <Upload sx={{ mr: 1 }} />
+            <Preview sx={{ mr: 1 }} />
             Preview Results
           </Fab>
           <Fab
             variant="extended"
             color="primary"
             aria-label="add"
-            // sx={{ marginTop: '2rem' }}
             // disabled={!isSubmitBtnEnabled}
             onClick={handleUploadAndCompare}
           >
