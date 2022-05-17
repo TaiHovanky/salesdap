@@ -25,12 +25,12 @@ export const parseJSONFromFile = (file: any): Array<any> => {
 export const createSalesDataArray = (
   fileStructure: string,
   unstructuredData: string,
-  filePath: any
+  filePath?: any
 ): Array<any> => {
-  let salesData: Array<any>;
+  let salesData: Array<any> = [];
   if (fileStructure === 'structured') {
     salesData = parseJSONFromFile(filePath);
-  } else {
+  } else if (fileStructure === 'unstructured') {
     salesData = unstructuredData.split('\n');
   }
   return salesData;

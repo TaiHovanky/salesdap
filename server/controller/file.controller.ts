@@ -18,12 +18,13 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
     unstructuredData1,
     unstructuredData2
   } = req.body;
+  const { sales_file1, sales_file2 }: any = req.files;
 
   let salesData1: Array<any> = [];
   let salesData2: Array<any> = [];
   try {
-    salesData1 = createSalesDataArray(fileStructure1, unstructuredData1, req.files.sales_file1[0].path);
-    salesData2 = createSalesDataArray(fileStructure2, unstructuredData2, req.files.sales_file2[0].path);
+    salesData1 = createSalesDataArray(fileStructure1, unstructuredData1, sales_file1 ? sales_file1[0].path : null);
+    salesData2 = createSalesDataArray(fileStructure2, unstructuredData2, sales_file2 ? sales_file2[0].path : null);
 
     /* Create list of rows where there is a duplicate value that is shared between the specified columns
       (comparisonColumns1 and comparisonColumns2) */
