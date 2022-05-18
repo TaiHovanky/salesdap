@@ -64,8 +64,8 @@ const UploadDocumentFormContainer = ({
       comparisonColumns2,
       fileStructure1,
       fileStructure2,
-      unstructuredData1,
-      unstructuredData2
+      unformattedData1,
+      unformattedData2
     } = document;
     setIsLoading(true);
     const formData = new FormData();
@@ -83,10 +83,10 @@ const UploadDocumentFormContainer = ({
     formData.append('comparisonColumns2', comparisonColumns2.join());
     formData.append('fileStructure1', fileStructure1);
     formData.append('fileStructure2', fileStructure2);
-    formData.append('unstructuredData1', unstructuredData1);
-    formData.append('unstructuredData2', unstructuredData2);
+    formData.append('unformattedData1', unformattedData1);
+    formData.append('unformattedData2', unformattedData2);
 
-    axios.post('/api/v1/uploadfile', formData)
+    axios.post('http://localhost:3001/api/v1/uploadfile', formData)
       .then((res: any) => {
         hideError();
         uploadDocumentSuccess(res.data);

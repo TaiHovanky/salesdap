@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
-import DataGrid, { Paging, Pager, Column, ColumnChooser } from 'devextreme-react/data-grid';
+import DataGrid, { Paging, Pager, Column, ColumnChooser, Toolbar, Item } from 'devextreme-react/data-grid';
 import { Grid } from '@mui/material';
 import { UserState } from '../../state/reducers/user';
 import { updateColumnsForDocument } from '../../utils/results-preview.utils';
+import { FORMATTED_DATA } from '../../state/actions/document';
 
 interface Props {
   duplicatesData: Array<any>;
@@ -12,6 +13,9 @@ interface Props {
   fileStructure2: string;
   user: UserState;
 }
+
+/* Handles the pressence of the 2 accuracy columns. Other columns start after those 2. */
+const COLUMN_OFFSET = 2;
 
 const DuplicatesTable = ({
   duplicatesData,
@@ -23,7 +27,7 @@ const DuplicatesTable = ({
 }: Props) => {
   const customizeColumns = useCallback((columns) => {
     columns.push({
-        caption: "My accounts",
+        caption: `My accounts (${user.firstname} ${user.lastname})`,
         isBand: true,
         cssClass: 'my-accounts'
     });
@@ -40,21 +44,43 @@ const DuplicatesTable = ({
 
     /* userAccountColumnCount is for determining how many columns should have the my-accounts css class
     and belong to the ownerBand */
-    let userAccountColumnCount = fileStructure1 === 'structured' ?
+    let userAccountColumnCount = fileStructure1 === FORMATTED_DATA ?
       comparisonColumns1.length : 1;
 
     /* Assign the columns belonging to the user to one owner band and CSS class, and the columns belonging to
     their partner's accounts into another owner band and CSS class */
-    for (let i = 3; i < columns.length - 1; i++) {
-      if (comparisonColumns[i - 3] === columns[i].caption && i < userAccountColumnCount + 3) {
+    for (let i = COLUMN_OFFSET; i < columns.length - 1; i++) {
+      if (comparisonColumns[i - COLUMN_OFFSET] === columns[i].caption && i < userAccountColumnCount + COLUMN_OFFSET) {
         columns[i].ownerBand = columns.length - 2;
         columns[i].cssClass = 'my-accounts'
-      } else if (comparisonColumns[i - 3] === columns[i].caption) {
+      } else if (comparisonColumns[i - COLUMN_OFFSET] === columns[i].caption) {
         columns[i].ownerBand = columns.length - 1;
         columns[i].cssClass = 'their-accounts'
       }
     }
   }, [comparisonColumns1, comparisonColumns2]);
+
+  const calculateGroupCell = (options: any) => {
+    let column = options.column;
+    let displayValue = options.value.split(";")[1];
+    return (
+        <div>{column.caption + ": " + displayValue}</div>
+    );
+  }
+
+  const calculateAccuracyLevel = (rowData: any) => {
+    // console.log('row data', rowData);
+    switch (rowData.accuracy) {
+      case 1:
+        // if (comparisonColumns1.length > 1 && comparisonColumns2.length > 1) {
+        return `aaa;Low`;
+        // }
+      case 2:
+        return `bbb;Medium`;
+      case 3:
+        return `ccc;High`;
+    }
+  }
 
   return (
     <Grid
@@ -88,8 +114,15 @@ const DuplicatesTable = ({
           rowAlternationEnabled={true}
         >
           <ColumnChooser mode="select" enabled={true} allowSearch={true} />
-          <Column dataField="precision" groupIndex={0} sortOrder="desc" name="Precision of match" visible={false} />
-          <Column fixed={true} fixedPosition="left" width={150} calculateCellValue={() => `${user.firstname} ${user.lastname}`} caption="Current User" />
+          <Column
+            dataField="accuracy"
+            groupIndex={0}
+            name="Accuracy Level"
+            calculateGroupValue={calculateAccuracyLevel}
+            groupCellRender={calculateGroupCell}
+            sortOrder="desc"
+            visible={false}
+          />
           {duplicatesData && duplicatesData[0] && Array.from(Object.keys(duplicatesData[0]))
             .map((colName: string, colIndex: number) => {
               return (
@@ -104,6 +137,9 @@ const DuplicatesTable = ({
             showInfo={true}
             showNavigationButtons={true}
           />
+          <Toolbar>
+            <Item name="columnChooserButton" text="edit view" showText="always"></Item>
+          </Toolbar>
         </DataGrid>
       </Grid>
     </Grid>

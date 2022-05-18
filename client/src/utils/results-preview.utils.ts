@@ -1,22 +1,23 @@
+import { FORMATTED_DATA, UNFORMATTED_DATA } from '../state/actions/document';
 import { SelectedDocument } from '../state/reducers/document';
 
 export const createDocumentSampleRows = (
   selectedDocument: SelectedDocument,
   fileStructure: string,
-  unstructuredData: string
+  unformattedData: string
 ) => {
   let docSampleData: Array<any>;
-  if (fileStructure === 'structured') {
+  if (fileStructure === FORMATTED_DATA) {
     if (selectedDocument.data.length && selectedDocument.data.length > 10) {
       docSampleData = selectedDocument.data.slice(0, 10);
     } else {
       docSampleData =  selectedDocument.data;
     }
   } else {
-    if (unstructuredData.length && unstructuredData.length > 10) {
-      docSampleData = unstructuredData.split('\n').slice(0, 10);
+    if (unformattedData.length && unformattedData.length > 10) {
+      docSampleData = unformattedData.split('\n').slice(0, 10);
     } else {
-      docSampleData =  unstructuredData.split('\n');
+      docSampleData =  unformattedData.split('\n');
     }
   }
   return docSampleData;
@@ -28,10 +29,10 @@ export const updateColumnsForDocument = (
   documentNumber: number
 ) => {
   let columns: Array<string> = [];
-  if (fileStructure === 'structured') {
+  if (fileStructure === FORMATTED_DATA) {
     columns = columns.concat([...comparisonColumns]);
-  } else if (fileStructure === 'unstructured') {
-    columns.push(`Unstructured Data ${documentNumber}`);
+  } else if (fileStructure === UNFORMATTED_DATA) {
+    columns.push(`Unformatted Data ${documentNumber}`);
   }
   return columns;
 }

@@ -33,8 +33,8 @@ const UploadDocumentForm = ({
     fileSource2,
     fileStructure1,
     fileStructure2,
-    unstructuredData1,
-    unstructuredData2
+    unformattedData1,
+    unformattedData2
   } = document;
 
   const handleOpenPreview = () => {
@@ -79,7 +79,7 @@ const UploadDocumentForm = ({
             setAllColumns={setAllColumns}
             handleColumnClick={handleColumnClick}
             fileStructure={fileStructure1}
-            unstructuredData={unstructuredData1}
+            unformattedData={unformattedData1}
           />
           <UploadDocumentColumnContainer
             comparisonColumns={comparisonColumns2}
@@ -90,7 +90,7 @@ const UploadDocumentForm = ({
             setAllColumns={setAllColumns}
             handleColumnClick={handleColumnClick}
             fileStructure={fileStructure2}
-            unstructuredData={unstructuredData2}
+            unformattedData={unformattedData2}
           />
         </Grid>
       </Grid>

@@ -2,6 +2,10 @@
 import * as fs from 'fs';
 import AWS from 'aws-sdk';
 
+// Constants for file structure
+export const UNFORMATTED_DATA = 'UNFORMATTED_DATA';
+export const FORMATTED_DATA = 'FORMATTED_DATA';
+
 /**
  * Converts the file buffer to JSON object
  * @param {any} file
@@ -17,21 +21,21 @@ export const parseJSONFromFile = (file: any): Array<any> => {
 
 /**
  * 
- * @param {string} fileStructure Either structured (from Excel file) or unstructured (copy/pasted)
- * @param {string} unstructuredData Unstructured data that was copied and pasted in
+ * @param {string} fileStructure Either formatted (from Excel file) or unformatted (copy/pasted)
+ * @param {string} unformattedData Unformatted data that was copied and pasted in
  * @param {any} filePath File path from formData
  * @returns {Array<any>} List of accounts
  */
 export const createSalesDataArray = (
   fileStructure: string,
-  unstructuredData: string,
+  unformattedData: string,
   filePath?: any
 ): Array<any> => {
   let salesData: Array<any> = [];
-  if (fileStructure === 'structured') {
+  if (fileStructure === FORMATTED_DATA) {
     salesData = parseJSONFromFile(filePath);
-  } else if (fileStructure === 'unstructured') {
-    salesData = unstructuredData.split('\n');
+  } else if (fileStructure === UNFORMATTED_DATA) {
+    salesData = unformattedData.split('\n');
   }
   return salesData;
 }
@@ -115,7 +119,7 @@ const addCellValueToHash = (
   fileStructure1: string
 ): void => {
   salesData.forEach((row: any, rowIndex: number) => {
-    if (fileStructure1 === 'structured') {
+    if (fileStructure1 === FORMATTED_DATA) {
       comparisonColumnList.forEach((column) => {
         const cellValue: string = sanitizeValue(row[column]);
         lookUpPropertyAndUpdateValueHash(cellValue, valueHash, row, rowIndex);
@@ -163,7 +167,7 @@ const checkForMatches = (
 ): void => {
   salesData2.forEach((row: any) => {
     const matchedIndxesForRow: Array<number> = [];
-    if (fileStructure2 === 'structured') {
+    if (fileStructure2 === FORMATTED_DATA) {
       comparisonColumnList.forEach((column) => {
         const cellValue: string = sanitizeValue(row[column]);
         updateMatchedIndexesForRow(cellValue, valueHash, matchedIndxesForRow);
@@ -187,18 +191,18 @@ const checkForMatches = (
     });
 
     Array.from(Object.keys(possibleMatches)).forEach((key) => {
-      /* possibleMatches[key] is the precision of the match i.e. the number of columns that match between the files.
+      /* possibleMatches[key] is the accuracy of the match i.e. the number of columns that match between the files.
       Subtract 1 because of zero-indexing in the resultsList, which is an array of arrays */
       let result: any = {};
-      if (fileStructure1 === 'structured') {
+      if (fileStructure1 === FORMATTED_DATA) {
         result = { ...salesData1[parseInt(key)] };
       } else {
-        result = { 'Unstructured Data 1': salesData1[parseInt(key)] };
+        result = { 'Unformatted Data 1': salesData1[parseInt(key)] };
       }
-      if (fileStructure2 === 'structured') {
+      if (fileStructure2 === FORMATTED_DATA) {
         result = { ...result, ...row };
       } else {
-        result = { ...result, 'Unstructured Data 2': row };
+        result = { ...result, 'Unformatted Data 2': row };
       }
       resultsList[possibleMatches[key] - 1].push(result);
     });
@@ -207,7 +211,7 @@ const checkForMatches = (
 
 /**
  * 
- * @param {string} fileStructure Whether the data input by user is coming from structured file or unstructured list
+ * @param {string} fileStructure Whether the data input by user is coming from formatted file or unformatted list
  * @param {Array<string>} comparisonColumns Desired columns used for comparison
  * @param {number} documentNumber Which file do these columns belong to
  * @returns {Array<string>} Columns that will appear in the final results
@@ -218,10 +222,10 @@ export const updateColumns = (
   documentNumber: number
 ): Array<string> => {
   let columns: Array<string> = [];
-  if (fileStructure === 'structured') {
+  if (fileStructure === FORMATTED_DATA) {
     columns = columns.concat([...comparisonColumns]);
-  } else if (fileStructure === 'unstructured') {
-    columns.push(`Unstructured Data ${documentNumber}`);
+  } else if (fileStructure === UNFORMATTED_DATA) {
+    columns.push(`Unformatted Data ${documentNumber}`);
   }
   return columns;
 }
@@ -252,9 +256,9 @@ export const setupResultColumns = (
  */
 export const setupResults = (duplicatesList: Array<any>, columns: Array<string>): Array<any>  => {
   const result: Array<any> = [];
-  duplicatesList.forEach((resultsGroupForPrecisionLevel: Array<any>, resultsGroupForPrecisionLevelIdx: number) => {
-    resultsGroupForPrecisionLevel.forEach((item: any) => {
-      const row = createResultRow(columns, item, resultsGroupForPrecisionLevelIdx + 1);
+  duplicatesList.forEach((resultsGroupForAccuracyLevel: Array<any>, resultsGroupForAccuracyLevelIdx: number) => {
+    resultsGroupForAccuracyLevel.forEach((item: any) => {
+      const row = createResultRow(columns, item, resultsGroupForAccuracyLevelIdx + 1);
       result.push(row);
     });
   });
@@ -267,16 +271,16 @@ export const setupResults = (duplicatesList: Array<any>, columns: Array<string>)
  * @param {Array<string>} columns All of the columns for a result object (columns from both
  * salesData1 and salesData2)
  * @param {any} item 1 result in the results list
- * @param {number} precision Number of matched cells between the 2 rows from salesData1 and salesData2
+ * @param {number} accuracy Number of matched cells between the 2 rows from salesData1 and salesData2
  * @returns Result that will be displayed in the duplicates table page
  */
-export const createResultRow = (columns: Array<string>, item: any, precision: number) => {
+export const createResultRow = (columns: Array<string>, item: any, accuracy: number) => {
   return columns.reduce((rowObj: any, col: string) => {
     if (!!rowObj[col]) {
       return { ...rowObj, [`${col}--2`]: item[col] || null };
     }
     return { ...rowObj, [col]: item[col] || item };
-  }, { precision });
+  }, { accuracy });
 }
 
 /**

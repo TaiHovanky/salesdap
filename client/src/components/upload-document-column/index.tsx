@@ -8,7 +8,8 @@ import ComparisonColumnAutocompleteContainer from '../../containers/comparison-c
 import FileStructureRadioContainer from '../../containers/file-structure-radio';
 import { DataGrid } from 'devextreme-react';
 import { Column, Pager, Paging } from 'devextreme-react/data-grid';
-import UnstructuredDataTextfieldContainer from '../../containers/unstructured-data-textfield-container';
+import UnformattedDataTextfieldContainer from '../../containers/unformatted-data-textfield-container';
+import { FORMATTED_DATA } from '../../state/actions/document';
 
 interface UploadDocumentColumnProps {
   selectedDocument: any;
@@ -20,7 +21,7 @@ interface UploadDocumentColumnProps {
   setAllColumns: any;
   handleColumnClick: any;
   fileStructure: any;
-  unstructuredData: string;
+  unformattedData: string;
 }
 
 const renderGridCell = (
@@ -52,7 +53,7 @@ const UploadDocumentColumn = ({
   setAllColumns,
   handleColumnClick,
   fileStructure,
-  unstructuredData
+  unformattedData
 }: UploadDocumentColumnProps) => {
   useEffect(() => {
     if (selectedDocument.data && selectedDocument.data[0]) {
@@ -79,7 +80,7 @@ const UploadDocumentColumn = ({
             <PinnedFileChipContainer />
           }
         </div>
-        {fileStructure === 'structured' ?
+        {fileStructure === FORMATTED_DATA ?
           <>
             <ComparisonColumnAutocompleteContainer
               selectedDocument={selectedDocument}
@@ -119,8 +120,8 @@ const UploadDocumentColumn = ({
               </DataGrid>
             </div>
           </>:
-          <UnstructuredDataTextfieldContainer
-            unstructuredData={unstructuredData}
+          <UnformattedDataTextfieldContainer
+            unformattedData={unformattedData}
             index={index}
           />}
     </>
