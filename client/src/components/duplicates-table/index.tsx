@@ -1,6 +1,6 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import DataGrid, { Paging, Pager, Column, ColumnChooser, Toolbar, Item } from 'devextreme-react/data-grid';
-import { Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { UserState } from '../../state/reducers/user';
 import { updateColumnsForDocument } from '../../utils/results-preview.utils';
 import { FORMATTED_DATA } from '../../state/actions/document';
@@ -25,6 +25,7 @@ const DuplicatesTable = ({
   fileStructure2,
   user
 }: Props) => {
+  const dataGridRef: any = useRef<any>(null);
   const customizeColumns = useCallback((columns) => {
     columns.push({
         caption: `My accounts (${user.firstname} ${user.lastname})`,
@@ -69,7 +70,6 @@ const DuplicatesTable = ({
   }
 
   const calculateAccuracyLevel = (rowData: any) => {
-    // console.log('row data', rowData);
     switch (rowData.accuracy) {
       case 1:
         // if (comparisonColumns1.length > 1 && comparisonColumns2.length > 1) {
@@ -80,6 +80,18 @@ const DuplicatesTable = ({
       case 3:
         return `ccc;High`;
     }
+  }
+
+  const handleColumnChooserOpen = () => {
+    dataGridRef.current.instance.showColumnChooser();
+  }
+
+  const renderColChooserBtn = () => {
+    return (
+      <Button variant="outlined" onClick={handleColumnChooserOpen}>
+        edit view
+      </Button>
+    );
   }
 
   return (
@@ -112,6 +124,7 @@ const DuplicatesTable = ({
           width="100%"
           height="100%"
           rowAlternationEnabled={true}
+          ref={dataGridRef}
         >
           <ColumnChooser mode="select" enabled={true} allowSearch={true} />
           <Column
@@ -138,7 +151,7 @@ const DuplicatesTable = ({
             showNavigationButtons={true}
           />
           <Toolbar>
-            <Item name="columnChooserButton" text="edit view" showText="always"></Item>
+            <Item name="columnChooserButton" component={renderColChooserBtn}></Item>
           </Toolbar>
         </DataGrid>
       </Grid>
