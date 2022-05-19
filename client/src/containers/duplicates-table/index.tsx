@@ -9,6 +9,8 @@ interface Props {
   comparisonColumns2: Array<string>;
   fileStructure1: string;
   fileStructure2: string;
+  partnerName: string;
+  partnerCompany: string;
   user: UserState;
 }
 
@@ -18,6 +20,8 @@ const DuplicatesTableContainer = ({
   comparisonColumns2,
   fileStructure1,
   fileStructure2,
+  partnerName,
+  partnerCompany,
   user
 }: Props) => {
   return (
@@ -27,6 +31,8 @@ const DuplicatesTableContainer = ({
       comparisonColumns2={comparisonColumns2}
       fileStructure1={fileStructure1}
       fileStructure2={fileStructure2}
+      partnerName={partnerName}
+      partnerCompany={partnerCompany}
       user={user}
     />
   );
@@ -38,6 +44,8 @@ const mapStateToProps = (state: any) => ({
   comparisonColumns2: state.document.comparisonColumns2,
   fileStructure1: state.document.fileStructure1,
   fileStructure2: state.document.fileStructure2,
+  partnerName: state.document.partnerName,
+  partnerCompany: state.document.partnerCompany,
   user: state.user
 });
 

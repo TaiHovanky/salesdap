@@ -8,6 +8,8 @@ export const SET_FILE_STRUCTURE = 'SET_FILE_STRUCTURE';
 export const SET_COMPARISON_COLUMNS_ERROR = 'SET_COMPARISON_COLUMNS_ERROR';
 export const SET_ALL_COLUMNS = 'SET_ALL_COLUMNS';
 export const CHANGE_UNFORMATTED_DATA = 'CHANGE_UNFORMATTED_DATA';
+export const CHANGE_PARTNER_NAME = 'CHANGE_PARTNER_NAME';
+export const CHANGE_PARTNER_COMPANY = 'CHANGE_PARTNER_COMPANY';
 
 // Constants for file structure
 export const UNFORMATTED_DATA = 'UNFORMATTED_DATA';
@@ -75,4 +77,14 @@ export const setAllColumns = (columns: Array<string>, index: number) => ({
   type: SET_ALL_COLUMNS,
   payload: columns,
   index
+});
+
+export const changePartnerName = (value: string) => ({
+  type: CHANGE_PARTNER_NAME,
+  payload: value
+});
+
+export const changePartnerCompany = (value: string) => ({
+  type: CHANGE_PARTNER_COMPANY,
+  payload: value
 });

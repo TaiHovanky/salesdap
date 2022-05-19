@@ -7,7 +7,9 @@ import {
   SET_ALL_COLUMNS,
   SET_FILE_STRUCTURE,
   CHANGE_UNFORMATTED_DATA,
-  FORMATTED_DATA
+  FORMATTED_DATA,
+  CHANGE_PARTNER_NAME,
+  CHANGE_PARTNER_COMPANY
 } from '../../actions/document';
 import { addMessageToErrorList, removeMessageFromErrorList } from '../../../utils/update-comparison-columns';
 
@@ -32,6 +34,8 @@ export interface DocumentState {
   fileStructure2: string;
   unformattedData1: string;
   unformattedData2: string;
+  partnerName: string;
+  partnerCompany: string;
 }
 
 const initialState: DocumentState = {
@@ -57,7 +61,9 @@ const initialState: DocumentState = {
   fileStructure1: FORMATTED_DATA,
   fileStructure2: FORMATTED_DATA,
   unformattedData1: '',
-  unformattedData2: ''
+  unformattedData2: '',
+  partnerName: '',
+  partnerCompany: ''
 };
 
 export const COMPARISON_COLUMNS_LIMIT: number = 5;
@@ -243,6 +249,16 @@ export const documentReducer = (state = initialState, action: any) => {
         ...state,
         duplicatesData: action.payload
       };
+    case CHANGE_PARTNER_NAME:
+      return {
+        ...state,
+        partnerName: action.payload
+      }
+    case CHANGE_PARTNER_COMPANY:
+      return {
+        ...state,
+        partnerCompany: action.payload
+      }
     default:
       return state;
   }

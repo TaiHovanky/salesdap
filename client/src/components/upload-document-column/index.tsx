@@ -10,6 +10,8 @@ import { DataGrid } from 'devextreme-react';
 import { Column, Pager, Paging } from 'devextreme-react/data-grid';
 import UnformattedDataTextfieldContainer from '../../containers/unformatted-data-textfield-container';
 import { FORMATTED_DATA } from '../../state/actions/document';
+import PartnerNameTextfieldContainer from '../../containers/partner-name-textfield';
+import PartnerCompanyTextfieldContainer from '../../containers/partner-company-textfield';
 
 interface UploadDocumentColumnProps {
   selectedDocument: any;
@@ -90,7 +92,7 @@ const UploadDocumentColumn = ({
             />
             <div style={{ width: '100%'}}>
               <Typography variant="subtitle1" sx={{ margin: '2.5rem 0 0 0'}}>
-                This grid helps visualize the file that was uploaded with 2 example rows. Columns for comparison can be selected by clicking the column headers.
+                The grid below shows 2 example rows from the uploaded file. Columns for comparison can be selected by clicking the column headers.
               </Typography>
               <DataGrid
                 id="gridContainer"
@@ -118,6 +120,8 @@ const UploadDocumentColumn = ({
                   showNavigationButtons={true}
                 />
               </DataGrid>
+              {index === 1 && <PartnerNameTextfieldContainer />}
+              {index === 1 && <PartnerCompanyTextfieldContainer />}
             </div>
           </>:
           <UnformattedDataTextfieldContainer

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useEffect, useState } from 'react';
 import DataGrid, { Paging, Pager, Column, ColumnChooser, Toolbar, Item } from 'devextreme-react/data-grid';
 import { Button, Grid } from '@mui/material';
 import { UserState } from '../../state/reducers/user';
@@ -11,6 +11,8 @@ interface Props {
   comparisonColumns2: Array<string>;
   fileStructure1: string;
   fileStructure2: string;
+  partnerName: string;
+  partnerCompany: string;
   user: UserState;
 }
 
@@ -23,17 +25,48 @@ const DuplicatesTable = ({
   comparisonColumns2,
   fileStructure1,
   fileStructure2,
+  partnerName,
+  partnerCompany,
   user
 }: Props) => {
   const dataGridRef: any = useRef<any>(null);
+  // const [sanitizedUserName, setSanitizedUserName] = useState('');
+  // const [sanitizedPartnerName, setSanitizedPartnerName] = useState('');
+  // const [sanitizedPartnerCompany, setSanitizedPartnerCompany] = useState('');
+
+  // useEffect(() => {
+    console.log('use effect', user, partnerName, partnerCompany);
+    let capitalizedUserName = '';
+    let capitalizedPartnerCompany = '';
+    let capitalizedPartnerName = '';
+    if (user && user.firstname && user.lastname) {
+      const capitalizedFirstName = user.firstname[0].toUpperCase() + user.firstname.substring(1);
+      const capitalizedLastName = user.lastname[0].toUpperCase() + user.lastname.substring(1);
+      capitalizedUserName = `${capitalizedFirstName} ${capitalizedLastName}`;
+    }
+    if (partnerCompany) {
+      const words: Array<string> = partnerCompany.split(" ");
+      console.log('words', words)
+      capitalizedPartnerCompany = words.map((word: string) => { 
+          return word[0].toUpperCase() + word.substring(1); 
+      }).join(" ");
+      // setSanitizedPartnerCompany(capitalizedPartnerCompany);
+    }
+    if (partnerName) {
+      capitalizedPartnerName = partnerName[0].toUpperCase() + partnerName.substring(1);
+      // setSanitizedPartnerName(capitalizedPartnerName);
+    }
+    console.log('sanitzied vals', capitalizedPartnerCompany, capitalizedPartnerName, capitalizedUserName)
+  // }, [partnerName, partnerCompany, user]);
+
   const customizeColumns = useCallback((columns) => {
     columns.push({
-        caption: `My accounts (${user.firstname} ${user.lastname})`,
+        caption: `My accounts${capitalizedUserName ? ` (${capitalizedUserName})` : ''}`,
         isBand: true,
         cssClass: 'my-accounts'
     });
     columns.push({
-      caption: "Partner's accounts",
+      caption: `${capitalizedPartnerCompany ? `${capitalizedPartnerCompany}` : 'Partner'}'s accounts${capitalizedPartnerName ? ` (${capitalizedPartnerName})` : ''}`,
       isBand: true,
       cssClass: 'their-accounts'
     });
