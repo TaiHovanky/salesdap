@@ -126,7 +126,14 @@ const DuplicatesTable = ({
           rowAlternationEnabled={true}
           ref={dataGridRef}
         >
-          <ColumnChooser mode="select" enabled={true} allowSearch={true} />
+          <ColumnChooser
+            mode="select"
+            title="Edit View"
+            enabled={true}
+            allowSearch={true}
+            height={500}
+            width={350}
+          />
           <Column
             dataField="accuracy"
             groupIndex={0}
