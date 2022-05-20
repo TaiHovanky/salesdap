@@ -30,11 +30,31 @@ const DuplicatesTable = ({
   user
 }: Props) => {
   const dataGridRef: any = useRef<any>(null);
-  // const [sanitizedUserName, setSanitizedUserName] = useState('');
-  // const [sanitizedPartnerName, setSanitizedPartnerName] = useState('');
-  // const [sanitizedPartnerCompany, setSanitizedPartnerCompany] = useState('');
 
-  // useEffect(() => {
+    // console.log('use effect', user, partnerName, partnerCompany);
+    // let capitalizedUserName = '';
+    // let capitalizedPartnerCompany = '';
+    // let capitalizedPartnerName = '';
+    // if (user && user.firstname && user.lastname) {
+    //   const capitalizedFirstName = user.firstname[0].toUpperCase() + user.firstname.substring(1);
+    //   const capitalizedLastName = user.lastname[0].toUpperCase() + user.lastname.substring(1);
+    //   capitalizedUserName = `${capitalizedFirstName} ${capitalizedLastName}`;
+    // }
+    // if (partnerCompany) {
+    //   const words: Array<string> = partnerCompany.split(" ");
+    //   console.log('words', words)
+    //   capitalizedPartnerCompany = words.map((word: string) => { 
+    //       return word[0].toUpperCase() + word.substring(1); 
+    //   }).join(" ");
+    //   // setSanitizedPartnerCompany(capitalizedPartnerCompany);
+    // }
+    // if (partnerName) {
+    //   capitalizedPartnerName = partnerName[0].toUpperCase() + partnerName.substring(1);
+    //   // setSanitizedPartnerName(capitalizedPartnerName);
+    // }
+    // console.log('sanitzied vals', capitalizedPartnerCompany, capitalizedPartnerName, capitalizedUserName)
+
+  const customizeColumns = useCallback((columns) => {
     console.log('use effect', user, partnerName, partnerCompany);
     let capitalizedUserName = '';
     let capitalizedPartnerCompany = '';
@@ -46,20 +66,14 @@ const DuplicatesTable = ({
     }
     if (partnerCompany) {
       const words: Array<string> = partnerCompany.split(" ");
-      console.log('words', words)
       capitalizedPartnerCompany = words.map((word: string) => { 
           return word[0].toUpperCase() + word.substring(1); 
       }).join(" ");
-      // setSanitizedPartnerCompany(capitalizedPartnerCompany);
     }
     if (partnerName) {
       capitalizedPartnerName = partnerName[0].toUpperCase() + partnerName.substring(1);
-      // setSanitizedPartnerName(capitalizedPartnerName);
     }
-    console.log('sanitzied vals', capitalizedPartnerCompany, capitalizedPartnerName, capitalizedUserName)
-  // }, [partnerName, partnerCompany, user]);
 
-  const customizeColumns = useCallback((columns) => {
     columns.push({
         caption: `My accounts${capitalizedUserName ? ` (${capitalizedUserName})` : ''}`,
         isBand: true,
@@ -96,7 +110,7 @@ const DuplicatesTable = ({
 
   const calculateGroupCell = (options: any) => {
     let column = options.column;
-    let displayValue = options.value.split(";")[1];
+    let displayValue: string = options.value.split(";")[1];
     return (
         <div>{column.caption + ": " + displayValue}</div>
     );
@@ -107,7 +121,6 @@ const DuplicatesTable = ({
       case 1:
         // if (comparisonColumns1.length > 1 && comparisonColumns2.length > 1) {
         return `aaa;Low`;
-        // }
       case 2:
         return `bbb;Medium`;
       case 3:
@@ -173,13 +186,20 @@ const DuplicatesTable = ({
             name="Accuracy Level"
             calculateGroupValue={calculateAccuracyLevel}
             groupCellRender={calculateGroupCell}
+            showInColumnChooser={false}
             sortOrder="desc"
             visible={false}
           />
           {duplicatesData && duplicatesData[0] && Array.from(Object.keys(duplicatesData[0]))
             .map((colName: string, colIndex: number) => {
               return (
-                <Column dataField={colName} key={colIndex} caption={colName.replace('--2', '')} visible={colIndex !== 0} />
+                <Column
+                  dataField={colName}
+                  key={colIndex}
+                  caption={colName.replace('--2', '')}
+                  visible={colIndex !== 0}
+                  showInColumnChooser={colName !== 'accuracy' ? true : false}
+                />
               );
             })}
           <Paging defaultPageSize={25} />
