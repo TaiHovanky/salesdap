@@ -1,20 +1,20 @@
 import React, { useEffect } from 'react';
-import { Checkbox, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { UserState } from '../../state/reducers/user';
 import FileSelectionFieldContainer from '../../containers/file-selection-field';
 import PinnedFileChipContainer from '../../containers/pinned-file-chip';
 import FileSourceRadioContainer from '../../containers/file-source-radio';
 import ComparisonColumnAutocompleteContainer from '../../containers/comparison-column-autocomplete';
 import FileStructureRadioContainer from '../../containers/file-structure-radio';
-import { DataGrid } from 'devextreme-react';
-import { Column, Pager, Paging } from 'devextreme-react/data-grid';
 import UnformattedDataTextfieldContainer from '../../containers/unformatted-data-textfield-container';
 import { FORMATTED_DATA } from '../../state/actions/document';
 import PartnerNameTextfieldContainer from '../../containers/partner-name-textfield';
 import PartnerCompanyTextfieldContainer from '../../containers/partner-company-textfield';
+import FileDataPreviewTable from '../file-data-preview-table';
+import { SelectedDocument } from '../../state/reducers/document';
 
 interface UploadDocumentColumnProps {
-  selectedDocument: any;
+  selectedDocument: SelectedDocument;
   comparisonColumns: Array<string>;
   comparisonColumnsError: Array<string>;
   fileSource: string;
@@ -24,25 +24,6 @@ interface UploadDocumentColumnProps {
   handleColumnClick: any;
   fileStructure: any;
   unformattedData: string;
-}
-
-const renderGridCell = (
-  data: any,
-  handleColumnClick: any,
-  comparisonColumns: Array<string>,
-  index: number
-) => {
-  return (
-    <div>
-      {data.column? data.column.dataField : data}
-      <Checkbox
-        onClick={() => {
-          handleColumnClick(data, index)
-        }}
-        checked={comparisonColumns.indexOf(data) > -1}
-      />
-    </div>
-  );
 }
 
 const UploadDocumentColumn = ({
@@ -65,25 +46,25 @@ const UploadDocumentColumn = ({
 
   return (
     <>
-        <Typography variant='h6' sx={{ marginTop: '2rem', marginBottom: '1rem' }}>
+        <Typography variant='h6' sx={{ marginTop: '3rem', marginBottom: '1rem' }}>
           {index === 0 ? 'My accounts' : 'Partner\'s accounts'}
         </Typography>
         <FileStructureRadioContainer
           index={index}
           fileStructure={fileStructure}
         />
-        {!!user.pinnedFileName && index === 0 && <FileSourceRadioContainer
-          fileSource={fileSource}
-          index={index}
-        />}
-        <div style={{ height: '80px' }}>
-          {fileSource === 'upload' ?
-            <FileSelectionFieldContainer selectedDocument={selectedDocument} index={index} /> :
-            <PinnedFileChipContainer />
-          }
-        </div>
         {fileStructure === FORMATTED_DATA ?
           <>
+            {!!user.pinnedFileName && index === 0 && <FileSourceRadioContainer
+              fileSource={fileSource}
+              index={index}
+            />}
+            <div>
+              {fileSource === 'upload' ?
+                <FileSelectionFieldContainer selectedDocument={selectedDocument} index={index} /> :
+                <PinnedFileChipContainer />
+              }
+            </div>
             <ComparisonColumnAutocompleteContainer
               selectedDocument={selectedDocument}
               comparisonColumns={comparisonColumns}
@@ -91,35 +72,12 @@ const UploadDocumentColumn = ({
               index={index}
             />
             <div style={{ width: '100%'}}>
-              <Typography variant="subtitle1" sx={{ margin: '2.5rem 0 0 0'}}>
-                The grid below shows 2 example rows from the uploaded file. Columns for comparison can be selected by clicking the column headers.
-              </Typography>
-              <DataGrid
-                id="gridContainer"
-                dataSource={selectedDocument.columnChooserGridData}
-                allowColumnReordering={true}
-                allowColumnResizing={true}
-                columnAutoWidth={true}
-                showBorders={true}
-              >
-                {selectedDocument.allColumns ? selectedDocument.allColumns.map((colProps: any, colIdx: number) => {
-                  return (
-                    <Column
-                      dataField={colProps}
-                      key={`col-${colIdx}-1`}
-                      headerCellRender={() => renderGridCell(colProps, handleColumnClick, comparisonColumns, index)}
-                    />
-                  );
-                }) : []}
-                <Paging defaultPageSize={2} />
-                <Pager
-                  visible={true}
-                  displayMode={"full"}
-                  showPageSizeSelector={false}
-                  showInfo={true}
-                  showNavigationButtons={true}
-                />
-              </DataGrid>
+              <FileDataPreviewTable
+                selectedDocument={selectedDocument}
+                handleColumnClick={handleColumnClick}
+                comparisonColumns={comparisonColumns}
+                index={index}
+              />
               {index === 1 && <PartnerNameTextfieldContainer />}
               {index === 1 && <PartnerCompanyTextfieldContainer />}
             </div>

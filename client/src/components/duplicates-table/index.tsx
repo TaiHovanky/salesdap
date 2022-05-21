@@ -1,9 +1,10 @@
-import React, { useCallback, useRef, useEffect, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import DataGrid, { Paging, Pager, Column, ColumnChooser, Toolbar, Item } from 'devextreme-react/data-grid';
 import { Button, Grid } from '@mui/material';
 import { UserState } from '../../state/reducers/user';
 import { updateColumnsForDocument } from '../../utils/results-preview.utils';
 import { FORMATTED_DATA } from '../../state/actions/document';
+import { createCapitalizedPartnerCompany, createCapitalizedPartnerName, createCapitalizedUserName } from '../../utils/duplicates-table.utils';
 
 interface Props {
   duplicatesData: Array<any>;
@@ -31,48 +32,12 @@ const DuplicatesTable = ({
 }: Props) => {
   const dataGridRef: any = useRef<any>(null);
 
-    // console.log('use effect', user, partnerName, partnerCompany);
-    // let capitalizedUserName = '';
-    // let capitalizedPartnerCompany = '';
-    // let capitalizedPartnerName = '';
-    // if (user && user.firstname && user.lastname) {
-    //   const capitalizedFirstName = user.firstname[0].toUpperCase() + user.firstname.substring(1);
-    //   const capitalizedLastName = user.lastname[0].toUpperCase() + user.lastname.substring(1);
-    //   capitalizedUserName = `${capitalizedFirstName} ${capitalizedLastName}`;
-    // }
-    // if (partnerCompany) {
-    //   const words: Array<string> = partnerCompany.split(" ");
-    //   console.log('words', words)
-    //   capitalizedPartnerCompany = words.map((word: string) => { 
-    //       return word[0].toUpperCase() + word.substring(1); 
-    //   }).join(" ");
-    //   // setSanitizedPartnerCompany(capitalizedPartnerCompany);
-    // }
-    // if (partnerName) {
-    //   capitalizedPartnerName = partnerName[0].toUpperCase() + partnerName.substring(1);
-    //   // setSanitizedPartnerName(capitalizedPartnerName);
-    // }
-    // console.log('sanitzied vals', capitalizedPartnerCompany, capitalizedPartnerName, capitalizedUserName)
-
   const customizeColumns = useCallback((columns) => {
     console.log('use effect', user, partnerName, partnerCompany);
-    let capitalizedUserName = '';
-    let capitalizedPartnerCompany = '';
-    let capitalizedPartnerName = '';
-    if (user && user.firstname && user.lastname) {
-      const capitalizedFirstName = user.firstname[0].toUpperCase() + user.firstname.substring(1);
-      const capitalizedLastName = user.lastname[0].toUpperCase() + user.lastname.substring(1);
-      capitalizedUserName = `${capitalizedFirstName} ${capitalizedLastName}`;
-    }
-    if (partnerCompany) {
-      const words: Array<string> = partnerCompany.split(" ");
-      capitalizedPartnerCompany = words.map((word: string) => { 
-          return word[0].toUpperCase() + word.substring(1); 
-      }).join(" ");
-    }
-    if (partnerName) {
-      capitalizedPartnerName = partnerName[0].toUpperCase() + partnerName.substring(1);
-    }
+    /* Capitalize names that will be used in column captions */
+    let capitalizedUserName: string = createCapitalizedUserName(user);
+    let capitalizedPartnerCompany: string = createCapitalizedPartnerCompany(partnerCompany);
+    let capitalizedPartnerName: string = createCapitalizedPartnerName(partnerName);
 
     columns.push({
         caption: `My accounts${capitalizedUserName ? ` (${capitalizedUserName})` : ''}`,
@@ -191,17 +156,15 @@ const DuplicatesTable = ({
             visible={false}
           />
           {duplicatesData && duplicatesData[0] && Array.from(Object.keys(duplicatesData[0]))
-            .map((colName: string, colIndex: number) => {
-              return (
-                <Column
-                  dataField={colName}
-                  key={colIndex}
-                  caption={colName.replace('--2', '')}
-                  visible={colIndex !== 0}
-                  showInColumnChooser={colName !== 'accuracy' ? true : false}
-                />
-              );
-            })}
+            .map((colName: string, colIndex: number) => (
+              <Column
+                dataField={colName}
+                key={colIndex}
+                caption={colName.replace('--2', '')}
+                visible={colIndex !== 0}
+                showInColumnChooser={colName !== 'accuracy' ? true : false}
+              />
+            ))}
           <Paging defaultPageSize={25} />
           <Pager
             visible={true}

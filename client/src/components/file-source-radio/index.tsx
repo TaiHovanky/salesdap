@@ -15,7 +15,7 @@ interface Props {
 
 const FileSourceRadio = ({ fileSource, handleFileTypeChange, index }: Props) => {
   return (
-    <FormControl sx={{ marginBottom: '2rem' }}>
+    <FormControl>
       <FormLabel>File source?</FormLabel>
       <RadioGroup
         aria-labelledby="demo-controlled-radio-buttons-group"
@@ -23,7 +23,7 @@ const FileSourceRadio = ({ fileSource, handleFileTypeChange, index }: Props) => 
         row
         value={fileSource}
         onChange={(event: any) => handleFileTypeChange(event, index)}
-        sx={{ marginBottom: '1rem' }}
+        sx={{ marginBottom: '2rem' }}
       >
         <FormControlLabel value="upload" control={<Radio />} label="Upload a file" />
         <FormControlLabel value="pinned" control={<Radio />} label="Use your pinned file" />

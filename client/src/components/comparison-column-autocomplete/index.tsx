@@ -35,7 +35,7 @@ const ComparisonColumnAutocomplete = ({
         options={autocompleteOptions}
         onChange={handleComparisonColumnFieldChange}
         value={comparisonColumns}
-        sx={{ width: '100%', margin: '2.5rem 0 1.5rem 0' }}
+        sx={{ width: '100%', margin: '2rem 0 0' }}
         renderOption={(props, option, { selected }) => (
           <li {...props}>
             <Checkbox

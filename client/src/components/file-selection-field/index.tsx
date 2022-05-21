@@ -42,13 +42,11 @@ const FileSelectionField = ({ selectedDocument, validateAndSetFileSelection, ind
         onChange={(event: any) => validateAndSetFileSelection(event, index)}
         name="sales_file"
       />
-      <div style={{ height: '2rem', marginTop: '1rem' }}>
-        {selectedDocument && selectedDocument.name &&
-          <Typography variant="subtitle1">
-            {selectedDocument.name}
-          </Typography>
-        }
-      </div>
+      {selectedDocument && selectedDocument.name &&
+        <Typography variant="subtitle1" sx={{ marginTop: '0.5rem' }}>
+          {selectedDocument.name}
+        </Typography>
+      }
     </>
   )
 }

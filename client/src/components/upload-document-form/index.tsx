@@ -4,6 +4,7 @@ import ResultsPreviewModalContainer from '../../containers/results-preview-modal
 import { Grid, Fab } from '@mui/material';
 import { Upload, Preview } from '@mui/icons-material';
 import { DocumentState } from '../../state/reducers/document';
+import { isSubmitButtonEnabled } from '../../utils/duplicates-table.utils';
 
 interface UploadDocumentFormProps {
   document: DocumentState;
@@ -47,9 +48,16 @@ const UploadDocumentForm = ({
 
   /* Validation for whether the Submit button should be enabled or disabled. If documents
   and columns haven't been selected, the button should be disabled. */
-  // const isSubmitBtnEnabled: boolean = selectedDocument1 && selectedDocument2 &&
-  //   !!comparisonColumns1.length && !!comparisonColumns2.length &&
-  //   !comparisonColumns1Error.length && !comparisonColumns2Error.length;
+  const isSubmitBtnEnabled: boolean = isSubmitButtonEnabled(
+    fileStructure1,
+    fileStructure2,
+    comparisonColumns1,
+    comparisonColumns2,
+    unformattedData1,
+    unformattedData2,
+    selectedDocument1,
+    selectedDocument2
+  );
 
   return (
     <>
@@ -121,7 +129,7 @@ const UploadDocumentForm = ({
             variant="extended"
             color="primary"
             aria-label="add"
-            // disabled={!isSubmitBtnEnabled}
+            disabled={!isSubmitBtnEnabled}
             onClick={handleUploadAndCompare}
           >
             <Upload sx={{ mr: 1 }} />

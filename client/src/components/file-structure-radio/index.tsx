@@ -34,7 +34,7 @@ const FileStructureRadio = ({ fileStructure, handleFileStructureChange, index }:
           name="controlled-radio-buttons-group"
           value={fileStructure}
           onChange={(event: any) => handleFileStructureChange(event, index)}
-          sx={{ marginBottom: '1rem' }}
+          sx={{ marginBottom: '2rem' }}
         >
           <FormControlLabel value={FORMATTED_DATA} control={<Radio />} label="Formatted" />
           <FormControlLabel value={UNFORMATTED_DATA} control={<Radio />} label="Unformatted" />
