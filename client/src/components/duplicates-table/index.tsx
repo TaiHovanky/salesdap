@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useRef } from 'react';
 import DataGrid, { Paging, Pager, Column, ColumnChooser, Toolbar, Item } from 'devextreme-react/data-grid';
 import { Button, Grid } from '@mui/material';
 import { UserState } from '../../state/reducers/user';
@@ -32,8 +32,7 @@ const DuplicatesTable = ({
 }: Props) => {
   const dataGridRef: any = useRef<any>(null);
 
-  const customizeColumns = useCallback((columns) => {
-    console.log('use effect', user, partnerName, partnerCompany);
+  const customizeColumns = (columns: Array<any>) => {
     /* Capitalize names that will be used in column captions */
     let capitalizedUserName: string = createCapitalizedUserName(user);
     let capitalizedPartnerCompany: string = createCapitalizedPartnerCompany(partnerCompany);
@@ -71,7 +70,7 @@ const DuplicatesTable = ({
         columns[i].cssClass = 'their-accounts'
       }
     }
-  }, [comparisonColumns1, comparisonColumns2]);
+  }
 
   const calculateGroupCell = (options: any) => {
     let column = options.column;

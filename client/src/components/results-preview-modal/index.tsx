@@ -64,7 +64,7 @@ const ResultsPreviewModal = ({
     }
 
     setResultsData(updatedResultsData);
-  }, [selectedDocument1, selectedDocument2, comparisonColumns1, comparisonColumns2])
+  }, [selectedDocument1, fileStructure1, unformattedData1, selectedDocument2, fileStructure2, unformattedData2, comparisonColumns1, comparisonColumns2])
 
   return (
     <Dialog

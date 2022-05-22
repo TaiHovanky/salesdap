@@ -46,46 +46,49 @@ const UploadDocumentColumn = ({
 
   return (
     <>
-        <Typography variant='h6' sx={{ marginTop: '3rem', marginBottom: '1rem' }}>
-          {index === 0 ? 'My accounts' : 'Partner\'s accounts'}
-        </Typography>
-        <FileStructureRadioContainer
-          index={index}
-          fileStructure={fileStructure}
-        />
-        {fileStructure === FORMATTED_DATA ?
-          <>
-            {!!user.pinnedFileName && index === 0 && <FileSourceRadioContainer
-              fileSource={fileSource}
-              index={index}
-            />}
-            <div>
-              {fileSource === 'upload' ?
-                <FileSelectionFieldContainer selectedDocument={selectedDocument} index={index} /> :
-                <PinnedFileChipContainer />
-              }
-            </div>
-            <ComparisonColumnAutocompleteContainer
+      <Typography variant='h6' sx={{ marginTop: '3rem', marginBottom: '1rem' }}>
+        {index === 0 ? 'My accounts' : 'Partner\'s accounts'}
+      </Typography>
+      <FileStructureRadioContainer
+        index={index}
+        fileStructure={fileStructure}
+      />
+      {fileStructure === FORMATTED_DATA ?
+        <>
+          {!!user.pinnedFileName && index === 0 && <FileSourceRadioContainer
+            fileSource={fileSource}
+            index={index}
+          />}
+          <div>
+            {fileSource === 'upload' ?
+              <FileSelectionFieldContainer selectedDocument={selectedDocument} index={index} /> :
+              <PinnedFileChipContainer />
+            }
+          </div>
+          <ComparisonColumnAutocompleteContainer
+            selectedDocument={selectedDocument}
+            comparisonColumns={comparisonColumns}
+            comparisonColumnsError={comparisonColumnsError}
+            index={index}
+          />
+          <div style={{ width: '100%'}}>
+            <FileDataPreviewTable
               selectedDocument={selectedDocument}
+              handleColumnClick={handleColumnClick}
               comparisonColumns={comparisonColumns}
-              comparisonColumnsError={comparisonColumnsError}
               index={index}
             />
-            <div style={{ width: '100%'}}>
-              <FileDataPreviewTable
-                selectedDocument={selectedDocument}
-                handleColumnClick={handleColumnClick}
-                comparisonColumns={comparisonColumns}
-                index={index}
-              />
-              {index === 1 && <PartnerNameTextfieldContainer />}
-              {index === 1 && <PartnerCompanyTextfieldContainer />}
-            </div>
-          </>:
+          </div>
+        </>:
+        <>
           <UnformattedDataTextfieldContainer
             unformattedData={unformattedData}
             index={index}
-          />}
+          />
+        </>
+      }
+      {index === 1 && <PartnerNameTextfieldContainer />}
+      {index === 1 && <PartnerCompanyTextfieldContainer />}
     </>
   );
 }
