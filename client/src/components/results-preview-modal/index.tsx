@@ -37,7 +37,7 @@ const ResultsPreviewModal = ({
     columns = [...columns, ...updateColumnsForDocument(fileStructure2, comparisonColumns2, 2)];
 
     const updatedResultsData = [];
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 5; i++) {
       
       const row = columns.reduce((rowObj: any, col: string, index: number) => {
         if (

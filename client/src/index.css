@@ -12,23 +12,10 @@ code {
     monospace;
 }
 
-/* .dx-popup-normal {
-  position: relative !important;
-  margin-top: 13rem !important;
-} */
-
 .MuiAutocomplete-popper {
   z-index: 1540 !important;
 }
 
-.my-accounts {
-  color: blue;
-}
-
 .their-accounts {
-  color: purple;
+  background-color: #E8F4FF;
 }
-
-/* .dx-icon-column-chooser {
-  background-image: url('https://fonts.sandbox.google.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0') !important;
-} */
