@@ -80,7 +80,7 @@ const UploadDocumentColumn = ({
               <PinnedFileChipContainer />
             }
           </div>
-          <FormLabel sx={{ marginTop: '3rem' }}>Use autocomplete field or data grid to pick columns <IconButton onClick={handleOpenChooseColumnHelpModal}><Help /></IconButton></FormLabel>
+          <FormLabel sx={{ marginTop: '3.5rem' }}>Use autocomplete field or data grid to pick columns <IconButton onClick={handleOpenChooseColumnHelpModal}><Help /></IconButton></FormLabel>
           <ComparisonColumnAutocompleteContainer
             selectedDocument={selectedDocument}
             comparisonColumns={comparisonColumns}

@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   FormControlLabel,
-  FormLabel,
   FormControl,
   Radio,
   RadioGroup

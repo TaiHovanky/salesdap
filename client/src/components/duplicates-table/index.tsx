@@ -109,7 +109,7 @@ const DuplicatesTable = ({
       container
       justifyContent="center"
       alignItems="center"
-      sx={{ height: '100%', margin: '3.5rem 0 4.5rem 0', padding: '0 1rem' }}
+      sx={{ height: '100%', margin: '3rem 0 4.5rem 0', padding: '0 1rem' }}
     >
       <Grid
         item
