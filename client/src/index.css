@@ -16,6 +16,21 @@ code {
   z-index: 1540 !important;
 }
 
+.MuiDialog-paper {
+  max-width: none !important; 
+}
+
 .their-accounts {
   background-color: #E8F4FF;
+}
+
+.dx-datagrid .dx-datagrid-table .dx-header-row > td {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.dx-datagrid .dx-row > td {
+  padding: 10px;
+  font-size: 14px;
+  line-height: 20px;
 }

@@ -38,7 +38,7 @@ const FileDataPreviewTable = ({
   return (
     <>
       <Typography variant="subtitle1" sx={{ margin: '2rem 0 0'}}>
-        The grid below shows 2 example rows from the uploaded file. Columns for comparison can be selected by clicking the column headers.
+        The grid below shows 2 example rows from the uploaded file. Columns for comparison can also be selected by clicking the column headers.
       </Typography>
       <DataGrid
         id="gridContainer"
@@ -52,6 +52,7 @@ const FileDataPreviewTable = ({
           return (
             <Column
               dataField={colProps}
+              allowSorting={false}
               key={`col-${colIdx}-1`}
               headerCellRender={() => renderGridCell(colProps, handleColumnClick, comparisonColumns, index)}
             />
