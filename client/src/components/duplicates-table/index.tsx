@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import DataGrid, { Paging, Pager, Column, ColumnChooser, Toolbar, Item } from 'devextreme-react/data-grid';
 import { Button, Grid } from '@mui/material';
-import themes from 'devextreme/ui/themes';
 import { UserState } from '../../state/reducers/user';
 import { updateColumnsForDocument } from '../../utils/results-preview.utils';
 import { FORMATTED_DATA } from '../../state/actions/document';

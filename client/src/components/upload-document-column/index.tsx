@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { FormLabel, IconButton, Typography } from '@mui/material';
 import { UserState } from '../../state/reducers/user';
 import FileSelectionFieldContainer from '../../containers/file-selection-field';
 import PinnedFileChipContainer from '../../containers/pinned-file-chip';
@@ -12,6 +12,9 @@ import PartnerNameTextfieldContainer from '../../containers/partner-name-textfie
 import PartnerCompanyTextfieldContainer from '../../containers/partner-company-textfield';
 import FileDataPreviewTable from '../file-data-preview-table';
 import { SelectedDocument } from '../../state/reducers/document';
+import { Help } from '@mui/icons-material';
+import ChooseColumnHelpModal from '../choose-column-help-modal';
+import FileSourceHelpModal from '../file-source-help-modal';
 
 interface UploadDocumentColumnProps {
   selectedDocument: SelectedDocument;
@@ -38,16 +41,27 @@ const UploadDocumentColumn = ({
   fileStructure,
   unformattedData
 }: UploadDocumentColumnProps) => {
+  const [isChooseColumnHelpModalOpen, setIsChooseColumnHelpModalOpen] = useState(false);
+  const [isSelectFileSourceHelpModalOpen, setIsSelectFileSourceHelpModalOpen] = useState(false);
+
   useEffect(() => {
     if (selectedDocument.data && selectedDocument.data[0]) {
       setAllColumns(Array.from(Object.keys(selectedDocument.data[0])), index);
     }
   }, [selectedDocument.data, setAllColumns, index]);
 
+  const handleOpenFileSourceHelpModal = () => {
+    setIsSelectFileSourceHelpModalOpen(!isSelectFileSourceHelpModalOpen);
+  }
+
+  const handleOpenChooseColumnHelpModal = () => {
+    setIsChooseColumnHelpModalOpen(!isChooseColumnHelpModalOpen);
+  }
+
   return (
     <>
       <Typography variant='h6' sx={{ marginTop: '3rem', marginBottom: '1rem' }}>
-        {index === 0 ? 'My accounts' : 'Partner\'s accounts'}
+        {index === 0 ? 'MY ACCOUNTS' : 'PARTNER\'S ACCOUNTS'}
       </Typography>
       <FileStructureRadioContainer
         index={index}
@@ -55,6 +69,7 @@ const UploadDocumentColumn = ({
       />
       {fileStructure === FORMATTED_DATA ?
         <>
+          <FormLabel sx={{ marginTop: '3rem' }}>Select a file <IconButton onClick={handleOpenFileSourceHelpModal}><Help /></IconButton></FormLabel>
           {!!user.pinnedFileName && index === 0 && <FileSourceRadioContainer
             fileSource={fileSource}
             index={index}
@@ -65,6 +80,7 @@ const UploadDocumentColumn = ({
               <PinnedFileChipContainer />
             }
           </div>
+          <FormLabel sx={{ marginTop: '3rem' }}>Use autocomplete field or data grid to pick columns <IconButton onClick={handleOpenChooseColumnHelpModal}><Help /></IconButton></FormLabel>
           <ComparisonColumnAutocompleteContainer
             selectedDocument={selectedDocument}
             comparisonColumns={comparisonColumns}
@@ -89,6 +105,8 @@ const UploadDocumentColumn = ({
       }
       {index === 1 && <PartnerNameTextfieldContainer />}
       {index === 1 && <PartnerCompanyTextfieldContainer />}
+      <ChooseColumnHelpModal isHelpModalOpen={isChooseColumnHelpModalOpen} handleOpenHelpModal={handleOpenChooseColumnHelpModal} />
+      <FileSourceHelpModal isHelpModalOpen={isSelectFileSourceHelpModalOpen} handleOpenHelpModal={handleOpenFileSourceHelpModal} />
     </>
   );
 }

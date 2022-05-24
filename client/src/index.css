@@ -17,7 +17,7 @@ code {
 }
 
 .MuiDialog-paper {
-  max-width: none !important; 
+  max-width: 80% !important; 
 }
 
 .their-accounts {
