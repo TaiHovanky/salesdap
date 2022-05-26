@@ -69,7 +69,7 @@ const UploadDocumentColumn = ({
       />
       {fileStructure === FORMATTED_DATA ?
         <>
-          <FormLabel sx={{ marginTop: '3rem', marginBottom: '0.25rem' }}>Select a file <IconButton onClick={handleOpenFileSourceHelpModal}><Help /></IconButton></FormLabel>
+          <FormLabel sx={{ marginTop: '4rem', marginBottom: '0.25rem' }}>Select a file <IconButton onClick={handleOpenFileSourceHelpModal}><Help /></IconButton></FormLabel>
           {!!user.pinnedFileName && index === 0 && <FileSourceRadioContainer
             fileSource={fileSource}
             index={index}
@@ -80,7 +80,7 @@ const UploadDocumentColumn = ({
               <PinnedFileChipContainer />
             }
           </div>
-          <FormLabel sx={{ marginTop: '4rem', marginBottom: '0.25rem' }}>Use autocomplete field or data grid to pick columns <IconButton onClick={handleOpenChooseColumnHelpModal}><Help /></IconButton></FormLabel>
+          <FormLabel sx={{ marginTop: '4.5rem', marginBottom: '0.25rem' }}>Use autocomplete field or data grid to pick columns <IconButton onClick={handleOpenChooseColumnHelpModal}><Help /></IconButton></FormLabel>
           <ComparisonColumnAutocompleteContainer
             selectedDocument={selectedDocument}
             comparisonColumns={comparisonColumns}
@@ -105,7 +105,7 @@ const UploadDocumentColumn = ({
         </>
       }
       {index === 1 && <>
-        <FormLabel sx={{ marginTop: '4rem', marginBottom: '0.5rem' }}>Enter partner info</FormLabel>
+        <FormLabel sx={{ marginTop: fileStructure === FORMATTED_DATA ? '3.5rem' : '4rem', marginBottom: '0.5rem' }}>Enter partner info</FormLabel>
         <PartnerNameTextfieldContainer />
         <PartnerCompanyTextfieldContainer />
       </>}
