@@ -24,6 +24,11 @@ code {
   background-color: #E8F4FF;
 }
 
+.file-selection {
+  display: flex;
+  flex-direction: column;
+}
+
 .dx-datagrid .dx-datagrid-table .dx-header-row > td {
   padding-top: 10px;
   padding-bottom: 10px;

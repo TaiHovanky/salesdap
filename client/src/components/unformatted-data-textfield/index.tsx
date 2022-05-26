@@ -15,6 +15,8 @@ const UnformattedDataTextField = ({
       multiline
       maxRows={5}
       variant="standard"
+      sx={{ width: '100%' }}
+      helperText="Unformatted data"
       value={unformattedData}
       onChange={handleUnformattedDataChange}
     />

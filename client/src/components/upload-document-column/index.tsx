@@ -69,18 +69,18 @@ const UploadDocumentColumn = ({
       />
       {fileStructure === FORMATTED_DATA ?
         <>
-          <FormLabel sx={{ marginTop: '3rem' }}>Select a file <IconButton onClick={handleOpenFileSourceHelpModal}><Help /></IconButton></FormLabel>
+          <FormLabel sx={{ marginTop: '3rem', marginBottom: '0.25rem' }}>Select a file <IconButton onClick={handleOpenFileSourceHelpModal}><Help /></IconButton></FormLabel>
           {!!user.pinnedFileName && index === 0 && <FileSourceRadioContainer
             fileSource={fileSource}
             index={index}
           />}
-          <div>
+          <div className="file-selection">
             {fileSource === 'upload' ?
               <FileSelectionFieldContainer selectedDocument={selectedDocument} index={index} /> :
               <PinnedFileChipContainer />
             }
           </div>
-          <FormLabel sx={{ marginTop: '3.5rem' }}>Use autocomplete field or data grid to pick columns <IconButton onClick={handleOpenChooseColumnHelpModal}><Help /></IconButton></FormLabel>
+          <FormLabel sx={{ marginTop: '4rem', marginBottom: '0.25rem' }}>Use autocomplete field or data grid to pick columns <IconButton onClick={handleOpenChooseColumnHelpModal}><Help /></IconButton></FormLabel>
           <ComparisonColumnAutocompleteContainer
             selectedDocument={selectedDocument}
             comparisonColumns={comparisonColumns}
@@ -97,7 +97,7 @@ const UploadDocumentColumn = ({
           </div>
         </>:
         <>
-          <FormLabel sx={{ marginTop: '3rem', marginBottom: '1rem' }}>Copy and Paste unformatted data</FormLabel>
+          <FormLabel sx={{ marginTop: '4.5rem', marginBottom: '0.25rem' }}>Copy and Paste unformatted data</FormLabel>
           <UnformattedDataTextfieldContainer
             unformattedData={unformattedData}
             index={index}
@@ -105,7 +105,7 @@ const UploadDocumentColumn = ({
         </>
       }
       {index === 1 && <>
-        <FormLabel sx={{ marginTop: '3rem' }}>Enter partner info</FormLabel>
+        <FormLabel sx={{ marginTop: '4rem', marginBottom: '0.5rem' }}>Enter partner info</FormLabel>
         <PartnerNameTextfieldContainer />
         <PartnerCompanyTextfieldContainer />
       </>}
