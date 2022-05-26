@@ -15,7 +15,7 @@ const PartnerNameTextfield = ({
       <TextField
         helperText="Partner Sales Rep Name"
         variant="standard"
-        sx={{ width: '100%', margin: '0.5rem 0' }}
+        sx={{ width: '100%' }}
         value={partnerName}
         onChange={changePartnerName}
       />

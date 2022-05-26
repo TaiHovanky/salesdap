@@ -86,6 +86,9 @@ export const findDuplicates = (
  * @returns {string} Sanitized value
  */
 const sanitizeValue = (value: any): string => {
+  if (!value) {
+    return '';
+  }
   return typeof value === 'string' ?
     value.toLowerCase().trim() : value.toString().toLowerCase().trim();
 }
@@ -167,6 +170,7 @@ const checkForMatches = (
 ): void => {
   salesData2.forEach((row: any) => {
     const matchedIndxesForRow: Array<number> = [];
+
     if (fileStructure2 === FORMATTED_DATA) {
       comparisonColumnList.forEach((column) => {
         const cellValue: string = sanitizeValue(row[column]);
@@ -277,9 +281,17 @@ export const setupResults = (duplicatesList: Array<any>, columns: Array<string>)
 export const createResultRow = (columns: Array<string>, item: any, accuracy: number) => {
   return columns.reduce((rowObj: any, col: string) => {
     if (!!rowObj[col]) {
-      return { ...rowObj, [`${col}--2`]: item[col] || null };
+      if (typeof item !== 'string') {
+        return { ...rowObj, [`${col}--2`]: item[col] || '' };
+      } else {
+        return { ...rowObj, [`${col}--2`]: item || '' };
+      }
     }
-    return { ...rowObj, [col]: item[col] || item };
+    if (typeof item !== 'string') {
+      return { ...rowObj, [col]: item[col] || '' };
+    } else {
+      return { ...rowObj, [col]: item || '' }
+    }
   }, { accuracy });
 }
 

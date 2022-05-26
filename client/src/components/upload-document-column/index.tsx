@@ -97,14 +97,18 @@ const UploadDocumentColumn = ({
           </div>
         </>:
         <>
+          <FormLabel sx={{ marginTop: '3rem', marginBottom: '1rem' }}>Copy and Paste unformatted data</FormLabel>
           <UnformattedDataTextfieldContainer
             unformattedData={unformattedData}
             index={index}
           />
         </>
       }
-      {index === 1 && <PartnerNameTextfieldContainer />}
-      {index === 1 && <PartnerCompanyTextfieldContainer />}
+      {index === 1 && <>
+        <FormLabel sx={{ marginTop: '3rem' }}>Enter partner info</FormLabel>
+        <PartnerNameTextfieldContainer />
+        <PartnerCompanyTextfieldContainer />
+      </>}
       <ChooseColumnHelpModal isHelpModalOpen={isChooseColumnHelpModalOpen} handleOpenHelpModal={handleOpenChooseColumnHelpModal} />
       <FileSourceHelpModal isHelpModalOpen={isSelectFileSourceHelpModalOpen} handleOpenHelpModal={handleOpenFileSourceHelpModal} />
     </>

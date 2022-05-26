@@ -13,8 +13,8 @@ const UnformattedDataTextField = ({
   return (
     <TextField
       multiline
+      maxRows={5}
       variant="standard"
-      helperText="Copy and Paste unformatted data here"
       value={unformattedData}
       onChange={handleUnformattedDataChange}
     />
