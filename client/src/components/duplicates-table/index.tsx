@@ -44,7 +44,7 @@ const DuplicatesTable = ({
         cssClass: 'my-accounts'
     });
     columns.push({
-      caption: `${capitalizedPartnerCompany ? `${capitalizedPartnerCompany}` : 'Partner'}'s accounts${capitalizedPartnerName ? ` (${capitalizedPartnerName})` : ''}`,
+      caption: `${capitalizedPartnerCompany ? `${capitalizedPartnerCompany}` : 'Partner'} accounts${capitalizedPartnerName ? ` (${capitalizedPartnerName})` : ''}`,
       isBand: true,
       cssClass: 'their-accounts'
     });
@@ -102,6 +102,10 @@ const DuplicatesTable = ({
         edit view
       </Button>
     );
+  }
+
+  const renderLabel = () => {
+    return <div className="toolbar-label"><b>{duplicatesData.length} Matches</b></div>;
   }
 
   return (
@@ -172,6 +176,10 @@ const DuplicatesTable = ({
             showNavigationButtons={true}
           />
           <Toolbar>
+            <Item location="center"
+              locateInMenu="never"
+              render={renderLabel}
+            />
             <Item name="columnChooserButton" component={renderColChooserBtn}></Item>
           </Toolbar>
         </DataGrid>
