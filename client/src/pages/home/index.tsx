@@ -12,7 +12,7 @@ import DuplicatesTableContainer from '../../containers/duplicates-table';
 import EmailTemplateContainer from '../../containers/email-template';
 import StepperFooterContainer from '../../containers/stepper-footer';
 
-const steps = ['Upload document', 'View duplicates', 'Email customers'];
+const steps: Array<string> = ['Upload document', 'View results', 'Email customers'];
 
 interface Props {
   activeStep: number;

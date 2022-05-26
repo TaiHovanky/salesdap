@@ -7,5 +7,4 @@ temp/
 uploads/
 package-lock.json
 .env
-dist
 pgdata

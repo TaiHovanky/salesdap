@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import UploadDocumentColumnContainer from '../../containers/upload-document-column';
 import ResultsPreviewModalContainer from '../../containers/results-preview-modal';
-import { Grid, Fab } from '@mui/material';
+import { Grid, Fab, Divider } from '@mui/material';
 import { Upload, Preview } from '@mui/icons-material';
 import { DocumentState } from '../../state/reducers/document';
+import { isSubmitButtonEnabled } from '../../utils/duplicates-table.utils';
 
 interface UploadDocumentFormProps {
   document: DocumentState;
@@ -33,8 +34,8 @@ const UploadDocumentForm = ({
     fileSource2,
     fileStructure1,
     fileStructure2,
-    unstructuredData1,
-    unstructuredData2
+    unformattedData1,
+    unformattedData2
   } = document;
 
   const handleOpenPreview = () => {
@@ -47,9 +48,16 @@ const UploadDocumentForm = ({
 
   /* Validation for whether the Submit button should be enabled or disabled. If documents
   and columns haven't been selected, the button should be disabled. */
-  // const isSubmitBtnEnabled: boolean = selectedDocument1 && selectedDocument2 &&
-  //   !!comparisonColumns1.length && !!comparisonColumns2.length &&
-  //   !comparisonColumns1Error.length && !comparisonColumns2Error.length;
+  const isSubmitBtnEnabled: boolean = isSubmitButtonEnabled(
+    fileStructure1,
+    fileStructure2,
+    comparisonColumns1,
+    comparisonColumns2,
+    unformattedData1,
+    unformattedData2,
+    selectedDocument1,
+    selectedDocument2
+  );
 
   return (
     <>
@@ -79,8 +87,9 @@ const UploadDocumentForm = ({
             setAllColumns={setAllColumns}
             handleColumnClick={handleColumnClick}
             fileStructure={fileStructure1}
-            unstructuredData={unstructuredData1}
+            unformattedData={unformattedData1}
           />
+          <Divider sx={{ marginTop: '3rem', width: '100%', borderColor: '#1976D2' }} variant="middle" />
           <UploadDocumentColumnContainer
             comparisonColumns={comparisonColumns2}
             comparisonColumnsError={comparisonColumns2Error}
@@ -90,7 +99,7 @@ const UploadDocumentForm = ({
             setAllColumns={setAllColumns}
             handleColumnClick={handleColumnClick}
             fileStructure={fileStructure2}
-            unstructuredData={unstructuredData2}
+            unformattedData={unformattedData2}
           />
         </Grid>
       </Grid>
@@ -121,7 +130,7 @@ const UploadDocumentForm = ({
             variant="extended"
             color="primary"
             aria-label="add"
-            // disabled={!isSubmitBtnEnabled}
+            disabled={!isSubmitBtnEnabled}
             onClick={handleUploadAndCompare}
           >
             <Upload sx={{ mr: 1 }} />

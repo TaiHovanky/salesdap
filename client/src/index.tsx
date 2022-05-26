@@ -5,7 +5,7 @@ import RoutesContainer from './containers/routes';
 import { applyMiddleware, createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { rootReducer } from './state/reducers';
-import 'devextreme/dist/css/dx.light.css';
+import 'devextreme/dist/css/dx.material.blue.light.css';
 import './index.css';
 import './App.css';
 

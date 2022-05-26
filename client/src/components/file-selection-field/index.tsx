@@ -29,7 +29,7 @@ const FileSelectionField = ({ selectedDocument, validateAndSetFileSelection, ind
       <Fab
         variant="extended"
         aria-label="add"
-        sx={{ margin: '0 auto' }}
+        sx={{ margin: '0.5rem auto 0' }}
         onClick={handleFileSelectionBtnClick}
       >
         <AttachFile sx={{ mr: 1 }} />
@@ -42,13 +42,11 @@ const FileSelectionField = ({ selectedDocument, validateAndSetFileSelection, ind
         onChange={(event: any) => validateAndSetFileSelection(event, index)}
         name="sales_file"
       />
-      <div style={{ height: '2rem', marginTop: '1rem' }}>
-        {selectedDocument && selectedDocument.name &&
-          <Typography variant="subtitle1">
-            {selectedDocument.name}
-          </Typography>
-        }
-      </div>
+      {selectedDocument && selectedDocument.name &&
+        <Typography variant="subtitle1" sx={{ marginTop: '1rem' }}>
+          {selectedDocument.name}
+        </Typography>
+      }
     </>
   )
 }

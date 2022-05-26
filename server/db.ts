@@ -1,5 +1,7 @@
 import knex from 'knex';
 
+console.log('process env=====', process.env.DB_HOST, process.env.DB_USER, process.env.DB_NAME);
+
 export default knex({
   client: 'pg',
   connection: {

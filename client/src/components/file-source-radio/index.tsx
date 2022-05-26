@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   FormControlLabel,
-  FormLabel,
   FormControl,
   Radio,
   RadioGroup
@@ -15,8 +14,7 @@ interface Props {
 
 const FileSourceRadio = ({ fileSource, handleFileTypeChange, index }: Props) => {
   return (
-    <FormControl sx={{ marginBottom: '2rem' }}>
-      <FormLabel>File source?</FormLabel>
+    <FormControl>
       <RadioGroup
         aria-labelledby="demo-controlled-radio-buttons-group"
         name="controlled-radio-buttons-group"

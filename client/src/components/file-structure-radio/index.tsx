@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { Help } from '@mui/icons-material';
 import FileStructureHelpModal from '../file-structure-help-modal';
+import { FORMATTED_DATA, UNFORMATTED_DATA } from '../../state/actions/document';
 
 interface Props {
   fileStructure: string;
@@ -26,17 +27,16 @@ const FileStructureRadio = ({ fileStructure, handleFileStructureChange, index }:
   return (
     <>
       <FormControl>
-        <FormLabel>Is your data structured or unstructured? <IconButton onClick={handleOpenHelpModal}><Help /></IconButton></FormLabel>
+        <FormLabel>Is your data formatted or unformatted? <IconButton onClick={handleOpenHelpModal}><Help /></IconButton></FormLabel>
         <RadioGroup
           row
           aria-labelledby="demo-controlled-radio-buttons-group"
           name="controlled-radio-buttons-group"
           value={fileStructure}
           onChange={(event: any) => handleFileStructureChange(event, index)}
-          sx={{ marginBottom: '1rem' }}
         >
-          <FormControlLabel value="structured" control={<Radio />} label="Structured" />
-          <FormControlLabel value="unstructured" control={<Radio />} label="Unstructured" />
+          <FormControlLabel value={FORMATTED_DATA} control={<Radio />} label="Formatted" />
+          <FormControlLabel value={UNFORMATTED_DATA} control={<Radio />} label="Unformatted" />
         </RadioGroup>
       </FormControl>
       <FileStructureHelpModal isHelpModalOpen={isHelpModalOpen} handleOpenHelpModal={handleOpenHelpModal} />

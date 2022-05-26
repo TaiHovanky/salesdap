@@ -8,13 +8,13 @@ import {
 } from '@mui/material';
 import DataGrid, { Column } from 'devextreme-react/data-grid';
 
-const structuredData = [
+const formattedData = [
   { 'Account Name': 'Pepsi Co.', Website: 'pepsi.com', 'Account Manager': 'Thomas Henry', DUNS: 123453 },
   { 'Account Name': 'Tropicana', Website: 'tropicana.com', 'Account Manager': 'Jennifer Shaw', DUNS: 345234 },
   { 'Account Name': 'Gatorade', Website: 'gatorade.com', 'Account Manager': 'Kim Yi', DUNS: 645345 }
 ];
 
-const unstructuredData = [
+const unformattedData = [
   'Pepsi Co.',
   'Tropicana',
   'Gatorade'
@@ -32,24 +32,24 @@ const FileStructureHelpModal = ({ isHelpModalOpen, handleOpenHelpModal }: Props)
         open={isHelpModalOpen}
         onClose={handleOpenHelpModal}
       >
-        <DialogTitle>Structured vs. Unstructured Data</DialogTitle>
+        <DialogTitle>Formatted vs. Unformatted Data</DialogTitle>
         <DialogContent dividers={true}>
-        <DialogContentText>Structured data example:</DialogContentText>
+        <DialogContentText>Formatted data example:</DialogContentText>
         <DataGrid
-          id="structuredGridContainer"
-          dataSource={structuredData}
+          id="formattedGridContainer"
+          dataSource={formattedData}
           showColumnLines={true}
           columnAutoWidth={true}
           showBorders={true}
           width="100%"
           height="100%"
         />
-        <Typography variant="body2">Note that "structured" here is referring to the presence of defined column
+        <Typography variant="body2">Note that "formatted" here is referring to the presence of defined column
         names.</Typography>
-        <DialogContentText sx={{ marginTop: '1.5rem' }}>Unstructured data example:</DialogContentText>
+        <DialogContentText sx={{ marginTop: '1.5rem' }}>Unformatted data example:</DialogContentText>
         <DataGrid 
-          id="unstructuredGridContainer"
-          dataSource={unstructuredData}
+          id="unformattedGridContainer"
+          dataSource={unformattedData}
           showColumnLines={true}
           columnAutoWidth={true}
           showBorders={true}
@@ -58,8 +58,8 @@ const FileStructureHelpModal = ({ isHelpModalOpen, handleOpenHelpModal }: Props)
         >
           <Column caption="" calculateCellValue={(data: any) => data} />
         </DataGrid>
-        <Typography variant="body2">Note that "unstructured" here is referring to the lack of defined column
-        names. If you're uploading an unstructured file, only copy/paste 1 column that you think would lead to the most
+        <Typography variant="body2">Note that "unformatted" here is referring to the lack of defined column
+        names. If you're uploading an unformatted file, only copy/paste 1 column that you think would lead to the most
         precise match when mapped to a column from the other file.</Typography>
         </DialogContent>
       </Dialog>

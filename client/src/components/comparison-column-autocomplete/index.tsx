@@ -1,7 +1,6 @@
 import React from 'react';
 import { TextField, Autocomplete, Typography, Checkbox } from '@mui/material';
 import { CheckBoxOutlineBlank, CheckBox } from '@mui/icons-material';
-import { COMPARISON_COLUMNS_LIMIT } from '../../state/reducers/document';
 
 interface Props {
   selectedDocument: any;
@@ -21,7 +20,6 @@ const ComparisonColumnAutocomplete = ({
   comparisonColumnsError,
   handleComparisonColumnsBlur,
   handleComparisonColumnFieldChange,
-  index
 }: Props) => {
   const autocompleteOptions: Array<string> = selectedDocument && selectedDocument.data && selectedDocument.data[0] ?
     Array.from(Object.keys(selectedDocument.data[0])) :
@@ -35,7 +33,7 @@ const ComparisonColumnAutocomplete = ({
         options={autocompleteOptions}
         onChange={handleComparisonColumnFieldChange}
         value={comparisonColumns}
-        sx={{ width: '100%', margin: '2.5rem 0 1.5rem 0' }}
+        sx={{ width: '100%' }}
         renderOption={(props, option, { selected }) => (
           <li {...props}>
             <Checkbox
@@ -53,9 +51,6 @@ const ComparisonColumnAutocomplete = ({
           required={true}
           error={!!comparisonColumnsError.length}
           onBlur={handleComparisonColumnsBlur}
-          helperText={`Columns from file ${index === 0 ? 'A' : 'B'} that will be compared with columns
-          from file ${index === 0 ? 'B' : 'A'} to determine match. Limit: ${COMPARISON_COLUMNS_LIMIT} columns. Hint: the more unique a column's value is
-          to a company, the better (DUNS number, company website, etc.).`}
         />)}
       />
       {!!comparisonColumnsError.length && <Typography variant="caption" sx={{ color: '#d32f2f' }}>{comparisonColumnsError.join('\n')}</Typography>}

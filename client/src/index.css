@@ -12,23 +12,45 @@ code {
     monospace;
 }
 
-/* .dx-popup-normal {
-  position: relative !important;
-  margin-top: 13rem !important;
-} */
-
 .MuiAutocomplete-popper {
   z-index: 1540 !important;
 }
 
-.my-accounts {
-  color: blue;
+.MuiDialog-paper {
+  max-width: 80% !important;
 }
 
 .their-accounts {
-  color: purple;
+  background-color: #E8F4FF;
 }
 
-/* .dx-icon-column-chooser {
-  background-image: url('https://fonts.sandbox.google.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0') !important;
+.file-selection {
+  display: flex;
+  flex-direction: column;
+}
+
+.dx-datagrid .dx-datagrid-table .dx-header-row > td {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.dx-datagrid .dx-row > td {
+  padding: 10px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* .dx-scrollable::-webkit-scrollbar {
+  width :36px;
+} */
+
+/* .dx-scrollable-content::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 24px;
+}
+
+.dx-scrollable-content::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: rgba(0,0,0,.5);
+  /* -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
 } */
