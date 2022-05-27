@@ -101,9 +101,9 @@ const sanitizeValue = (value: any): string => {
  * @param {any} row The whole row (usually representing a sales account)
  * @param {number} rowIndex Index of the row in the spreadsheet
  */
-const lookUpPropertyAndUpdateValueHash = (cellValue: string, valueHash: any, row: any, rowIndex: number) => {
+const lookUpPropertyAndUpdateValueHash = (cellValue: string, valueHash: any, rowIndex: number) => {
   if (cellValue && !valueHash.hasOwnProperty(cellValue)) {
-    valueHash[cellValue] = { row, rowIndex };
+    valueHash[cellValue] = rowIndex;
   }
 }
 
@@ -125,11 +125,11 @@ const addCellValueToHash = (
     if (fileStructure1 === FORMATTED_DATA) {
       comparisonColumnList.forEach((column) => {
         const cellValue: string = sanitizeValue(row[column]);
-        lookUpPropertyAndUpdateValueHash(cellValue, valueHash, row, rowIndex);
+        lookUpPropertyAndUpdateValueHash(cellValue, valueHash, rowIndex);
       });
     } else {
       const cellValue: string = sanitizeValue(row);
-      lookUpPropertyAndUpdateValueHash(cellValue, valueHash, row, rowIndex);
+      lookUpPropertyAndUpdateValueHash(cellValue, valueHash, rowIndex);
     }
   });
 }
@@ -139,7 +139,7 @@ const updateMatchedIndexesForRow = (cellValue: string, valueHash: any, matchedIn
     /* Add the rowIndex for the match to the list of matched indexes. Later, we'll
     use that list to determine how many columns of that row in file 2 match how many columns
     in file 1 */
-    matchedIndxesForRow.push(valueHash[cellValue].rowIndex);
+    matchedIndxesForRow.push(valueHash[cellValue]);
   }
 }
 
