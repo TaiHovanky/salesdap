@@ -61,9 +61,9 @@ const sanitizeValue = (value) => {
     return typeof value === 'string' ?
         value.toLowerCase().trim() : value.toString().toLowerCase().trim();
 };
-const lookUpPropertyAndUpdateValueHash = (cellValue, valueHash, row, rowIndex) => {
+const lookUpPropertyAndUpdateValueHash = (cellValue, valueHash, rowIndex) => {
     if (cellValue && !valueHash.hasOwnProperty(cellValue)) {
-        valueHash[cellValue] = { row, rowIndex };
+        valueHash[cellValue] = rowIndex;
     }
 };
 const addCellValueToHash = (salesData, comparisonColumnList, valueHash, fileStructure1) => {
@@ -71,18 +71,18 @@ const addCellValueToHash = (salesData, comparisonColumnList, valueHash, fileStru
         if (fileStructure1 === exports.FORMATTED_DATA) {
             comparisonColumnList.forEach((column) => {
                 const cellValue = sanitizeValue(row[column]);
-                lookUpPropertyAndUpdateValueHash(cellValue, valueHash, row, rowIndex);
+                lookUpPropertyAndUpdateValueHash(cellValue, valueHash, rowIndex);
             });
         }
         else {
             const cellValue = sanitizeValue(row);
-            lookUpPropertyAndUpdateValueHash(cellValue, valueHash, row, rowIndex);
+            lookUpPropertyAndUpdateValueHash(cellValue, valueHash, rowIndex);
         }
     });
 };
 const updateMatchedIndexesForRow = (cellValue, valueHash, matchedIndxesForRow) => {
     if (cellValue && valueHash[cellValue]) {
-        matchedIndxesForRow.push(valueHash[cellValue].rowIndex);
+        matchedIndxesForRow.push(valueHash[cellValue]);
     }
 };
 const checkForMatches = (salesData1, salesData2, comparisonColumnList, valueHash, resultsList, fileStructure1, fileStructure2) => {
