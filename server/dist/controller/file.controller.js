@@ -17,6 +17,8 @@ const uuid_1 = require("uuid");
 const upload_util_1 = require("../utils/upload.util");
 const db_1 = __importDefault(require("../db"));
 const uploadAndCompareFiles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const startTs = new Date().getTime();
+    console.log('------------------start time file compare----------', startTs);
     const { comparisonColumns1, comparisonColumns2, fileStructure1, fileStructure2, unformattedData1, unformattedData2 } = req.body;
     const { sales_file1, sales_file2 } = req.files;
     let salesData1 = [];
@@ -27,6 +29,8 @@ const uploadAndCompareFiles = (req, res) => __awaiter(void 0, void 0, void 0, fu
         const duplicatesList = (0, upload_util_1.findDuplicates)(salesData1, salesData2, comparisonColumns1.split(','), comparisonColumns2.split(','), fileStructure1, fileStructure2);
         const columns = (0, upload_util_1.setupResultColumns)(comparisonColumns1.split(','), comparisonColumns2.split(','), fileStructure1, fileStructure2);
         const result = (0, upload_util_1.setupResults)(duplicatesList, columns);
+        const finishTs = new Date().getTime();
+        console.log('------------------------finish ts:', finishTs, '-----diff-----', finishTs - startTs);
         res.status(200).json(result);
     }
     catch (err) {

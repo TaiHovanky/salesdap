@@ -10,6 +10,8 @@ import {
 import db from '../db';
 
 export const uploadAndCompareFiles = async (req: any, res: any) => {
+  const startTs = new Date().getTime();
+  console.log('------------------start time file compare----------', startTs);
   const {
     comparisonColumns1,
     comparisonColumns2,
@@ -48,6 +50,8 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
 
     /* Create array of objects (rows a.k.a duplicates) that only contain the columns that the user wants to see */
     const result: Array<any> = setupResults(duplicatesList, columns);
+    const finishTs = new Date().getTime();
+    console.log('------------------------finish ts:', finishTs, '-----diff-----', finishTs - startTs);
     res.status(200).json(result);
   } catch(err: any) {
     res.status(400).send();
