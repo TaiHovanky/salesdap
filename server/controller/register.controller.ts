@@ -21,7 +21,7 @@ export const registerUser = async (req: any, res: any) => {
   };
   db('users').insert(newUser)
     .then(() => {
-      // req.session.user = newUser;
+      req.session.user = newUser;
       return res.status(200).json({ email, firstname, lastname, company });
     })
     .catch((err: any) => console.log('register err', err));

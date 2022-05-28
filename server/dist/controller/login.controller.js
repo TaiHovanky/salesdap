@@ -33,6 +33,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (users && users[0]) {
             const isPasswordValid = yield (0, bcryptjs_1.compare)(password, users[0].password);
             if (isPasswordValid) {
+                req.session.user = users[0];
                 const _a = users[0], { password, userid } = _a, user = __rest(_a, ["password", "userid"]);
                 return res.status(200).json(user);
             }
