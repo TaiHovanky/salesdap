@@ -68,7 +68,7 @@ const PasswordReset = ({ onSubmit }: Props) => {
             alignItems="center"
           >
             <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Reset your password</Typography>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}  style={{ width: '100%' }}>
               <TextField
                 required
                 id="standard-basic"

@@ -57,7 +57,7 @@ const ForgotPassword = ({ onSubmit }: Props) => {
             <Typography variant="subtitle1" sx={{ marginBottom: '1.5rem', width: '80%' }}>
               Enter your email, and then you'll receive a verification code at that address. Use that code to reset your password.
             </Typography>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}  style={{ width: '100%' }}>
               <TextField
                 required
                 id="standard-basic"

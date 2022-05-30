@@ -70,7 +70,7 @@ const Login = ({ onSubmit }: Props) => {
             alignItems="center"
           >
             <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Login</Typography>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} style={{ width: '100%' }}>
               <TextField
                 required
                 id="standard-basic"
@@ -107,7 +107,7 @@ const Login = ({ onSubmit }: Props) => {
                 <Grid
                   item
                   container
-                  xs={4}
+                  xs={6}
                   p={0}
                   direction="column"
                   justifyContent="center"

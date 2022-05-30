@@ -55,7 +55,7 @@ const EmailCapture = ({ onClose, onSubmit }: Props) => {
       </AppBar>
       <Grid
         container
-        spacing={3}
+        spacing={2}
         justifyContent="center"
         alignItems="center"
         sx={{ height: '100%', width: '100%' }}
