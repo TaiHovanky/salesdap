@@ -37,26 +37,24 @@ const ForgotPassword = ({ onSubmit }: Props) => {
 
   return (
     <>
-      <Box sx={{ width: '100%', height: '80vh', marginTop: '3.5vh' }}>
+      <Box sx={{ width: '100%', marginTop: '6.5vh' }}>
         <Grid
           container
           spacing={2}
           justifyContent="center"
-          alignItems="center"
           sx={{ height: '100%' }}
         >
           <Grid
             item
             container
-            xs={4}
+            xs={6}
             p={0}
             sx={{ height: '100%' }}
             direction="column"
-            justifyContent="center"
             alignItems="center"
           >
-            <Typography variant="h5" sx={{ marginBottom: '0.5rem' }}>Forgot my password</Typography>
-            <Typography variant="subtitle1" sx={{ marginBottom: '2rem' }}>
+            <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Forgot my password</Typography>
+            <Typography variant="subtitle1" sx={{ marginBottom: '1.5rem', width: '80%' }}>
               Enter your email, and then you'll receive a verification code at that address. Use that code to reset your password.
             </Typography>
             <form onSubmit={handleSubmit}>
@@ -66,7 +64,7 @@ const ForgotPassword = ({ onSubmit }: Props) => {
                 label="Email"
                 name="email"
                 variant="standard"
-                sx={{ width: '100%', marginBottom: '1.5rem' }}
+                sx={{ width: '100%' }}
                 error={touched.email && !!errors.email}
                 helperText={errors.email ? errors.email : null}
                 onBlur={handleBlur}
@@ -91,7 +89,7 @@ const ForgotPassword = ({ onSubmit }: Props) => {
                   <Fab
                     variant="extended"
                     aria-label="add"
-                    sx={{ marginTop: '2.5rem', marginLeft: 'auto', marginRight: 'auto' }}
+                    sx={{ margin: '2.5rem auto 3rem auto' }}
                     type="submit"
                     disabled={isSubmitButtonDisabled}
                   >

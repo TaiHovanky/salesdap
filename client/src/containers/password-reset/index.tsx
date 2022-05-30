@@ -14,14 +14,14 @@ interface Props {
 
 const PasswordResetContainer = ({ setIsLoading, showError, hideError }: Props) => {
   const history = useHistory();
-  const params: any = useParams();
+  // const params: any = useParams();
 
-  useEffect(() => {
-    axios.post('/api/v1/resetpassword', { token: params.token })
-      .catch((err) => {
-        history.push('/');
-      });
-  }, [params, history]);
+  // useEffect(() => {
+  //   axios.post('/api/v1/resetpassword', { token: params.token })
+  //     .catch((err) => {
+  //       history.push('/');
+  //     });
+  // }, [params, history]);
 
   const onSubmit = (values: any) => {
     const formData = new FormData();

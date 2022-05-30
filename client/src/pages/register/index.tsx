@@ -58,22 +58,20 @@ const Register = ({ onSubmit }: Props) => {
 
   return (
     <>
-      <Box sx={{ width: '100%', height: '85vh', marginTop: '3.5vh' }}>
+      <Box sx={{ width: '100%', marginTop: '6.5vh' }}>
         <Grid
           container
           spacing={2}
           justifyContent="center"
-          alignItems="center"
           sx={{ height: '100%' }}
         >
           <Grid
             item
             container
-            xs={4}
+            xs={6}
             p={0}
             sx={{ height: '100%' }}
             direction="column"
-            justifyContent="center"
             alignItems="center"
           >
             <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Register</Typography>
@@ -86,7 +84,7 @@ const Register = ({ onSubmit }: Props) => {
                 variant="standard"
                 sx={{ width: '100%', marginBottom: '1.5rem' }}
                 error={touched.email && !!errors.email}
-                helperText={errors.email ? errors.email : null}
+                helperText={touched.email && !!errors.email ? errors.email : null}
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.email}
@@ -100,7 +98,7 @@ const Register = ({ onSubmit }: Props) => {
                 type="password"
                 sx={{ width: '100%', marginBottom: '1.5rem' }}
                 error={touched.password && !!errors.password}
-                helperText={errors.password ? errors.password : null}
+                helperText={touched.password && !!errors.password ? errors.password : null}
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.password}
@@ -114,7 +112,7 @@ const Register = ({ onSubmit }: Props) => {
                 type="password"
                 sx={{ width: '100%', marginBottom: '1.5rem' }}
                 error={touched.confirmPassword && !!errors.confirmPassword}
-                helperText={errors.confirmPassword ? errors.confirmPassword : null}
+                helperText={touched.confirmPassword && !!errors.confirmPassword ? errors.confirmPassword : null}
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.confirmPassword}
@@ -176,8 +174,8 @@ const Register = ({ onSubmit }: Props) => {
                 </Grid>
               </Grid>
             </form>
-            <Typography sx={{ marginTop: '2rem' }}>
-              Already have an account? <Link to="/">Sign in</Link>
+            <Typography sx={{ marginTop: '2rem', marginBottom: '3rem' }}>
+              Already have an account? <Link className="auth-page-link" to="/">Sign in</Link>
             </Typography>
           </Grid>
         </Grid>

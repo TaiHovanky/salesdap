@@ -30,6 +30,8 @@ const Login = ({ onSubmit }: Props) => {
   
     if (!values.email) {
       errors.email = 'Required';
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+      errors.email = 'Invalid email address';
     }
   
     return errors;
@@ -51,22 +53,20 @@ const Login = ({ onSubmit }: Props) => {
 
   return (
     <>
-      <Box sx={{ width: '100%', height: '80vh', marginTop: '3.5vh' }}>
+      <Box sx={{ width: '100%', marginTop: '6.5vh' }}>
         <Grid
           container
           spacing={2}
           justifyContent="center"
-          alignItems="center"
           sx={{ height: '100%' }}
         >
           <Grid
             item
             container
-            xs={4}
+            xs={6}
             p={0}
             sx={{ height: '100%' }}
             direction="column"
-            justifyContent="center"
             alignItems="center"
           >
             <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Login</Typography>
@@ -79,7 +79,7 @@ const Login = ({ onSubmit }: Props) => {
                 variant="standard"
                 sx={{ width: '100%', marginBottom: '1.5rem' }}
                 error={touched.email && !!errors.email}
-                helperText={errors.email ? errors.email : null}
+                helperText={touched.email && !!errors.email ? errors.email : null}
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.email}
@@ -91,9 +91,9 @@ const Login = ({ onSubmit }: Props) => {
                 name="password"
                 variant="standard"
                 type="password"
-                sx={{ width: '100%', marginBottom: '1.5rem' }}
+                sx={{ width: '100%' }}
                 error={touched.password && !!errors.password}
-                helperText={errors.password ? errors.password : null}
+                helperText={touched.password && !!errors.password ? errors.password : null}
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.password}
@@ -126,10 +126,10 @@ const Login = ({ onSubmit }: Props) => {
               </Grid>
             </form>
             <Typography sx={{ marginTop: '2rem' }}>
-              Don't have an account?  <Link to="/register">Sign up now!</Link>
+              Don't have an account?  <Link className="auth-page-link" to="/register">Sign up now!</Link>
             </Typography>
-            <Typography sx={{ marginTop: '0.5rem' }}>
-              Forgot your password?  <Link to="/forgot-password">Reset your password</Link>
+            <Typography sx={{ marginTop: '0.5rem', marginBottom: '3rem' }}>
+              Forgot your password?  <Link className="auth-page-link" to="/forgot-password">Reset your password</Link>
             </Typography>
           </Grid>
         </Grid>

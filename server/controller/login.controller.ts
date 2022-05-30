@@ -9,7 +9,7 @@ export const loginUser = async (req: any, res: any) => {
     if (users && users[0]) {
       const isPasswordValid: boolean = await compare(password, users[0].password);
       if (isPasswordValid) {
-        req.session.user = users[0];
+        // req.session.user = users[0];
         const { password, userid, ...user } = users[0];
         return res.status(200).json(user);
       }

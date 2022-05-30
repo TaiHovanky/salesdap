@@ -40,17 +40,12 @@ code {
   line-height: 20px;
 }
 
-/* .dx-scrollable::-webkit-scrollbar {
-  width :36px;
-} */
-
-/* .dx-scrollable-content::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 24px;
+.auth-page-link {
+  color: #1976D2;
 }
 
-.dx-scrollable-content::-webkit-scrollbar-thumb {
-  border-radius: 5px;
-  background-color: rgba(0,0,0,.5);
-  /* -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
-} */
+.dx-pager .dx-page-sizes .dx-selection, .dx-pager .dx-pages .dx-selection {
+  font-weight: 500;
+  background-color: #1976D2;
+  color: #fff;
+}

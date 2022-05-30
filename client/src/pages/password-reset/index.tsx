@@ -51,22 +51,20 @@ const PasswordReset = ({ onSubmit }: Props) => {
 
   return (
     <>
-      <Box sx={{ width: '100%', height: '80vh', marginTop: '3.5vh' }}>
+      <Box sx={{ width: '100%', marginTop: '6.5vh' }}>
         <Grid
           container
           spacing={2}
           justifyContent="center"
-          alignItems="center"
           sx={{ height: '100%' }}
         >
           <Grid
             item
             container
-            xs={4}
+            xs={6}
             p={0}
             sx={{ height: '100%' }}
             direction="column"
-            justifyContent="center"
             alignItems="center"
           >
             <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Reset your password</Typography>
@@ -79,7 +77,7 @@ const PasswordReset = ({ onSubmit }: Props) => {
                 variant="standard"
                 sx={{ width: '100%', marginBottom: '1.5rem' }}
                 error={touched.email && !!errors.email}
-                helperText={errors.email ? errors.email : null}
+                helperText={touched.email && !!errors.email ? errors.email : null}
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.email}
@@ -93,7 +91,7 @@ const PasswordReset = ({ onSubmit }: Props) => {
                 type="password"
                 sx={{ width: '100%', marginBottom: '1.5rem' }}
                 error={touched.password && !!errors.password}
-                helperText={errors.password ? errors.password : null}
+                helperText={touched.password && !!errors.password ? errors.password : null}
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.password}
@@ -105,9 +103,9 @@ const PasswordReset = ({ onSubmit }: Props) => {
                 name="confirmPassword"
                 variant="standard"
                 type="password"
-                sx={{ width: '100%', marginBottom: '1.5rem' }}
+                sx={{ width: '100%' }}
                 error={touched.confirmPassword && !!errors.confirmPassword}
-                helperText={errors.confirmPassword ? errors.confirmPassword : null}
+                helperText={touched.confirmPassword && !!errors.confirmPassword ? errors.confirmPassword : null}
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.confirmPassword}
@@ -130,7 +128,7 @@ const PasswordReset = ({ onSubmit }: Props) => {
                   <Fab
                     variant="extended"
                     aria-label="add"
-                    sx={{ marginTop: '2.5rem', marginLeft: 'auto', marginRight: 'auto' }}
+                    sx={{ margin: '2.5rem auto 3rem auto' }}
                     type="submit"
                     disabled={isSubmitButtonDisabled}
                   >
