@@ -4,17 +4,10 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-// const Redis = require('ioredis');
-// const session = require('express-session');
 import router from './routes';
+// import { redisSession } from './middleware/session';
 
 (async () => {
-  // let RedisStore = require('connect-redis')(session)
-  // let redisClient = new Redis({
-  //   host: process.env.REDIS_URL,
-  //   port: 6379
-  // });
-
   const app = express();
   app.use(cors({
     /* Use IP address of droplet with the exposed port that React app container runs on.
@@ -25,20 +18,9 @@ import router from './routes';
   app.use(bodyParser());
   app.use(cookieParser());
 
-  // app.use(
-  //   session({
-  //     store: new RedisStore({ client: redisClient }),
-  //     saveUninitialized: false,
-  //     secret: process.env.SESSION_SECRET,
-  //     resave: false,
-  //     cookie: {
-  //       secure: false,
-  //       sameSite: 'lax',
-  //       httpOnly: true,
-  //       maxAge: 600000
-  //     }
-  //   })
-  // );
+  // app.set('trust proxy', 1);
+
+  // app.use(redisSession);
 
   app.use('/', router);
 

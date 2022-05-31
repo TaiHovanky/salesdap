@@ -7,7 +7,7 @@ import {
   setupResults,
   createSalesDataArray
 } from '../utils/upload.util';
-import db from '../db';
+import db from '../db/postgres';
 
 export const uploadAndCompareFiles = async (req: any, res: any) => {
   const startTs = new Date().getTime();

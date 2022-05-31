@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import db from '../db';
+import db from '../db/postgres';
 
 export const updatePassword = async (req: any, res: any) => {
   const { email, password } = req.body;

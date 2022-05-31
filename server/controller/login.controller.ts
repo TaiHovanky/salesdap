@@ -1,5 +1,5 @@
 import { compare } from 'bcryptjs';
-import db from '../db';
+import db from '../db/postgres';
 
 export const loginUser = async (req: any, res: any) => {
   const { email, password } = req.body;
@@ -17,7 +17,7 @@ export const loginUser = async (req: any, res: any) => {
     }
     return res.status(401).send();
   } catch (err: any) {
-    console.log('login err', err);
+    console.log('login err', err); // TO DO: need to replace this with winston
     return res.status(401).send();
   }
 }

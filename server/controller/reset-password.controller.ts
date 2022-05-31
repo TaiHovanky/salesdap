@@ -1,4 +1,4 @@
-import db from '../db';
+import db from '../db/postgres';
 
 export const verifyResetPasswordToken = async (req: any, res: any) => {
   const token = req.body.token;

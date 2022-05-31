@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcryptjs';
-import db from '../db';
+import db from '../db/postgres';
 
 export const registerUser = async (req: any, res: any) => {
   const {

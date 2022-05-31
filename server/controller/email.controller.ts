@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import db from '../db';
+import db from '../db/postgres';
 
 export const saveEmail = (req: any, res: any) => {
   const { email } = req.body;
