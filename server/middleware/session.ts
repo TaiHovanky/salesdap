@@ -8,11 +8,12 @@ export const redisSession = session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   name: 'sessionId',
-  secure: false, // set to True for prod
+  // secure: false, // set to True for prod
   cookie: {
-    secure: false,
-    sameSite: 'lax',
-    httpOnly: true, // prevents client side JS from reading cookie
-    maxAge: 1000 * 60 * 30 // session max age in seconds
+    secure: true,
+    sameSite: 'none',
+    httpOnly: false, // prevents client side JS from reading cookie
+    maxAge: 1000 * 60 * 30, // session max age in seconds
+    path: '/'
   }
 });

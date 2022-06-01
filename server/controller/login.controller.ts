@@ -9,9 +9,13 @@ export const loginUser = async (req: any, res: any) => {
     if (users && users[0]) {
       const isPasswordValid: boolean = await compare(password, users[0].password);
       if (isPasswordValid) {
-        // req.session.user = users[0];
+        req.session.user = users[0];
+        // req.session.save();
+        console.log('req session user after login', req.session, req.sessionID);
         const { password, userid, ...user } = users[0];
-        return res.status(200).json(user);
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+        res.cookie = req.session.cookie;
+        return res.status(200).send(user);
       }
       return res.status(401).send();
     }
