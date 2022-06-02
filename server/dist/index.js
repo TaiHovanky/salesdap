@@ -23,7 +23,7 @@ const session_1 = require("./middleware/session");
 (() => __awaiter(void 0, void 0, void 0, function* () {
     const app = (0, express_1.default)();
     app.use((0, cors_1.default)({
-        origin: process.env.APP_URL || 'http://54.85.114.194',
+        origin: 'https://salesdap.com',
         credentials: true,
         methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
     }));

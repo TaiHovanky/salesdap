@@ -10,8 +10,8 @@ export const redisSession = session({
   name: 'sessionId',
   // secure: false, // set to True for prod
   cookie: {
-    secure: false,
     sameSite: 'none',
+    secure: true,
     httpOnly: false, // prevents client side JS from reading cookie
     maxAge: 1000 * 60 * 30, // session max age in seconds
     path: '/'

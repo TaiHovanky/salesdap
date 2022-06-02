@@ -11,8 +11,8 @@ exports.redisSession = session({
     resave: false,
     name: 'sessionId',
     cookie: {
-        secure: false,
         sameSite: 'none',
+        secure: true,
         httpOnly: false,
         maxAge: 1000 * 60 * 30,
         path: '/'

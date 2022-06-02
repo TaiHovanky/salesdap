@@ -37,7 +37,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 req.session.save();
                 console.log('req session user after login', req.session, req.sessionID);
                 const _a = users[0], { password, userid } = _a, user = __rest(_a, ["password", "userid"]);
-                res.header('Access-Control-Allow-Origin', "http://54.85.114.194");
+                res.header('Access-Control-Allow-Origin', "https://salesdap.com");
                 res.header('Access-Control-Allow-Credentials', true);
                 res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
                 return res.status(200)

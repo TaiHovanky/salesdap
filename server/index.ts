@@ -14,7 +14,7 @@ import { redisSession } from './middleware/session';
     /* Use IP address of droplet with the exposed port that React app container runs on.
     Note that port isn't needed because Web container exposes port 80 */
     // origin: 'http://localhost:3000',
-    origin: process.env.APP_URL || 'http://54.85.114.194',
+    origin: 'https://salesdap.com',
     credentials: true,
     methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
   }));
