@@ -88,7 +88,7 @@ export const viewPinnedFile = (req: any, res: any) => {
   const { pinnedFileId } = req.query;
   readPinnedFile(pinnedFileId)
     .then((data: any) => {
-      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+      // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
       return res.status(200).json(data);
     })
     .catch((err: any) => {
