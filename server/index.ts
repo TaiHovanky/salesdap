@@ -13,7 +13,8 @@ import { redisSession } from './middleware/session';
   app.use(cors({
     /* Use IP address of droplet with the exposed port that React app container runs on.
     Note that port isn't needed because Web container exposes port 80 */
-    origin: 'http://localhost:3000',
+    // origin: 'http://localhost:3000',
+    origin: 'http://54.85.114.194',
     credentials: true,
     methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
   }));

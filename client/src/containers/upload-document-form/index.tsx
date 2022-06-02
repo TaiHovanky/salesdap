@@ -86,7 +86,7 @@ const UploadDocumentFormContainer = ({
     formData.append('unformattedData1', unformattedData1);
     formData.append('unformattedData2', unformattedData2);
 
-    axios.post('http://localhost:3001/api/v1/uploadfile', formData, { withCredentials: true })
+    axios.post('/api/v1/uploadfile', formData, { withCredentials: true })
       .then((res: any) => {
         hideError();
         uploadDocumentSuccess(res.data);
