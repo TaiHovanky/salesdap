@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerUser = void 0;
 const uuid_1 = require("uuid");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const db_1 = __importDefault(require("../db"));
+const postgres_1 = __importDefault(require("../db/postgres"));
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password, firstname, lastname, company } = req.body;
     const hashedPassword = yield bcryptjs_1.default.hash(password, 12);
@@ -27,9 +27,9 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         lastname,
         company
     };
-    (0, db_1.default)('users').insert(newUser)
+    (0, postgres_1.default)('users').insert(newUser)
         .then(() => {
-        req.session.user = newUser;
+        req.session.user = newUser.userid;
         return res.status(200).json({ email, firstname, lastname, company });
     })
         .catch((err) => console.log('register err', err));

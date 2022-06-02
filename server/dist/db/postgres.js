@@ -15,4 +15,4 @@ exports.default = (0, knex_1.default)({
         database: process.env.DB_NAME
     }
 });
-//# sourceMappingURL=db.js.map
+//# sourceMappingURL=postgres.js.map

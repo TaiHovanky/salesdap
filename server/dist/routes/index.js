@@ -24,9 +24,6 @@ router.post('/api/v1/login', upload.none(), (req, res) => {
 router.post('/api/v1/logout', (req, res) => {
     (0, logout_controller_1.logoutUser)(req, res);
 });
-router.post('/api/v1/uploadfile', upload.fields([{ name: 'sales_file1', maxCount: 1 }, { name: 'sales_file2', maxCount: 1 }]), (req, res) => {
-    (0, file_controller_1.uploadAndCompareFiles)(req, res);
-});
 router.post('/api/v1/email', upload.none(), (req, res) => {
     (0, email_controller_1.saveEmail)(req, res);
 });
@@ -39,10 +36,18 @@ router.post('/api/v1/resetpassword', (req, res) => {
 router.post('/api/v1/updatepassword', upload.none(), (req, res) => {
     (0, update_password_controller_1.updatePassword)(req, res);
 });
+router.post('/api/v1/uploadfile', upload.fields([{ name: 'sales_file1', maxCount: 1 }, { name: 'sales_file2', maxCount: 1 }]), (req, res) => {
+    (0, file_controller_1.uploadAndCompareFiles)(req, res);
+});
 router.post('/api/v1/pinfile', upload.fields([{ name: 'sales_file', maxCount: 1 }]), (req, res) => {
     (0, file_controller_1.pinFile)(req, res);
 });
 router.get('/api/v1/viewpinnedfile', (req, res) => {
+    console.log('req session:', req.session, 'req sess user:', req.session.user, req.sessionID);
+    if (!req.session || !req.session.user) {
+        const err = new Error('Unauthenticated');
+        return res.status(404).send(err);
+    }
     (0, file_controller_1.viewPinnedFile)(req, res);
 });
 exports.default = router;

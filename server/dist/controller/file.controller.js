@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.viewPinnedFile = exports.pinFile = exports.uploadAndCompareFiles = void 0;
 const uuid_1 = require("uuid");
 const upload_util_1 = require("../utils/upload.util");
-const db_1 = __importDefault(require("../db"));
+const postgres_1 = __importDefault(require("../db/postgres"));
 const uploadAndCompareFiles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const startTs = new Date().getTime();
     console.log('------------------start time file compare----------', startTs);
@@ -31,7 +31,7 @@ const uploadAndCompareFiles = (req, res) => __awaiter(void 0, void 0, void 0, fu
         const result = (0, upload_util_1.setupResults)(duplicatesList, columns);
         const finishTs = new Date().getTime();
         console.log('------------------------finish ts:', finishTs, '-----diff-----', finishTs - startTs);
-        res.status(200).json(result);
+        res.send(result);
     }
     catch (err) {
         res.status(400).send();
@@ -49,7 +49,7 @@ const pinFile = (req, res) => {
         };
         (0, upload_util_1.storeFile)(file, pinned_file_id)
             .then(() => {
-            (0, db_1.default)('users').update(fileMetadata).where({ email })
+            (0, postgres_1.default)('users').update(fileMetadata).where({ email })
                 .then(() => {
                 res.status(200).json(fileMetadata);
             });
@@ -67,7 +67,9 @@ exports.pinFile = pinFile;
 const viewPinnedFile = (req, res) => {
     const { pinnedFileId } = req.query;
     (0, upload_util_1.readPinnedFile)(pinnedFileId)
-        .then((data) => res.status(200).send(data))
+        .then((data) => {
+        return res.status(200).json(data);
+    })
         .catch((err) => {
         res.status(400).send();
         console.log('failed to get pinned file: ', err);

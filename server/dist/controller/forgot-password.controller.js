@@ -15,11 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.forgotPassword = void 0;
 const crypto_1 = __importDefault(require("crypto"));
 const nodemailer = require("nodemailer");
-const db_1 = __importDefault(require("../db"));
+const postgres_1 = __importDefault(require("../db/postgres"));
 const forgotPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email } = req.body;
     try {
-        const users = yield (0, db_1.default)('users').select().where({ email });
+        const users = yield (0, postgres_1.default)('users').select().where({ email });
         if (users && users[0]) {
             const token = crypto_1.default.randomBytes(20).toString('hex');
             let transporter = nodemailer.createTransport({
@@ -46,7 +46,7 @@ const forgotPassword = (req, res) => __awaiter(void 0, void 0, void 0, function*
                     passwordtoken: token,
                     passwordtoken_expiration: new Date(Date.now() + 3600000)
                 };
-                (0, db_1.default)('users').update(data).where({ email })
+                (0, postgres_1.default)('users').update(data).where({ email })
                     .then(() => res.status(200).json('Password reset email was sent'));
             }
         }

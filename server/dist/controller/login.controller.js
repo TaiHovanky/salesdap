@@ -25,17 +25,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loginUser = void 0;
 const bcryptjs_1 = require("bcryptjs");
-const db_1 = __importDefault(require("../db"));
+const postgres_1 = __importDefault(require("../db/postgres"));
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     try {
-        const users = yield (0, db_1.default)('users').select().where({ email });
+        const users = yield (0, postgres_1.default)('users').select().where({ email });
         if (users && users[0]) {
             const isPasswordValid = yield (0, bcryptjs_1.compare)(password, users[0].password);
             if (isPasswordValid) {
-                req.session.user = users[0];
+                req.session.user = users[0].userid;
+                req.session.save();
+                console.log('req session user after login', req.session, req.sessionID);
                 const _a = users[0], { password, userid } = _a, user = __rest(_a, ["password", "userid"]);
-                return res.status(200).json(user);
+                res.header('Access-Control-Allow-Origin', "http://54.85.114.194");
+                res.header('Access-Control-Allow-Credentials', true);
+                res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+                return res.status(200)
+                    .send(user);
             }
             return res.status(401).send();
         }

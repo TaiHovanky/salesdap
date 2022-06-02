@@ -18,34 +18,19 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const Redis = require('ioredis');
-const session = require('express-session');
 const routes_1 = __importDefault(require("./routes"));
+const session_1 = require("./middleware/session");
 (() => __awaiter(void 0, void 0, void 0, function* () {
-    let RedisStore = require('connect-redis')(session);
-    let redisClient = new Redis({
-        host: process.env.REDIS_URL,
-        port: 6379
-    });
     const app = (0, express_1.default)();
     app.use((0, cors_1.default)({
-        origin: process.env.APP_URL,
-        credentials: true
+        origin: process.env.APP_URL || 'http://54.85.114.194',
+        credentials: true,
+        methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
     }));
     app.use((0, body_parser_1.default)());
     app.use((0, cookie_parser_1.default)());
-    app.use(session({
-        store: new RedisStore({ client: redisClient }),
-        saveUninitialized: false,
-        secret: process.env.SESSION_SECRET,
-        resave: false,
-        cookie: {
-            secure: false,
-            sameSite: 'lax',
-            httpOnly: true,
-            maxAge: 600000
-        }
-    }));
+    app.set('trust proxy', 1);
+    app.use(session_1.redisSession);
     app.use('/', routes_1.default);
     app.listen(3001, () => {
         console.log('app listening at 3001');

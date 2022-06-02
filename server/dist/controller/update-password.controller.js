@@ -14,11 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updatePassword = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const db_1 = __importDefault(require("../db"));
+const postgres_1 = __importDefault(require("../db/postgres"));
 const updatePassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     try {
-        const users = yield (0, db_1.default)('users').select().where({ email });
+        const users = yield (0, postgres_1.default)('users').select().where({ email });
         if (users && users[0]) {
             const hashedPassword = yield bcryptjs_1.default.hash(password, 12);
             const updatedUser = {
@@ -26,7 +26,7 @@ const updatePassword = (req, res) => __awaiter(void 0, void 0, void 0, function*
                 passwordtoken: null,
                 passwordtoken_expiration: null
             };
-            yield (0, db_1.default)('users').update(updatedUser).where({ email });
+            yield (0, postgres_1.default)('users').update(updatedUser).where({ email });
             return res.status(200).send();
         }
     }

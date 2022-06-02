@@ -13,11 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyResetPasswordToken = void 0;
-const db_1 = __importDefault(require("../db"));
+const postgres_1 = __importDefault(require("../db/postgres"));
 const verifyResetPasswordToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const token = req.body.token;
     try {
-        const users = yield (0, db_1.default)('users').select().where({ passwordtoken: token }).andWhere('passwordtoken_expiration', '>', new Date());
+        const users = yield (0, postgres_1.default)('users').select().where({ passwordtoken: token }).andWhere('passwordtoken_expiration', '>', new Date());
         if (users && users[0]) {
             res.status(200).send('Password reset link is valid');
         }
