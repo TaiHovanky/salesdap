@@ -14,7 +14,7 @@ export const loginUser = async (req: any, res: any) => {
         console.log('req session user after login', req.session, req.sessionID);
         const { password, userid, ...user } = users[0];
         // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-        res.header('Access-Control-Allow-Origin', "https://salesdap.com");
+        res.header('Access-Control-Allow-Origin', 'https://salesdap.com');
         res.header('Access-Control-Allow-Credentials', true);
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, HEAD, OPTIONS');

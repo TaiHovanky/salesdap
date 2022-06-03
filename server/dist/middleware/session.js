@@ -15,7 +15,7 @@ exports.redisSession = session({
         httpOnly: false,
         maxAge: 1000 * 60 * 30,
         path: '/',
-        domain: 'http://localhost:3001'
+        domain: 'https://salesdap.com'
     }
 });
 //# sourceMappingURL=session.js.map
