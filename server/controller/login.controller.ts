@@ -10,7 +10,7 @@ export const loginUser = async (req: any, res: any) => {
       const isPasswordValid: boolean = await compare(password, users[0].password);
       if (isPasswordValid) {
         req.session.user = users[0].userid;
-        // req.session.save();
+        req.session.save();
         console.log('req session user after login', req.session, req.sessionID);
         const { password, userid, ...user } = users[0];
         // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');

@@ -14,7 +14,8 @@ exports.redisSession = session({
         secure: true,
         httpOnly: false,
         maxAge: 1000 * 60 * 30,
-        path: '/'
+        path: '/',
+        domain: 'http://localhost:3001'
     }
 });
 //# sourceMappingURL=session.js.map

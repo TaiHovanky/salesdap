@@ -22,6 +22,10 @@ import { redisSession } from './middleware/session';
   app.use(cookieParser());
 
   app.set('trust proxy', 1);
+  // app.set('Access-Control-Allow-Origin', "https://salesdap.com");
+  // app.set('Access-Control-Allow-Credentials', true);
+  // app.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  // app.set('Access-Control-Allow-Methods', 'GET, POST, PUT, HEAD, OPTIONS');
   app.use(redisSession);
 
   app.use('/', router);
