@@ -2,7 +2,7 @@ import 'dotenv/config';
 import 'reflect-metadata';
 import express from 'express';
 import cors from 'cors';
-import cookieParser from 'cookie-parser';
+// import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import router from './routes';
 import { redisSession } from './middleware/session';
@@ -19,7 +19,7 @@ import { redisSession } from './middleware/session';
     methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
   }));
   app.use(bodyParser());
-  app.use(cookieParser());
+  // app.use(cookieParser());
 
   app.set('trust proxy', 1);
   // app.set('Access-Control-Allow-Origin', "https://salesdap.com");

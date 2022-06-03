@@ -16,7 +16,6 @@ require("dotenv/config");
 require("reflect-metadata");
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
-const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const routes_1 = __importDefault(require("./routes"));
 const session_1 = require("./middleware/session");
@@ -28,7 +27,6 @@ const session_1 = require("./middleware/session");
         methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
     }));
     app.use((0, body_parser_1.default)());
-    app.use((0, cookie_parser_1.default)());
     app.set('trust proxy', 1);
     app.use(session_1.redisSession);
     app.use('/', routes_1.default);

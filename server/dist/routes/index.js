@@ -44,6 +44,10 @@ router.post('/api/v1/pinfile', upload.fields([{ name: 'sales_file', maxCount: 1 
 });
 router.get('/api/v1/viewpinnedfile', (req, res) => {
     console.log('req session:', req.session, 'req sess user:', req.session.user, req.sessionID);
+    if (!req.session || !req.session.user) {
+        const err = new Error('Unauthenticated');
+        return res.status(404).send(err);
+    }
     (0, file_controller_1.viewPinnedFile)(req, res);
 });
 exports.default = router;
