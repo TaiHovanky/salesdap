@@ -10,7 +10,7 @@ import { logoutUser } from '../controller/logout.controller';
 import { forgotPassword } from '../controller/forgot-password.controller';
 import { verifyResetPasswordToken } from '../controller/reset-password.controller';
 import { updatePassword } from '../controller/update-password.controller';
-// import { authenticate } from '../middleware/authenticate';
+import { authenticate } from '../middleware/authenticate';
 
 const router = express.Router();
 
@@ -45,7 +45,7 @@ router.post('/api/v1/updatepassword', upload.none(), (req: any, res: any) => {
 });
 
 // Protected routes
-// router.use(authenticate);
+router.use(authenticate);
 
 router.post(
   '/api/v1/uploadfile',
@@ -65,11 +65,11 @@ router.post(
 
 router.get('/api/v1/viewpinnedfile', (req: any, res: any) => {
   console.log('req session:', req.session, 'req sess user:', req.session.user, req.sessionID);
-  if (!req.session || !req.session.user) {
-    const err = new Error('Unauthenticated');
-    // err.statusCode = 401;
-    return res.status(404).send(err);
-  }
+  // if (!req.session || !req.session.user) {
+  //   const err = new Error('Unauthenticated');
+  //   // err.statusCode = 401;
+  //   return res.status(404).send(err);
+  // }
   viewPinnedFile(req, res);
 });
 
