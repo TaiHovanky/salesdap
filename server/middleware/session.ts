@@ -7,7 +7,7 @@ export const redisSession = session({
   saveUninitialized: false,
   secret: process.env.SESSION_SECRET,
   resave: false,
-  name: 'sessionId',
+  // name: 'sessionId',
   // secure: false, // set to True for prod
   cookie: {
     sameSite: 'none',

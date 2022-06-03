@@ -34,7 +34,6 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             const isPasswordValid = yield (0, bcryptjs_1.compare)(password, users[0].password);
             if (isPasswordValid) {
                 req.session.user = users[0].userid;
-                req.session.save();
                 console.log('req session user after login', req.session, req.sessionID);
                 const _a = users[0], { password, userid } = _a, user = __rest(_a, ["password", "userid"]);
                 res.header('Access-Control-Allow-Origin', "https://salesdap.com");

@@ -9,7 +9,6 @@ exports.redisSession = session({
     saveUninitialized: false,
     secret: process.env.SESSION_SECRET,
     resave: false,
-    name: 'sessionId',
     cookie: {
         sameSite: 'none',
         secure: true,
