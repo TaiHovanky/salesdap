@@ -70,10 +70,10 @@ const UploadDocumentColumn = ({
       {fileStructure === FORMATTED_DATA ?
         <>
           <FormLabel sx={{ marginTop: '4rem', marginBottom: '0.25rem' }}>Select a file <IconButton onClick={handleOpenFileSourceHelpModal}><Help /></IconButton></FormLabel>
-          <FileSourceRadioContainer
+          {!!user.pinnedFileName && index === 0 && <FileSourceRadioContainer
             fileSource={fileSource}
             index={index}
-          />
+          />}
           <div className="file-selection">
             {fileSource === 'upload' ?
               <FileSelectionFieldContainer selectedDocument={selectedDocument} index={index} /> :

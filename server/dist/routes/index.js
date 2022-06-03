@@ -14,7 +14,6 @@ const logout_controller_1 = require("../controller/logout.controller");
 const forgot_password_controller_1 = require("../controller/forgot-password.controller");
 const reset_password_controller_1 = require("../controller/reset-password.controller");
 const update_password_controller_1 = require("../controller/update-password.controller");
-const authenticate_1 = require("../middleware/authenticate");
 const router = express_1.default.Router();
 router.post('/api/v1/register', upload.none(), (req, res) => {
     (0, register_controller_1.registerUser)(req, res);
@@ -37,7 +36,6 @@ router.post('/api/v1/resetpassword', (req, res) => {
 router.post('/api/v1/updatepassword', upload.none(), (req, res) => {
     (0, update_password_controller_1.updatePassword)(req, res);
 });
-router.use(authenticate_1.authenticate);
 router.post('/api/v1/uploadfile', upload.fields([{ name: 'sales_file1', maxCount: 1 }, { name: 'sales_file2', maxCount: 1 }]), (req, res) => {
     (0, file_controller_1.uploadAndCompareFiles)(req, res);
 });
