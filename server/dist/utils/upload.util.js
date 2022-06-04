@@ -193,7 +193,6 @@ const storeFile = (file, pinnedFileId) => new Promise((resolve, reject) => {
 });
 exports.storeFile = storeFile;
 const readPinnedFile = (pinnedFileId) => new Promise((resolve, reject) => {
-    console.log('buckets', process.env.AWS_ACCESS_KEY_ID, process.env.AWS_BUCKET_NAME);
     const s3 = new aws_sdk_1.default.S3({
         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -204,10 +203,8 @@ const readPinnedFile = (pinnedFileId) => new Promise((resolve, reject) => {
     };
     s3.getObject(params, (err, data) => {
         if (err) {
-            console.log('err reading pinned file', err);
             return reject(err);
         }
-        console.log('data pinned file', data);
         return resolve(data.Body);
     });
 });
