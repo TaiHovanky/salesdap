@@ -68,7 +68,7 @@ const viewPinnedFile = (req, res) => {
     const { pinnedFileId } = req.query;
     (0, upload_util_1.readPinnedFile)(pinnedFileId)
         .then((data) => {
-        return res.status(200).json(data);
+        return res.status(200).send(data);
     })
         .catch((err) => {
         res.status(400).send();

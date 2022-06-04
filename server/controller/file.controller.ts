@@ -88,7 +88,7 @@ export const viewPinnedFile = (req: any, res: any) => {
   const { pinnedFileId } = req.query;
   readPinnedFile(pinnedFileId)
     .then((data: any) => {
-      return res.status(200).json(data);
+      return res.status(200).send(data);
     })
     .catch((err: any) => {
       res.status(400).send();
