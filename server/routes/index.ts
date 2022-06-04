@@ -65,11 +65,11 @@ router.post(
 
 router.get('/api/v1/viewpinnedfile', (req: any, res: any) => {
   console.log('req session:', req.session, 'req sess user:', req.session.user, req.sessionID);
-  if (!req.session || !req.session.user) {
-    const err = new Error('Unauthenticated');
-    // err.statusCode = 401;
-    return res.status(404).send(err);
-  }
+  // if (!req.session || !req.session.user) {
+  //   const err = new Error('Unauthenticated');
+  //   // err.statusCode = 401;
+  //   return res.status(404).send(err);
+  // }
   viewPinnedFile(req, res);
 });
 
