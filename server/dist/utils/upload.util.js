@@ -207,6 +207,7 @@ const readPinnedFile = (pinnedFileId) => new Promise((resolve, reject) => {
             console.log('err reading pinned file', err);
             return reject(err);
         }
+        console.log('data pinned file', data);
         return resolve(data.Body);
     });
 });

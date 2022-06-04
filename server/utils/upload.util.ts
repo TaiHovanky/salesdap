@@ -345,6 +345,7 @@ export const readPinnedFile = (pinnedFileId: string) => new Promise((resolve, re
       console.log('err reading pinned file', err);
       return reject(err)
     }
+    console.log('data pinned file', data);
     return resolve(data.Body);
   });
 });
