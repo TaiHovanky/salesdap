@@ -6,7 +6,7 @@ import { Payment as PaymentIcon } from '@mui/icons-material';
 
 export const PREMIUM_PRICE: number = 15;
 
-const Payment = () => {
+const PaymentButton = () => {
   const publishableKey: string = process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || 'testkey';
 
   const handlePayment = async (token: any) => {
@@ -53,4 +53,4 @@ const Payment = () => {
   )
 }
 
-export default Payment;
+export default PaymentButton;

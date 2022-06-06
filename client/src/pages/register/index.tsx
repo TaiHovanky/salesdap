@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
+import PaymentButton from '../../components/payment-button';
 
 interface Props {
   onSubmit: any;
@@ -162,6 +163,7 @@ const Register = ({ onSubmit }: Props) => {
                   justifyContent="center"
                   alignItems="center"
                 >
+                  <PaymentButton />
                   <Fab
                     variant="extended"
                     aria-label="add"
