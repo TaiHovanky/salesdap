@@ -14,6 +14,7 @@ const logout_controller_1 = require("../controller/logout.controller");
 const forgot_password_controller_1 = require("../controller/forgot-password.controller");
 const reset_password_controller_1 = require("../controller/reset-password.controller");
 const update_password_controller_1 = require("../controller/update-password.controller");
+const payment_controller_1 = require("../controller/payment.controller");
 const router = express_1.default.Router();
 router.post('/api/v1/register', upload.none(), (req, res) => {
     (0, register_controller_1.registerUser)(req, res);
@@ -45,6 +46,9 @@ router.post('/api/v1/pinfile', upload.fields([{ name: 'sales_file', maxCount: 1 
 router.get('/api/v1/viewpinnedfile', (req, res) => {
     console.log('req session:', req.session, 'req sess user:', req.session.user, req.sessionID);
     (0, file_controller_1.viewPinnedFile)(req, res);
+});
+router.post('/api/v1/payment', (req, res) => {
+    (0, payment_controller_1.makePayment)(req, res);
 });
 exports.default = router;
 //# sourceMappingURL=index.js.map
