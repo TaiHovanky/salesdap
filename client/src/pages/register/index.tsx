@@ -5,16 +5,30 @@ import {
   TextField,
   Grid,
   Typography,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import PaymentButton from '../../components/payment-button';
 
+const FREE = 'FREE';
+const FREE_DESCRIPTION = 'Free: Sign up now to be able to compare 10 lists';
+const PREMIUM = 'PREMIUM';
+const PREMIUM_DESCRIPTION = 'Premium: You can compare an unlimited amount of lists per month';
+// const ENTERPRISE = 'ENTERPRISE';
+// const ENTERPRISE_DESCRIPTION = 'Enterprise: Talk to a Salesdap advisor in order to create an account for your organization';
+
+
 interface Props {
   onSubmit: any;
+  setIsLoading: any;
 }
 
-const Register = ({ onSubmit }: Props) => {
+const Register = ({ onSubmit, setIsLoading }: Props) => {
 
   const validate = (values: any) => {
     const errors: any = {};
@@ -46,13 +60,14 @@ const Register = ({ onSubmit }: Props) => {
       confirmPassword: '',
       firstName: '',
       lastName: '',
-      company: ''
+      company: '',
+      subscriptionType: FREE
     },
     validate,
     onSubmit
   });
 
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } = formik;
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } = formik;
 
   const isSubmitButtonDisabled = !!errors.email || !!errors.password || !!errors.confirmPassword
     || !values.email || !values.password || !values.confirmPassword;
@@ -76,7 +91,7 @@ const Register = ({ onSubmit }: Props) => {
             alignItems="center"
           >
             <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Register</Typography>
-            <form onSubmit={handleSubmit}  style={{ width: '100%' }}>
+            <form style={{ width: '100%' }}>
               <TextField
                 required
                 id="standard-basic"
@@ -143,11 +158,34 @@ const Register = ({ onSubmit }: Props) => {
                 label="Company"
                 name="company"
                 variant="standard"
-                sx={{ width: '100%' }}
+                sx={{ width: '100%', marginBottom: '3rem' }}
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.company}
               />
+              <FormControl sx={{ marginBottom: '2rem' }}>
+                <FormLabel sx={{ marginBottom: '1rem' }}>What type of subscription do you want?</FormLabel>
+                <RadioGroup
+                  aria-labelledby="demo-controlled-radio-buttons-group"
+                  name="subscription-radio-buttons-group"
+                  value={values.subscriptionType}
+                  onChange={(_, value: string) => setFieldValue('subscriptionType', value)}
+                >
+                  <FormControlLabel
+                    value={FREE}
+                    control={<Radio checked={values.subscriptionType === FREE} />}
+                    label={FREE_DESCRIPTION}
+                    name="free"
+                  />
+                  <FormControlLabel
+                    value={PREMIUM}
+                    control={<Radio checked={values.subscriptionType === PREMIUM} />}
+                    label={PREMIUM_DESCRIPTION}
+                    name="premium"
+                  />
+                  {/* <FormControlLabel value={ENTERPRISE} control={<Radio />} label="Enterprise" /> */}
+                </RadioGroup>
+              </FormControl>
               <Grid
                 container
                 spacing={2}
@@ -157,22 +195,29 @@ const Register = ({ onSubmit }: Props) => {
                 <Grid
                   item
                   container
-                  xs={4}
+                  xs={10}
                   p={0}
                   direction="column"
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <PaymentButton />
-                  <Fab
-                    variant="extended"
-                    aria-label="add"
-                    sx={{ marginTop: '2.5rem', marginLeft: 'auto', marginRight: 'auto' }}
-                    type="submit"
-                    disabled={isSubmitButtonDisabled}
-                  >
-                    Submit
-                  </Fab>
+                  {values.subscriptionType === PREMIUM ?
+                    <PaymentButton
+                      disabled={isSubmitButtonDisabled}
+                      user={values}
+                      handleSubmit={handleSubmit}
+                      setIsLoading={setIsLoading}
+                    /> :
+                    <Fab
+                      variant="extended"
+                      aria-label="add"
+                      sx={{ marginLeft: 'auto', marginRight: 'auto' }}
+                      type="submit"
+                      disabled={isSubmitButtonDisabled}
+                    >
+                      sign up
+                    </Fab>
+                  }
                 </Grid>
               </Grid>
             </form>

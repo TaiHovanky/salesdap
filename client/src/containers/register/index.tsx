@@ -30,13 +30,15 @@ const RegisterContainer = ({
     formData.append('firstname', values.firstName);
     formData.append('lastname', values.lastName);
     formData.append('company', values.company);
+    formData.append('subscriptionType', values.subscriptionType);
     const config = {
       headers: {
         'Content-Type': 'multipart/form-data'
       },
       withCredentials: true
     };
-    axios.post('/api/v1/register', formData, config)
+    console.log('form data', formData, values);
+    axios.post('http://localhost:3001/api/v1/register', formData, config)
       .then((res) => {
         hideError();
         updateUser(res.data);
@@ -54,7 +56,7 @@ const RegisterContainer = ({
   }
 
   return (
-    <Register onSubmit={onSubmit} />
+    <Register onSubmit={onSubmit} setIsLoading={setIsLoading} />
   );
 };
 

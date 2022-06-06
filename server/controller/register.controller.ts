@@ -8,7 +8,8 @@ export const registerUser = async (req: any, res: any) => {
     password,
     firstname,
     lastname,
-    company
+    company,
+    subscriptionType
   } = req.body;
   const hashedPassword = await bcrypt.hash(password, 12);
   const newUser = {
@@ -17,11 +18,14 @@ export const registerUser = async (req: any, res: any) => {
     password: hashedPassword,
     firstname,
     lastname,
-    company
+    company,
+    subscription_type: subscriptionType
   };
+  console.log('new user', newUser);
+
   db('users').insert(newUser)
     .then(() => {
-      req.session.user = newUser.userid;
+      // req.session.user = newUser.userid;
       return res.status(200).json({ email, firstname, lastname, company });
     })
     .catch((err: any) => console.log('register err', err));
