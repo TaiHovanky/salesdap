@@ -21,7 +21,7 @@ const routes_1 = __importDefault(require("./routes"));
 (() => __awaiter(void 0, void 0, void 0, function* () {
     const app = (0, express_1.default)();
     app.use((0, cors_1.default)({
-        origin: 'http://localhost:3000',
+        origin: 'https://salesdap.com',
         credentials: true,
         methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
     }));
