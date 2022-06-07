@@ -202,12 +202,20 @@ const Register = ({ onSubmit, setIsLoading }: Props) => {
                   alignItems="center"
                 >
                   {values.subscriptionType === PREMIUM ?
-                    <PaymentButton
-                      disabled={isSubmitButtonDisabled}
-                      user={values}
-                      handleSubmit={handleSubmit}
-                      setIsLoading={setIsLoading}
-                    /> :
+                    <>
+                      <PaymentButton
+                        disabled={isSubmitButtonDisabled}
+                        user={values}
+                        handleSubmit={handleSubmit}
+                        setIsLoading={setIsLoading}
+                      />
+                      <form action="/create-checkout-session" method="POST">
+                        <button type="submit">
+                          Checkout
+                        </button>
+                      </form>
+                    </>
+                    :
                     <Fab
                       variant="extended"
                       aria-label="add"

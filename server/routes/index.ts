@@ -10,7 +10,7 @@ import { logoutUser } from '../controller/logout.controller';
 import { forgotPassword } from '../controller/forgot-password.controller';
 import { verifyResetPasswordToken } from '../controller/reset-password.controller';
 import { updatePassword } from '../controller/update-password.controller';
-import { makePayment } from '../controller/payment.controller';
+import { createCheckoutSession, makePayment, createCustomerPortal } from '../controller/payment.controller';
 // import { authenticate } from '../middleware/authenticate';
 
 const router = express.Router();
@@ -77,5 +77,13 @@ router.get('/api/v1/viewpinnedfile', (req: any, res: any) => {
 router.post('/api/v1/payment', (req: any, res: any) => {
   makePayment(req, res);
 });
+
+router.post('/api/v1/create-checkout-session', async (req: any, res: any) => {
+  createCheckoutSession(req, res);
+});
+
+router.post('/api/v1/create-portal-session', (req: any, res: any) => {
+  createCustomerPortal(req, res);
+})
 
 export default router;

@@ -13,10 +13,10 @@ import router from './routes';
   app.use(cors({
     /* Use IP address of droplet with the exposed port that React app container runs on.
     Note that port isn't needed because Web container exposes port 80 */
-    origin: 'http://localhost:3000',
+    origin: '*',
     // origin: 'https://salesdap.com',
     credentials: true,
-    methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
+    methods: ["POST", "PUT", "GET", "HEAD"],
   }));
   app.use(bodyParser());
   // app.use(cookieParser());
