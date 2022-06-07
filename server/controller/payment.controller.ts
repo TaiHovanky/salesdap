@@ -1,3 +1,5 @@
+import { registerUser } from "./register.controller";
+
 // const stripe = require('stripe')(process.env.STRIPE_SECRET);
 const stripe = require('stripe')(process.env.STRIPE_TEST_SECRET);
 
@@ -136,4 +138,25 @@ export const createCustomerPortal = async (req: any, res: any) => {
   });
 
   res.redirect(303, portalSession.url);
+}
+
+export const handleSuccessfulSubscription = async (req: any, res: any) => {
+  console.log('req query', req.query, req.body);
+  const { sessionId } = req.body;
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const customer = await stripe.customers.retrieve(session.customer, { expand: ['subscriptions']});
+    console.log('customer in successful session', customer, customer.subscriptions.data);
+    if (customer && customer.subscriptions && customer.subscriptions.data) {
+      const hasActiveSubscription: boolean = !!customer.subscriptions.data.find((subscription: any) => {
+        return subscription.status === 'active';
+      });
+      if (hasActiveSubscription) {
+        registerUser(req, res);
+      }
+    }
+    res.status(200).json({ customer });
+  } catch (err: any) {
+    console.log('err with handlesuccess', err);
+  }
 }

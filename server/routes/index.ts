@@ -10,7 +10,12 @@ import { logoutUser } from '../controller/logout.controller';
 import { forgotPassword } from '../controller/forgot-password.controller';
 import { verifyResetPasswordToken } from '../controller/reset-password.controller';
 import { updatePassword } from '../controller/update-password.controller';
-import { createCheckoutSession, makePayment, createCustomerPortal } from '../controller/payment.controller';
+import {
+  createCheckoutSession,
+  makePayment,
+  createCustomerPortal,
+  handleSuccessfulSubscription
+} from '../controller/payment.controller';
 // import { authenticate } from '../middleware/authenticate';
 
 const router = express.Router();
@@ -84,6 +89,10 @@ router.post('/api/v1/create-checkout-session', async (req: any, res: any) => {
 
 router.post('/api/v1/create-portal-session', (req: any, res: any) => {
   createCustomerPortal(req, res);
-})
+});
+
+router.post('/api/v1/order-success', async (req: any, res: any) => {
+  handleSuccessfulSubscription(req, res);
+});
 
 export default router;

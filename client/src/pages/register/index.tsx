@@ -14,6 +14,7 @@ import {
 import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import PaymentButton from '../../components/payment-button';
+import Payment from '../payment';
 
 const FREE = 'FREE';
 const FREE_DESCRIPTION = 'Free: Sign up now to be able to compare 10 lists';
@@ -26,9 +27,10 @@ const PREMIUM_DESCRIPTION = 'Premium: You can compare an unlimited amount of lis
 interface Props {
   onSubmit: any;
   setIsLoading: any;
+  createRegistrationUser: any;
 }
 
-const Register = ({ onSubmit, setIsLoading }: Props) => {
+const Register = ({ onSubmit, setIsLoading, createRegistrationUser }: Props) => {
 
   const validate = (values: any) => {
     const errors: any = {};
@@ -203,17 +205,13 @@ const Register = ({ onSubmit, setIsLoading }: Props) => {
                 >
                   {values.subscriptionType === PREMIUM ?
                     <>
-                      <PaymentButton
+                      {/* <PaymentButton
                         disabled={isSubmitButtonDisabled}
                         user={values}
                         handleSubmit={handleSubmit}
                         setIsLoading={setIsLoading}
-                      />
-                      <form action="/create-checkout-session" method="POST">
-                        <button type="submit">
-                          Checkout
-                        </button>
-                      </form>
+                      /> */}
+                      <Payment createRegistrationUser={createRegistrationUser} registrationUser={values} />
                     </>
                     :
                     <Fab

@@ -1,19 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Fab, Grid, TextField, Typography } from '@mui/material';
 import { CheckCircle } from '@mui/icons-material';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 
-const SuccessDisplay = () => {
-  // Check to see if this is a redirect back from Checkout
-  const query = new URLSearchParams(window.location.search);
+const SuccessDisplay = ({ handleManageSubscriptionClick }: any) => {
   const history = useHistory();
-
-  const sessionId = query.get('session_id');
-
-  const handleManageSubscriptionClick = () => {
-    axios.post('http://localhost:3001/api/v1/create-portal-session', { sessionId });
-  }
 
   const handleHomeButtonClick = () => {
     history.push('/home');

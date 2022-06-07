@@ -15,7 +15,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { AlertState } from '../../state/reducers/alert';
 import { UserState } from '../../state/reducers/user';
 import Payment from '../../pages/payment';
-import SuccessDisplay from '../../pages/payment-success';
+import SuccessDisplayContainer from '../../containers/payment-success';
 
 interface Props {
   alert: AlertState;
@@ -39,7 +39,7 @@ const Routes = ({
           <Route exact path="/" component={LoginContainer} />
           <Route exact path="/register" component={RegisterContainer} />
           <Route path="/pay" component={Payment} />
-          <Route path="/success" component={SuccessDisplay} />
+          <Route path="/success" component={SuccessDisplayContainer} />
           <PrivateRoute exact path="/profile" component={ProfileContainer} user={user} />
           <Route exact path="/forgot-password" component={ForgotPasswordContainer} />
           <Route path="/reset-password/:token" component={PasswordResetContainer} />
