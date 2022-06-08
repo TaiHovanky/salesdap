@@ -1,31 +1,38 @@
-import { registerUser } from "./register.controller";
+import db from '../db/postgres';
 
 // const stripe = require('stripe')(process.env.STRIPE_SECRET);
 const stripe = require('stripe')(process.env.STRIPE_TEST_SECRET);
 
 export const createCheckoutSession = async (req: any, res: any) => {
   const { customerEmail } = req.body;
-  const session = await stripe.checkout.sessions.create({
-    customer_email: customerEmail,
-    billing_address_collection: 'auto',
-    shipping_address_collection: {
-      allowed_countries: ['US', 'CA'],
-    },
-    // automatic_tax: {enabled: true},
-    line_items: [
-      {
-        // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-        // price: process.env.STRIPE_PRICE, // salesdap
-        price: process.env.STRIPE_TEST_PRICE, // my acct
-        quantity: 1,
+  try {
+    const session = await stripe.checkout.sessions.create({
+      customer_email: customerEmail,
+      billing_address_collection: 'auto',
+      shipping_address_collection: {
+        allowed_countries: ['US', 'CA'],
       },
-    ],
-    mode: 'subscription',
-    success_url: `http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `http://localhost:3000/register`,
-  });
-
-  res.json({url: session.url});
+      // automatic_tax: {enabled: true},
+      line_items: [
+        {
+          // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+          // price: process.env.STRIPE_PRICE, // salesdap
+          price: process.env.STRIPE_TEST_PRICE, // my acct
+          quantity: 1,
+        },
+      ],
+      mode: 'subscription',
+      success_url: `http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `http://localhost:3000/register`,
+    });
+    console.log('session', customerEmail, session);
+    // await db('users').where({ email: customerEmail }).update({ customer_id: session.customer.id })
+  
+    res.json({url: session.url});
+  } catch (err: any) {
+    console.log('checkout session creation err:', err);
+    res.status(500).send();
+  }
 }
 
 export const makePayment = async (req: any, res: any) => {
@@ -43,6 +50,7 @@ export const makePayment = async (req: any, res: any) => {
 
     if (customer) {
       const invoiceId = `${token.email}-${Math.random().toString()}-${Date.now().toString()}`;
+      // await db('users').where({ email: token.email }).update({ customer_id: customer.id });
   
       await stripe.charges.create({
         amount,
@@ -125,15 +133,23 @@ export const createWebhook = (req: any, res: any) => {
 export const createCustomerPortal = async (req: any, res: any) => {
   // For demonstration purposes, we're using the Checkout session to retrieve the customer ID.
   // Typically this is stored alongside the authenticated user in your database.
-  const { session_id } = req.body;
-  const checkoutSession = await stripe.checkout.sessions.retrieve(session_id);
+  const { session_id, email } = req.body;
+  let customer: any;
+
+  if (session_id) {
+    const checkoutSession = await stripe.checkout.sessions.retrieve(session_id);
+    customer = checkoutSession.customer;
+  } else {
+    const user = await db('users').select('email').where({ email });
+    console.log('users', user);
+  }
 
   // This is the url to which the customer will be redirected when they are done
   // managing their billing with the portal.
   const returnUrl = 'http://localhost:3000/home';
 
   const portalSession = await stripe.billingPortal.sessions.create({
-    customer: checkoutSession.customer,
+    customer,
     return_url: returnUrl,
   });
 
@@ -141,18 +157,21 @@ export const createCustomerPortal = async (req: any, res: any) => {
 }
 
 export const handleSuccessfulSubscription = async (req: any, res: any) => {
-  console.log('req query', req.query, req.body);
   const { sessionId } = req.body;
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     const customer = await stripe.customers.retrieve(session.customer, { expand: ['subscriptions']});
-    console.log('customer in successful session', customer, customer.subscriptions.data);
+    // console.log('customer in successful session', customer, customer.subscriptions.data);
+
     if (customer && customer.subscriptions && customer.subscriptions.data) {
       const hasActiveSubscription: boolean = !!customer.subscriptions.data.find((subscription: any) => {
         return subscription.status === 'active';
       });
       if (hasActiveSubscription) {
-        registerUser(req, res);
+        await db('users').where({ email: customer.email }).update({
+          active_subscription: true,
+          customer_id: customer.id
+        });
       }
     }
     res.status(200).json({ customer });

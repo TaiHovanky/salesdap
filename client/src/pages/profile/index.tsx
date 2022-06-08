@@ -14,12 +14,14 @@ interface Props {
   user: UserState;
   validateFileSelection: any;
   handlePinnedFileClick: any;
+  handleManageSubscriptionClick: any;
 }
 
 const Profile = ({
   user,
   validateFileSelection,
-  handlePinnedFileClick
+  handlePinnedFileClick,
+  handleManageSubscriptionClick
 }: Props) => {
   const inputFileRef: any = useRef(null);
 
@@ -82,6 +84,15 @@ const Profile = ({
                   onChange={validateFileSelection}
                   name="sales_file"
                 />
+                <Fab
+                  variant="extended"
+                  aria-label="add"
+                  sx={{ marginTop: '2.5rem', minWidth: '208px' }}
+                  onClick={handleManageSubscriptionClick}
+                >
+                  <Upload sx={{ mr: 1 }} />
+                  Manage Subscription
+                </Fab>
               </Grid>
             </Paper>
           </Grid>

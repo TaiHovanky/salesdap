@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
-import PaymentButton from '../../components/payment-button';
+// import PaymentButton from '../../components/payment-button';
 import Payment from '../payment';
 
 const FREE = 'FREE';
@@ -26,11 +26,9 @@ const PREMIUM_DESCRIPTION = 'Premium: You can compare an unlimited amount of lis
 
 interface Props {
   onSubmit: any;
-  setIsLoading: any;
-  createRegistrationUser: any;
 }
 
-const Register = ({ onSubmit, setIsLoading, createRegistrationUser }: Props) => {
+const Register = ({ onSubmit }: Props) => {
 
   const validate = (values: any) => {
     const errors: any = {};
@@ -93,7 +91,7 @@ const Register = ({ onSubmit, setIsLoading, createRegistrationUser }: Props) => 
             alignItems="center"
           >
             <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Register</Typography>
-            <form style={{ width: '100%' }}>
+            <form style={{ width: '100%' }} onSubmit={handleSubmit}>
               <TextField
                 required
                 id="standard-basic"
@@ -211,7 +209,10 @@ const Register = ({ onSubmit, setIsLoading, createRegistrationUser }: Props) => 
                         handleSubmit={handleSubmit}
                         setIsLoading={setIsLoading}
                       /> */}
-                      <Payment createRegistrationUser={createRegistrationUser} registrationUser={values} />
+                      <Payment
+                        // handleSubmit={handleSubmit}
+                        // registrationUser={values}
+                      />
                     </>
                     :
                     <Fab

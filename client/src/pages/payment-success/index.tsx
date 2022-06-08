@@ -1,14 +1,13 @@
-import React, { useEffect } from 'react';
-import { Box, Fab, Grid, TextField, Typography } from '@mui/material';
+import React from 'react';
+import { Box, Fab, Grid, Typography } from '@mui/material';
 import { CheckCircle } from '@mui/icons-material';
 import { useHistory } from 'react-router-dom';
-import axios from 'axios';
 
 const SuccessDisplay = ({ handleManageSubscriptionClick }: any) => {
   const history = useHistory();
 
-  const handleHomeButtonClick = () => {
-    history.push('/home');
+  const handleLoginButtonClick = () => {
+    history.push('/login');
   }
 
   return (
@@ -35,18 +34,10 @@ const SuccessDisplay = ({ handleManageSubscriptionClick }: any) => {
                 <Typography variant="h4">Subscribed to Salesdap!</Typography>
               </div>
             </div>
-            {/* <form action="" method="POST"> */}
-              {/* <TextField
-                type="hidden"
-                id="session-id"
-                name="session_id"
-                value={sessionId}
-              /> */}
-              <Fab variant="extended" id="checkout-and-portal-button" onClick={handleManageSubscriptionClick}>
-                Manage your subscription
-              </Fab>
-            {/* </form> */}
-            <Fab variant="extended" color='primary' id="home-button" sx={{ marginTop: '1.5rem'}} onClick={handleHomeButtonClick}>
+            <Fab variant="extended" id="checkout-and-portal-button" onClick={handleManageSubscriptionClick}>
+              Manage your subscription
+            </Fab>
+            <Fab variant="extended" color='primary' id="login-button" sx={{ marginTop: '1.5rem'}} onClick={handleLoginButtonClick}>
               Get Started
             </Fab>
           </Grid>

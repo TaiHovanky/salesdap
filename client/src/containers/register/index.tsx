@@ -1,11 +1,11 @@
 import React from 'react';
 import axios from 'axios';
 import Register from '../../pages/register';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { showError, hideError } from '../../state/actions/alert';
 import { setIsLoading } from '../../state/actions/loading';
-import { updateRegistrationUser } from '../../state/actions/registration';
+// import { updateRegistrationUser } from '../../state/actions/registration';
 
 interface Props {
   setIsLoading: any;
@@ -18,9 +18,30 @@ const RegisterContainer = ({
   setIsLoading,
   showError,
   hideError,
-  updateRegistrationUser
+  // updateRegistrationUser
 }: Props) => {
-  const history = useHistory();
+  // const history = useHistory();
+
+  const handleCreateCheckoutSession = (values: any) => {
+    return axios.post('http://localhost:3001/api/v1/create-checkout-session', {
+      customerEmail: values.email
+    })
+      .then((res) => {
+        hideError();
+        setIsLoading(false);
+        if (!!res && !!res.data) {
+          window.location.href = res.data.url;
+        }
+      })
+      .catch((err: any) => {
+        console.log('err', err);
+        setIsLoading(false);
+        showError('There was a problem with accessing the payments page.');
+        setTimeout(() => {
+          hideError();
+        }, 5000)
+      });
+  }
 
   const onSubmit = (values: any) => {
     setIsLoading(true);
@@ -39,11 +60,8 @@ const RegisterContainer = ({
     };
     console.log('form data', formData, values);
     axios.post('http://localhost:3001/api/v1/register', formData, config)
-      .then((res) => {
-        hideError();
-        // updateUser(res.data);
-        setIsLoading(false);
-        history.push('/home');
+      .then(() => {
+        handleCreateCheckoutSession(values);
       })
       .catch((err: any) => {
         console.log('err', err);
@@ -55,12 +73,8 @@ const RegisterContainer = ({
       });
   }
 
-  const createRegistrationUser = (values: any) => {
-    updateRegistrationUser(values);
-  }
-
   return (
-    <Register onSubmit={onSubmit} setIsLoading={setIsLoading} createRegistrationUser={createRegistrationUser} />
+    <Register onSubmit={onSubmit} />
   );
 };
 
@@ -68,7 +82,6 @@ const mapDispatchToProps = (dispatch: any) => ({
   showError: (message: string) => dispatch(showError(message)),
   hideError: () => dispatch(hideError()),
   setIsLoading: (isLoading: boolean) => dispatch(setIsLoading(isLoading)),
-  updateRegistrationUser: (user: any) => dispatch(updateRegistrationUser(user))
 });
 
 export default connect(null, mapDispatchToProps)(RegisterContainer);
