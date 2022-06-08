@@ -40,6 +40,26 @@ const ProfileContainer = ({
     }
   };
 
+  const handleManageSubscriptionClick = () => {
+    setIsLoading(true);
+    axios.post('http://localhost:3001/api/v1/create-portal-session', { email: user.email })
+      .then((res: any) => {
+        setIsLoading(false);
+        hideError();
+        if (!!res && !!res.data) {
+          window.location.href = res.data.url;
+        }
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        console.log('err subscription', err);
+        showError('There was a problem with connecting with the subscription portal.');
+        setTimeout(() => {
+          hideError();
+        }, 10000);
+      });
+  }
+
   const validateFileSelection = (event: any) => {
     const document: any = event && event.target && event.target.files ?
       event.target.files[0] :
@@ -93,6 +113,7 @@ const ProfileContainer = ({
       user={user}
       validateFileSelection={validateFileSelection}
       handlePinnedFileClick={handlePinnedFileClick}
+      handleManageSubscriptionClick={handleManageSubscriptionClick}
     />
   );
 }

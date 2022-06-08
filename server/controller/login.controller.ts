@@ -6,9 +6,11 @@ export const loginUser = async (req: any, res: any) => {
 
   try {
     const users: Array<any> = await db('users').select().where({ email })
+    console.log('login users', users);
     if (users && users[0]) {
       const isPasswordValid: boolean = await compare(password, users[0].password);
       if (isPasswordValid) {
+        console.log('password valid');
         // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
         // res.header('Access-Control-Allow-Origin', 'https://salesdap.com');
         // res.header('Access-Control-Allow-Credentials', true);

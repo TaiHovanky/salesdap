@@ -133,27 +133,38 @@ export const createWebhook = (req: any, res: any) => {
 export const createCustomerPortal = async (req: any, res: any) => {
   // For demonstration purposes, we're using the Checkout session to retrieve the customer ID.
   // Typically this is stored alongside the authenticated user in your database.
-  const { session_id, email } = req.body;
+  const { sessionId, email } = req.body;
   let customer: any;
+  console.log('req body in create customer porta', req.body);
 
-  if (session_id) {
-    const checkoutSession = await stripe.checkout.sessions.retrieve(session_id);
-    customer = checkoutSession.customer;
-  } else {
-    const user = await db('users').select('email').where({ email });
-    console.log('users', user);
+  try {
+    if (sessionId) {
+      console.log('')
+      const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId);
+      console.log('checkout session--------', checkoutSession);
+      customer = checkoutSession.customer;
+    } else if (email) {
+      const user = await db('users').select('customer_id').where({ email });
+      console.log('createCustomerPortal users', user);
+      const customerObj = await stripe.customers.retrieve(user[0].customer_id);
+      customer = customerObj.id;
+      console.log('createCustomerPortal customer', customer);
+    }
+  
+    // This is the url to which the customer will be redirected when they are done
+    // managing their billing with the portal.
+    const returnUrl = 'http://localhost:3000/home';
+  
+    const portalSession = await stripe.billingPortal.sessions.create({
+      customer,
+      return_url: returnUrl,
+    });
+  
+    res.json({ url: portalSession.url });
+  } catch (err: any) {
+    console.log('err', err);
+    res.status(400).send();
   }
-
-  // This is the url to which the customer will be redirected when they are done
-  // managing their billing with the portal.
-  const returnUrl = 'http://localhost:3000/home';
-
-  const portalSession = await stripe.billingPortal.sessions.create({
-    customer,
-    return_url: returnUrl,
-  });
-
-  res.redirect(303, portalSession.url);
 }
 
 export const handleSuccessfulSubscription = async (req: any, res: any) => {

@@ -56,7 +56,7 @@ const RegisterContainer = ({
       headers: {
         'Content-Type': 'multipart/form-data'
       },
-      withCredentials: true
+      // withCredentials: true
     };
     console.log('form data', formData, values);
     axios.post('http://localhost:3001/api/v1/register', formData, config)
