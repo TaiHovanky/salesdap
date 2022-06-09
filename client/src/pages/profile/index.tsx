@@ -7,7 +7,7 @@ import {
   Chip,
   Fab,
 } from '@mui/material';
-import { Attachment, Upload } from '@mui/icons-material';
+import { Attachment, Upload, Payment as PaymentIcon } from '@mui/icons-material';
 import { UserState } from '../../state/reducers/user';
 
 interface Props {
@@ -90,7 +90,7 @@ const Profile = ({
                   sx={{ marginTop: '2.5rem', minWidth: '208px' }}
                   onClick={handleManageSubscriptionClick}
                 >
-                  <Upload sx={{ mr: 1 }} />
+                  <PaymentIcon sx={{ mr: 1 }} />
                   Manage Subscription
                 </Fab>
               </Grid>

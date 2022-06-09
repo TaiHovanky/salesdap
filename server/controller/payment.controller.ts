@@ -25,8 +25,6 @@ export const createCheckoutSession = async (req: any, res: any) => {
       success_url: `http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `http://localhost:3000/register`,
     });
-    console.log('session', customerEmail, session);
-    // await db('users').where({ email: customerEmail }).update({ customer_id: session.customer.id })
   
     res.json({url: session.url});
   } catch (err: any) {
@@ -135,20 +133,15 @@ export const createCustomerPortal = async (req: any, res: any) => {
   // Typically this is stored alongside the authenticated user in your database.
   const { sessionId, email } = req.body;
   let customer: any;
-  console.log('req body in create customer porta', req.body);
 
   try {
     if (sessionId) {
-      console.log('')
       const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId);
-      console.log('checkout session--------', checkoutSession);
       customer = checkoutSession.customer;
     } else if (email) {
       const user = await db('users').select('customer_id').where({ email });
-      console.log('createCustomerPortal users', user);
       const customerObj = await stripe.customers.retrieve(user[0].customer_id);
       customer = customerObj.id;
-      console.log('createCustomerPortal customer', customer);
     }
   
     // This is the url to which the customer will be redirected when they are done
