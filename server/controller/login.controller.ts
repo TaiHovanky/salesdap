@@ -3,23 +3,27 @@ import db from '../db/postgres';
 
 export const loginUser = async (req: any, res: any) => {
   const { email, password } = req.body;
+  // console.log('res body login', res.body)
 
   try {
     const users: Array<any> = await db('users').select().where({ email })
+    // console.log('users', users);
     if (users && users[0]) {
+      // console.log('if users and users0', users[0])
       const isPasswordValid: boolean = await compare(password, users[0].password);
       if (isPasswordValid) {
+        // console.log('is password valid')
         // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-        res.header('Access-Control-Allow-Origin', 'https://salesdap.com');
-        res.header('Access-Control-Allow-Credentials', true);
-        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-        res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, HEAD, OPTIONS');
-        req.session.user = users[0].userid;
-        req.session.save();
-        console.log('req session user after login', req.session, req.sessionID);
+        // res.header('Access-Control-Allow-Origin', 'https://salesdap.com');
+        // res.header('Access-Control-Allow-Credentials', true);
+        // res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+        // res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, HEAD, OPTIONS');
+        // req.session.user = users[0].userid;
+        // req.session.save();
+        // console.log('req session user after login', req.session, req.sessionID);
         const { password, userid, ...user } = users[0];
         return res
-        // .status(200)
+        .status(200)
         // .cookie(
         //   req.session.user,
         //   JSON.stringify(process.env.SESSION_SECRET),
