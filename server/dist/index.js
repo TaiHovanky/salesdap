@@ -18,7 +18,6 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const routes_1 = __importDefault(require("./routes"));
-const session_1 = require("./middleware/session");
 (() => __awaiter(void 0, void 0, void 0, function* () {
     const app = (0, express_1.default)();
     app.use((0, cors_1.default)({
@@ -28,7 +27,6 @@ const session_1 = require("./middleware/session");
     }));
     app.use((0, body_parser_1.default)());
     app.set('trust proxy', 1);
-    app.use(session_1.redisSession);
     app.use('/', routes_1.default);
     app.listen(3001, () => {
         console.log('app listening at 3001');

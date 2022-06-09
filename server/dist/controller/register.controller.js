@@ -29,7 +29,6 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     };
     (0, postgres_1.default)('users').insert(newUser)
         .then(() => {
-        req.session.user = newUser.userid;
         return res.status(200).json({ email, firstname, lastname, company });
     })
         .catch((err) => console.log('register err', err));
