@@ -6,6 +6,9 @@ import { hideError, hideSuccess } from '../../state/actions/alert';
 import { useEffect } from 'react';
 import axios from 'axios';
 import { setAccessToken } from '../../utils/access-token.utils';
+import { useHistory } from 'react-router-dom';
+import { setIsLoading } from '../../state/actions/loading';
+import { updateUser } from '../../state/actions/user';
 
 interface Props {
   alert: AlertState;
@@ -13,6 +16,8 @@ interface Props {
   user: UserState;
   hideError: any;
   hideSuccess: any;
+  setIsLoading: any;
+  updateUser: any;
 }
 
 const RoutesContainer = ({
@@ -20,14 +25,25 @@ const RoutesContainer = ({
   loading,
   user,
   hideError,
-  hideSuccess
+  hideSuccess,
+  setIsLoading,
+  updateUser
 }: Props) => {
+  // const history = useHistory();
+
   useEffect(() => {
-    axios.post("http://localhost:3001/refresh_token", {
-      credentials: "include"
-    }).then((x: any) => {
-      const { token } = x;
-      setAccessToken(token);
+    setIsLoading(true);
+    axios.post("http://localhost:3001/api/v1/refresh_token", {
+      refreshToken: localStorage.getItem('sdtr')
+    }).then((res: any) => {
+      console.log('data', res.data);
+      setAccessToken(res.data.token);
+      localStorage.setItem('sdtr', res.data.refreshToken);
+      hideError();
+      updateUser(res.data);
+      setIsLoading(false);
+      // history.push('/home');
+      // window.location.href = 'http://localhost:3000/home'
     });
   }, []);
 
@@ -57,7 +73,9 @@ const mapStateToProps = (state: any) => ({
 
 const mapDispatchToProps = (dispatch: any) => ({
   hideError: () => dispatch(hideError()),
-  hideSuccess: () => dispatch(hideSuccess())
+  hideSuccess: () => dispatch(hideSuccess()),
+  setIsLoading: (isLoading: boolean) => dispatch(setIsLoading(isLoading)),
+  updateUser: (user: any) => dispatch(updateUser(user))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoutesContainer);

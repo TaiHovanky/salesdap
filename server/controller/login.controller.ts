@@ -1,7 +1,7 @@
 import { compare } from 'bcryptjs';
 import db from '../db/postgres';
 const jwt = require("jsonwebtoken");
-import { createRefreshToken, sendRefreshToken } from '../utils/auth.utils';
+import { createRefreshToken } from '../utils/auth.utils';
 
 export const loginUser = async (req: any, res: any) => {
   const { email, password } = req.body;
@@ -19,8 +19,7 @@ export const loginUser = async (req: any, res: any) => {
         );
         console.log('password valid', token);
         const { password, userid, ...user } = users[0];
-        sendRefreshToken(res, createRefreshToken(user));
-        return res.status(200).json({ ...user, token });
+        return res.status(200).json({ ...user, token, refreshToken: createRefreshToken(user) });
       }
       return res.status(401).send();
     }
@@ -32,7 +31,34 @@ export const loginUser = async (req: any, res: any) => {
 }
 
 export const refreshAccessToken = async (req: any, res: any) => {
-  const token = req.cookies.jid;
-  console.log('refresh token ', token);
-  res.status(200).send();
+  const { refreshToken } = req.body;
+  console.log('refresh token ', refreshToken, req.body);
+
+  let payload: any = null;
+  try {
+    payload = jwt.verify(refreshToken, 'refreshtokensecret');
+  } catch (err) {
+    console.log(err);
+    return res.send({ token: "" });
+  }
+  console.log('payload-------', payload);
+
+  try {
+    const users: Array<any> = await db('users').select().where({ userid: payload })
+    console.log('login refresh users', users);
+    if (users && users[0]) {
+      const token: any = jwt.sign(
+        { userId: users[0].userid },
+        "secretkeyappearshere",
+        { expiresIn: "1h" }
+      );
+      console.log('password valid', token);
+      const { password, userid, ...user } = users[0];
+      return res.status(200).json({ ...user, token });
+    }
+    return res.status(200).send({ token: '' });
+  } catch (err: any) {
+    console.log('login err', err); // TO DO: need to replace this with winston
+    return res.status(200).send({ token: '' });
+  }
 }

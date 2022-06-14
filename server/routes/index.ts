@@ -16,7 +16,7 @@ import {
   createCustomerPortal,
   handleSuccessfulSubscription
 } from '../controller/payment.controller';
-import { authenticate } from '../middleware/authenticate';
+// import { authenticate } from '../middleware/authenticate';
 
 const router = express.Router();
 
@@ -31,6 +31,7 @@ router.post('/api/v1/login', upload.none(), (req: any, res: any) => {
 });
 
 router.post('/api/v1/refresh_token', upload.none(), (req: any, res: any) => {
+  console.log('------------------------------------------------------------refresh?--------------------')
   refreshAccessToken(req, res);
 });
 
@@ -71,7 +72,7 @@ router.post('/api/v1/order-success', async (req: any, res: any) => {
 });
 
 // Protected routes
-router.use(authenticate);
+// router.use(authenticate);
 
 router.post(
   '/api/v1/uploadfile',

@@ -9,16 +9,16 @@ import { setIsLoading } from '../../state/actions/loading';
 import { setAccessToken } from '../../utils/access-token.utils';
 
 interface Props {
-  setIsLoading: any;
   showError: any;
   hideError: any;
+  setIsLoading: any;
   updateUser: any;
 }
 
 const LoginContainer = ({
-  setIsLoading,
   showError,
   hideError,
+  setIsLoading,
   updateUser
 }: Props) => {
   const history = useHistory();
@@ -39,6 +39,7 @@ const LoginContainer = ({
       .then((res: any) => {
         console.log('res login', res.data);
         setAccessToken(res.data.token);
+        localStorage.setItem('sdtr', res.data.refreshToken);
         hideError();
         updateUser(res.data);
         setIsLoading(false);
