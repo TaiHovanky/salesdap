@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { updateUser } from '../../state/actions/user';
 import { showError, hideError } from '../../state/actions/alert';
 import { setIsLoading } from '../../state/actions/loading';
+import { setAccessToken } from '../../utils/access-token.utils';
 
 interface Props {
   setIsLoading: any;
@@ -36,6 +37,8 @@ const LoginContainer = ({
 
     axios.post('http://localhost:3001/api/v1/login', formData, config)
       .then((res: any) => {
+        console.log('res login', res.data);
+        setAccessToken(res.data.token);
         hideError();
         updateUser(res.data);
         setIsLoading(false);

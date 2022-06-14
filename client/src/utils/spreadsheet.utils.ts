@@ -1,5 +1,6 @@
 import { WorkSheet, WorkBook, utils, read, writeFile } from 'xlsx';
 import axios from 'axios';
+import { getAccessToken } from './access-token.utils';
 
 export const createJSONFromSpreadsheet = async (document: any) => {
   const data = await document.arrayBuffer();
@@ -41,11 +42,14 @@ export const createFileLink = (data: any, pinnedFileName: string) => {
 }
 
 export const getPinnedFile = (pinnedFileId: string) => {
-  return axios.get('/api/v1/viewpinnedfile',
+  return axios.get('http://localhost:3001/api/v1/viewpinnedfile',
     {
       responseType: 'blob',
       params: { pinnedFileId },
-      withCredentials: true
+      // withCredentials: true
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}` //the token is a variable which holds the token
+      }
     }
   );
 }

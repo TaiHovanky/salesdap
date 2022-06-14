@@ -11,6 +11,7 @@ import { UserState } from '../../state/reducers/user';
 import { checkIsValidFileType } from '../../utils/validate-file-type';
 import { showError, hideError } from '../../state/actions/alert';
 import { setIsLoading } from '../../state/actions/loading';
+import { getAccessToken } from '../../utils/access-token.utils';
 
 interface Props {
   user: UserState;
@@ -92,7 +93,11 @@ const ProfileContainer = ({
         user.email
       );
     }
-    axios.post('/api/v1/pinfile', formData)
+    axios.post('http://localhost:3001/api/v1/pinfile', formData, {
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`
+      }
+    })
       .then((res: any) => {
         pinFileSuccess(res.data);
         hideError();

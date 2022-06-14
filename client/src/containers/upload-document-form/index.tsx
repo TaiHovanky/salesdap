@@ -8,6 +8,7 @@ import { changeStep } from '../../state/actions/step-progress';
 import { showError, hideError } from '../../state/actions/alert';
 import { setIsLoading } from '../../state/actions/loading';
 import { updateComparisonColumns } from '../../utils/update-comparison-columns';
+import { getAccessToken } from '../../utils/access-token.utils';
 
 interface Props {
   activeStep: number;
@@ -86,7 +87,11 @@ const UploadDocumentFormContainer = ({
     formData.append('unformattedData1', unformattedData1);
     formData.append('unformattedData2', unformattedData2);
 
-    axios.post('/api/v1/uploadfile', formData, { withCredentials: true })
+    axios.post('http://localhost:3001/api/v1/uploadfile', formData, {
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`
+      }
+    })
       .then((res: any) => {
         hideError();
         uploadDocumentSuccess(res.data);

@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 import { AlertState } from '../../state/reducers/alert';
 import { UserState } from '../../state/reducers/user';
 import { hideError, hideSuccess } from '../../state/actions/alert';
+import { useEffect } from 'react';
+import axios from 'axios';
+import { setAccessToken } from '../../utils/access-token.utils';
 
 interface Props {
   alert: AlertState;
@@ -19,6 +22,15 @@ const RoutesContainer = ({
   hideError,
   hideSuccess
 }: Props) => {
+  useEffect(() => {
+    axios.post("http://localhost:3001/refresh_token", {
+      credentials: "include"
+    }).then((x: any) => {
+      const { token } = x;
+      setAccessToken(token);
+    });
+  }, []);
+
   const handleAlertClose = () => {
     if (alert.alertType === 'error') {
       hideError();
