@@ -39,7 +39,9 @@ const LoginContainer = ({
       .then((res: any) => {
         console.log('res login', res.data);
         setAccessToken(res.data.token);
-        localStorage.setItem('sdtr', res.data.refreshToken);
+        if (res.data.refreshToken) {
+          localStorage.setItem('sdtr', res.data.refreshToken);
+        }
         hideError();
         updateUser(res.data);
         setIsLoading(false);

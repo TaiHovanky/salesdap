@@ -7,8 +7,9 @@ export const createAccessToken = (user: any) => {
 };
 
 export const createRefreshToken = (user: any) => {
+  console.log('creating refresh token----------------------------------------------', user);
   return sign(
-    { userId: user.userid, tokenVersion: user.token_version },
+    { email: user.email, tokenVersion: user.token_version | 0 },
     'refreshtokensecret',
     {
       expiresIn: '7d'

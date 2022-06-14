@@ -44,7 +44,7 @@ export const refreshAccessToken = async (req: any, res: any) => {
   console.log('payload-------', payload);
 
   try {
-    const users: Array<any> = await db('users').select().where({ userid: payload })
+    const users: Array<any> = await db('users').select().where({ email: payload.email })
     console.log('login refresh users', users);
     if (users && users[0]) {
       const token: any = jwt.sign(

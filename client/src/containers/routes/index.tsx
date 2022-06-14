@@ -6,9 +6,10 @@ import { hideError, hideSuccess } from '../../state/actions/alert';
 import { useEffect } from 'react';
 import axios from 'axios';
 import { setAccessToken } from '../../utils/access-token.utils';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import { setIsLoading } from '../../state/actions/loading';
 import { updateUser } from '../../state/actions/user';
+import { createBrowserHistory } from 'history';
 
 interface Props {
   alert: AlertState;
@@ -29,7 +30,8 @@ const RoutesContainer = ({
   setIsLoading,
   updateUser
 }: Props) => {
-  // const history = useHistory();
+  const history = createBrowserHistory();
+  console.log('history', history);
 
   useEffect(() => {
     setIsLoading(true);
@@ -40,10 +42,12 @@ const RoutesContainer = ({
       setAccessToken(res.data.token);
       localStorage.setItem('sdtr', res.data.refreshToken);
       hideError();
-      updateUser(res.data);
       setIsLoading(false);
-      // history.push('/home');
-      // window.location.href = 'http://localhost:3000/home'
+      if (res.data && res.data.email) {
+        updateUser(res.data);
+        history.push('/home');
+        // window.location.href = 'http://localhost:3000/home';
+      }
     });
   }, []);
 
@@ -61,6 +65,7 @@ const RoutesContainer = ({
       loading={loading}
       user={user}
       handleAlertClose={handleAlertClose}
+      history={history}
     />
   );
 }

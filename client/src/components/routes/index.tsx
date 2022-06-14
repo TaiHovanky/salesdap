@@ -11,27 +11,51 @@ import {
   Backdrop,
   CircularProgress
 } from '@mui/material';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, useHistory } from 'react-router-dom';
 import { AlertState } from '../../state/reducers/alert';
 import { UserState } from '../../state/reducers/user';
 import Payment from '../../pages/payment';
 import SuccessDisplayContainer from '../../containers/payment-success';
+// import { createBrowserHistory } from 'history';
 
 interface Props {
   alert: AlertState;
   loading: boolean;
   user: UserState;
   handleAlertClose: any;
+  history: any;
 }
 
 const Routes = ({
   alert,
   loading,
   user,
-  handleAlertClose
+  handleAlertClose,
+  history
 }: Props) => {
+  // const history = createBrowserHistory();
+  // console.log('history', history);
+
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   axios.post("http://localhost:3001/api/v1/refresh_token", {
+  //     refreshToken: localStorage.getItem('sdtr')
+  //   }).then((res: any) => {
+  //     console.log('data', res.data);
+  //     setAccessToken(res.data.token);
+  //     localStorage.setItem('sdtr', res.data.refreshToken);
+  //     hideError();
+  //     setIsLoading(false);
+  //     // history.push('/home');
+  //     if (res.data && res.data.email) {
+  //       updateUser(res.data);
+  //       // window.location.href = 'http://localhost:3000/home';
+  //     }
+  //   });
+  // }, []);
+
   return (
-    <BrowserRouter>
+    <BrowserRouter history={history}>
       <main>
         <NavBarContainer user={user} />
         <Switch>
