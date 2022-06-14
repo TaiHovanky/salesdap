@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import Login from '../../pages/login';
 import { useHistory } from 'react-router-dom';
@@ -22,6 +22,23 @@ const LoginContainer = ({
   updateUser
 }: Props) => {
   const history = useHistory();
+
+  useEffect(() => {
+    setIsLoading(true);
+    axios.post("http://localhost:3001/api/v1/refresh_token", {
+      refreshToken: localStorage.getItem('sdtr')
+    }).then((res: any) => {
+      console.log('data', res.data);
+      setAccessToken(res.data.token);
+      localStorage.setItem('sdtr', res.data.refreshToken);
+      hideError();
+      setIsLoading(false);
+      if (res.data && res.data.email) {
+        updateUser(res.data);
+        history.push('/home');
+      }
+    });
+  }, []);
 
   const onSubmit = (values: any) => {
     setIsLoading(true);

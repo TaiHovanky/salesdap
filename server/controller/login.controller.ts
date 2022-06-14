@@ -54,7 +54,7 @@ export const refreshAccessToken = async (req: any, res: any) => {
       );
       console.log('password valid', token);
       const { password, userid, ...user } = users[0];
-      return res.status(200).json({ ...user, token });
+      return res.status(200).json({ ...user, token, refreshToken: createRefreshToken(user) });
     }
     return res.status(200).send({ token: '' });
   } catch (err: any) {
