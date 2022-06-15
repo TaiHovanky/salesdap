@@ -10,7 +10,7 @@ export const createAccessToken = (user: any) => {
 
 export const createRefreshToken = (user: any) => {
   return sign(
-    { email: user.email, tokenVersion: user.token_version | 0 },
+    { email: user.email, tokenVersion: user.token_version || 0 },
     'refreshtokensecret',
     { expiresIn: '7d' }
   );

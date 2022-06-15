@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const stripe = require('stripe')(process.env.STRIPE_TEST_SECRET);
 import { compare } from 'bcryptjs';
 import db from '../db/postgres';
 import { createAccessToken, createRefreshToken, sendRefreshToken } from '../utils/auth.utils';
@@ -7,24 +8,31 @@ export const loginUser = async (req: any, res: any) => {
   const { email, password } = req.body;
 
   try {
-    const users: Array<any> = await db('users').select().where({ email })
-    if (users && users[0]) {
-      const isPasswordValid: boolean = await compare(password, users[0].password);
-      if (isPasswordValid) {
-        const token: string = createAccessToken(users[0]);
-        const {
-          password,
-          userid,
-          customer_id,
-          passwordtoken,
-          passwordtoken_expiration,
-          ...user
-        } = users[0];
-        sendRefreshToken(res, createRefreshToken(user));
-        return res.status(200).json({ ...user, token });
-      }
+    const users: Array<any> = await db('users').select().where({ email });
+    if (!users || !users[0]) {
       return res.status(401).send();
     }
+
+    const isActive: boolean = await checkForActiveSubscription(users[0].customer_id);
+    if (!isActive) {
+      return res.status(401).send();
+    }
+
+    const isPasswordValid: boolean = await compare(password, users[0].password);
+    if (isPasswordValid) {
+      const token: string = createAccessToken(users[0]);
+      const {
+        password,
+        userid,
+        customer_id,
+        passwordtoken,
+        passwordtoken_expiration,
+        ...user
+      } = users[0];
+      sendRefreshToken(res, createRefreshToken(user));
+      return res.status(200).json({ ...user, token });
+    }
+
     return res.status(401).send();
   } catch (err: any) {
     console.log('login err', err); // TO DO: need to replace this with winston
@@ -43,7 +51,17 @@ export const refreshAccessToken = async (req: any, res: any) => {
   }
 
   try {
-    const users: Array<any> = await db('users').select().where({ email: payload.email })
+    const users: Array<any> = await db('users').select().where({ email: payload.email });
+
+    // if (!users[0] || users[0].token_version !== payload.tokenVersion) {
+    //   // safeguard for refresh token version
+    //   return res.status(200).send();
+    // }
+    const isActive: boolean = await checkForActiveSubscription(users[0].customer_id);
+    if (!isActive) {
+      return res.status(200).send();
+    }
+
     if (users && users[0]) {
       const token: string = createAccessToken(users[0]);
       const {
@@ -62,4 +80,23 @@ export const refreshAccessToken = async (req: any, res: any) => {
     console.log('login err', err); // TO DO: need to replace this with winston
     return res.status(200).send();
   }
+}
+
+export const checkForActiveSubscription = async (customerId: string): Promise<boolean> => {
+  if (!customerId) {
+    return false;
+  }
+
+  const customer = await stripe.customers.retrieve(customerId, { expand: ['subscriptions']});
+
+  if (customer && customer.subscriptions && customer.subscriptions.data) {
+    const hasActiveSubscription: boolean = !!customer.subscriptions.data.find((subscription: any) => {
+      return subscription.status === 'active';
+    });
+
+    if (hasActiveSubscription) {
+      return true;
+    }
+  }
+  return false;
 }

@@ -5,7 +5,6 @@ import Register from '../../pages/register';
 import { connect } from 'react-redux';
 import { showError, hideError } from '../../state/actions/alert';
 import { setIsLoading } from '../../state/actions/loading';
-// import { updateRegistrationUser } from '../../state/actions/registration';
 
 interface Props {
   setIsLoading: any;
@@ -18,9 +17,7 @@ const RegisterContainer = ({
   setIsLoading,
   showError,
   hideError,
-  // updateRegistrationUser
 }: Props) => {
-  // const history = useHistory();
 
   const handleCreateCheckoutSession = (values: any) => {
     return axios.post('http://localhost:3001/api/v1/create-checkout-session', {
@@ -56,9 +53,8 @@ const RegisterContainer = ({
       headers: {
         'Content-Type': 'multipart/form-data'
       },
-      // withCredentials: true
     };
-    console.log('form data', formData, values);
+
     axios.post('http://localhost:3001/api/v1/register', formData, config)
       .then(() => {
         handleCreateCheckoutSession(values);
