@@ -10,8 +10,6 @@ interface Props {
   user: UserState;
   hideError: any;
   hideSuccess: any;
-  setIsLoading: any;
-  updateUser: any;
 }
 
 const RoutesContainer = ({

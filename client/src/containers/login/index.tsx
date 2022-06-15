@@ -8,6 +8,8 @@ import { showError, hideError } from '../../state/actions/alert';
 import { setIsLoading } from '../../state/actions/loading';
 import { setAccessToken } from '../../utils/access-token.utils';
 
+axios.defaults.withCredentials = true; // this fixed the cookie issue
+
 interface Props {
   showError: any;
   hideError: any;
@@ -25,19 +27,9 @@ const LoginContainer = ({
 
   useEffect(() => {
     setIsLoading(true);
-    axios.post("http://localhost:3001/api/v1/refresh_token", {
-      refreshToken: localStorage.getItem('sdtr')
-    }).then((res: any) => {
-      console.log('data', res.data);
-      setAccessToken(res.data.token);
-      localStorage.setItem('sdtr', res.data.refreshToken);
-      hideError();
-      setIsLoading(false);
-      if (res.data && res.data.email) {
-        updateUser(res.data);
-        history.push('/home');
-      }
-    });
+    axios.post("http://localhost:3001/api/v1/refresh_token", null, { withCredentials: true })
+      .then(handleLoginSuccess)
+      .catch(handleLoginFailure);
   }, []);
 
   const onSubmit = (values: any) => {
@@ -49,27 +41,34 @@ const LoginContainer = ({
       headers: {
         'Content-Type': 'multipart/form-data'
       },
-      // withCredentials: true
+      withCredentials: true
     };
 
     axios.post('http://localhost:3001/api/v1/login', formData, config)
-      .then((res: any) => {
-        console.log('res login', res.data);
-        setAccessToken(res.data.token);
-        if (res.data.refreshToken) {
-          localStorage.setItem('sdtr', res.data.refreshToken);
-        }
-        hideError();
-        updateUser(res.data);
-        setIsLoading(false);
-        history.push('/home');
-      })
-      .catch((err: any) => {
-        console.log('err', err);
-        setIsLoading(false);
-        showError('Wrong email or password');
-      });
+      .then(handleLoginSuccess)
+      .catch(handleLoginFailure);
   };
+
+  const handleLoginSuccess = (res: any) => {
+    const { token, email } = res.data;
+    console.log('data', res.data);
+    setAccessToken(token);
+    hideError();
+    setIsLoading(false);
+    if (res.data && email) {
+      // if (refreshToken) {
+      //   localStorage.setItem('sdtr', refreshToken);
+      // }
+      updateUser(res.data);
+      history.push('/home');
+    }
+  }
+
+  const handleLoginFailure = (err: any) => {
+    console.log('err', err);
+    setIsLoading(false);
+    showError('Wrong email or password');
+  }
 
   return (
     <Login onSubmit={onSubmit} />
