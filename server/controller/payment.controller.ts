@@ -178,7 +178,8 @@ export const handleSuccessfulSubscription = async (req: any, res: any) => {
       if (hasActiveSubscription) {
         await db('users').where({ email: customer.email }).update({
           active_subscription: true,
-          customer_id: customer.id
+          customer_id: customer.id,
+          subscription_type: 'PREMIUM'
         });
       }
     }

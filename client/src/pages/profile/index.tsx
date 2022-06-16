@@ -34,7 +34,7 @@ const Profile = ({
     }
   };
 
-  const hasActiveSubscription = user.subscriptionType === PREMIUM && user.activeSubscription === true;
+  const hasActiveSubscription = user.activeSubscription === true;
 
   return (
     <>
