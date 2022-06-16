@@ -8,20 +8,22 @@ import {
   Fab,
 } from '@mui/material';
 import { Attachment, Upload, Payment as PaymentIcon } from '@mui/icons-material';
-import { UserState } from '../../state/reducers/user';
+import { PREMIUM, UserState } from '../../state/reducers/user';
 
 interface Props {
   user: UserState;
   validateFileSelection: any;
   handlePinnedFileClick: any;
   handleManageSubscriptionClick: any;
+  handleCreateCheckoutSession: any;
 }
 
 const Profile = ({
   user,
   validateFileSelection,
   handlePinnedFileClick,
-  handleManageSubscriptionClick
+  handleManageSubscriptionClick,
+  handleCreateCheckoutSession
 }: Props) => {
   const inputFileRef: any = useRef(null);
 
@@ -31,6 +33,8 @@ const Profile = ({
       inputFileRef.current.click();
     }
   };
+
+  const hasActiveSubscription = user.subscriptionType === PREMIUM && user.activeSubscription === true;
 
   return (
     <>
@@ -84,15 +88,26 @@ const Profile = ({
                   onChange={validateFileSelection}
                   name="sales_file"
                 />
-                <Fab
-                  variant="extended"
-                  aria-label="add"
-                  sx={{ marginTop: '2.5rem', minWidth: '208px' }}
-                  onClick={handleManageSubscriptionClick}
-                >
-                  <PaymentIcon sx={{ mr: 1 }} />
-                  Manage Subscription
-                </Fab>
+                {hasActiveSubscription ?
+                  <Fab
+                    variant="extended"
+                    aria-label="add"
+                    sx={{ marginTop: '2.5rem', minWidth: '208px' }}
+                    onClick={handleManageSubscriptionClick}
+                  >
+                    <PaymentIcon sx={{ mr: 1 }} />
+                    Manage Subscription
+                  </Fab> :
+                  <Fab
+                    variant="extended"
+                    aria-label="add"
+                    sx={{ marginTop: '2.5rem', minWidth: '208px' }}
+                    onClick={() => handleCreateCheckoutSession(user.email)}
+                  >
+                    <PaymentIcon sx={{ mr: 1 }} />
+                    Upgrade Subscription
+                  </Fab>
+                }
               </Grid>
             </Paper>
           </Grid>

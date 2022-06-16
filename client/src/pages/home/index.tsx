@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   Stepper,
@@ -17,9 +17,14 @@ const steps: Array<string> = ['Upload document', 'View results', 'Email customer
 interface Props {
   activeStep: number;
   changeStep: any;
+  user: any;
 }
 
-const Home = ({ activeStep, changeStep }: Props) => {
+const Home = ({ activeStep, changeStep, user }: Props) => {
+  useEffect(() => {
+    console.log('user home', user);
+  }, []);
+
   return (
     <>
       <Box sx={{ width: '100%', height: '100%', marginTop: '3.5vh' }}>

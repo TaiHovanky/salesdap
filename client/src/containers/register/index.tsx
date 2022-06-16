@@ -19,9 +19,9 @@ const RegisterContainer = ({
   hideError,
 }: Props) => {
 
-  const handleCreateCheckoutSession = (values: any) => {
+  const handleCreateCheckoutSession = (email: string) => {
     return axios.post('http://localhost:3001/api/v1/create-checkout-session', {
-      customerEmail: values.email
+      customerEmail: email
     })
       .then((res) => {
         hideError();
@@ -57,7 +57,7 @@ const RegisterContainer = ({
 
     axios.post('http://localhost:3001/api/v1/register', formData, config)
       .then(() => {
-        handleCreateCheckoutSession(values);
+        handleCreateCheckoutSession(values.email);
       })
       .catch((err: any) => {
         console.log('err', err);

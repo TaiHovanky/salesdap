@@ -56,9 +56,6 @@ const LoginContainer = ({
     hideError();
     setIsLoading(false);
     if (res.data && email) {
-      // if (refreshToken) {
-      //   localStorage.setItem('sdtr', refreshToken);
-      // }
       updateUser(res.data);
       history.push('/home');
     }

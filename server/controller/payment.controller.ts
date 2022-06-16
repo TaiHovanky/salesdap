@@ -4,7 +4,7 @@ import db from '../db/postgres';
 const stripe = require('stripe')(process.env.STRIPE_TEST_SECRET);
 
 export const createCheckoutSession = async (req: any, res: any) => {
-  const { customerEmail } = req.body;
+  const { customerEmail, isComingFromProfilePage } = req.body;
   try {
     const session = await stripe.checkout.sessions.create({
       customer_email: customerEmail,
@@ -22,8 +22,12 @@ export const createCheckoutSession = async (req: any, res: any) => {
         },
       ],
       mode: 'subscription',
-      success_url: `http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `http://localhost:3000/register`,
+      success_url: isComingFromProfilePage ?
+        `http://localhost:3000/profile?session_id={CHECKOUT_SESSION_ID}` :
+        `http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: isComingFromProfilePage ?
+        'http://localhost:3000/profile' :
+        'http://localhost:3000/register'
     });
   
     res.json({url: session.url});

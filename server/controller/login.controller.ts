@@ -4,6 +4,8 @@ import { compare } from 'bcryptjs';
 import db from '../db/postgres';
 import { createAccessToken, createRefreshToken, sendRefreshToken } from '../utils/auth.utils';
 
+// const FREE = 'FREE';
+
 export const loginUser = async (req: any, res: any) => {
   const { email, password } = req.body;
 
@@ -13,10 +15,10 @@ export const loginUser = async (req: any, res: any) => {
       return res.status(401).send();
     }
 
-    const isActive: boolean = await checkForActiveSubscription(users[0].customer_id);
-    if (!isActive) {
-      return res.status(401).send();
-    }
+    // const isActive: boolean = await checkForActiveSubscription(users[0].customer_id);
+    // if (!isActive && users[0].subscription_type !== FREE) {
+    //   return res.status(401).send();
+    // }
 
     const isPasswordValid: boolean = await compare(password, users[0].password);
     if (isPasswordValid) {
@@ -30,6 +32,7 @@ export const loginUser = async (req: any, res: any) => {
         ...user
       } = users[0];
       sendRefreshToken(res, createRefreshToken(user));
+      console.log('user---------', user);
       return res.status(200).json({ ...user, token });
     }
 
@@ -57,10 +60,10 @@ export const refreshAccessToken = async (req: any, res: any) => {
     //   // safeguard for refresh token version
     //   return res.status(200).send();
     // }
-    const isActive: boolean = await checkForActiveSubscription(users[0].customer_id);
-    if (!isActive) {
-      return res.status(200).send();
-    }
+    // const isActive: boolean = await checkForActiveSubscription(users[0].customer_id);
+    // if (!isActive && users[0].subscription_type !== FREE) {
+    //   return res.status(200).send();
+    // }
 
     if (users && users[0]) {
       const token: string = createAccessToken(users[0]);

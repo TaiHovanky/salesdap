@@ -40,7 +40,7 @@ const Routes = ({
           <Route exact path="/register" component={RegisterContainer} />
           <Route path="/pay" component={Payment} />
           <Route path="/success" component={SuccessDisplayContainer} />
-          <PrivateRoute exact path="/profile" component={ProfileContainer} user={user} />
+          <PrivateRoute path="/profile" component={ProfileContainer} user={user} />
           <Route exact path="/forgot-password" component={ForgotPasswordContainer} />
           <Route path="/reset-password/:token" component={PasswordResetContainer} />
         </Switch>
