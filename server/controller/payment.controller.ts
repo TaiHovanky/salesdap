@@ -169,7 +169,7 @@ export const handleSuccessfulSubscription = async (req: any, res: any) => {
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     const customer = await stripe.customers.retrieve(session.customer, { expand: ['subscriptions']});
-    // console.log('customer in successful session', customer, customer.subscriptions.data);
+    console.log('customer in successful session', customer, customer.subscriptions.data);
 
     if (customer && customer.subscriptions && customer.subscriptions.data) {
       const hasActiveSubscription: boolean = !!customer.subscriptions.data.find((subscription: any) => {

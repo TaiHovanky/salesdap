@@ -18,7 +18,10 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
     fileStructure1,
     fileStructure2,
     unformattedData1,
-    unformattedData2
+    unformattedData2,
+    userSubscriptionType,
+    userFreeComparisons,
+    userEmail
   } = req.body;
   const { sales_file1, sales_file2 }: any = req.files;
 
@@ -51,7 +54,12 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
     /* Create array of objects (rows a.k.a duplicates) that only contain the columns that the user wants to see */
     const result: Array<any> = setupResults(duplicatesList, columns);
     const finishTs = new Date().getTime();
-    console.log('------------------------finish ts:', finishTs, '-----diff-----', finishTs - startTs);
+    console.log('------------------------finish ts:', finishTs, '-----diff-----', finishTs - startTs, userSubscriptionType, userFreeComparisons, userEmail);
+    if (userSubscriptionType === 'FREE') {
+      await db('users').update({
+        free_comparisons: parseInt(userFreeComparisons) + 1
+      }).where({ email: userEmail });
+    }
     res.send(result);
   } catch(err: any) {
     res.status(400).send();

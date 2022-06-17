@@ -5,14 +5,11 @@ import {
   Typography,
   Paper,
   Chip,
-  Tooltip,
   Fab,
-  styled,
-  TooltipProps,
-  tooltipClasses,
 } from '@mui/material';
 import { Attachment, Upload, Payment as PaymentIcon } from '@mui/icons-material';
-import { PREMIUM, UserState } from '../../state/reducers/user';
+import { UserState } from '../../state/reducers/user';
+import InfoTooltip from '../../components/info-tooltip';
 
 interface Props {
   user: UserState;
@@ -21,14 +18,6 @@ interface Props {
   handleManageSubscriptionClick: any;
   handleCreateCheckoutSession: any;
 }
-
-const PinnedFileTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    fontSize: theme.typography.pxToRem(18),
-  },
-}));
 
 const Profile = ({
   user,
@@ -90,8 +79,9 @@ const Profile = ({
                 justifyContent="start"
                 alignItems="start"
               >
-                <PinnedFileTooltip
+                <InfoTooltip
                   arrow
+                  placement="top-start"
                   open={!user.pinnedFileId}
                   title="Upload and 'pin' a list that you will regularly be comparing to partner account lists"
                 >
@@ -104,7 +94,7 @@ const Profile = ({
                     <Upload sx={{ mr: 1 }} />
                     Select Pinned File
                   </Fab>
-                </PinnedFileTooltip>
+                </InfoTooltip>
                 <input
                   type="file"
                   ref={inputFileRef}

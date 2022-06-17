@@ -9,6 +9,8 @@ import { showError, hideError } from '../../state/actions/alert';
 import { setIsLoading } from '../../state/actions/loading';
 import { updateComparisonColumns } from '../../utils/update-comparison-columns';
 import { getAccessToken } from '../../utils/access-token.utils';
+import { updateUser } from '../../state/actions/user';
+import { FREE, UserState } from '../../state/reducers/user';
 
 interface Props {
   activeStep: number;
@@ -20,6 +22,8 @@ interface Props {
   changeStep: any;
   setAllColumns: any;
   changeComparisonColumn: any;
+  user: UserState;
+  updateUser: any;
 }
 
 const UploadDocumentFormContainer = ({
@@ -31,7 +35,9 @@ const UploadDocumentFormContainer = ({
   setIsLoading,
   changeStep,
   setAllColumns,
-  changeComparisonColumn
+  changeComparisonColumn,
+  user,
+  updateUser
 }: Props) => {
   /**
    * When the user selects a column (by clicking a checkbox next to the column name in the data grid
@@ -86,6 +92,9 @@ const UploadDocumentFormContainer = ({
     formData.append('fileStructure2', fileStructure2);
     formData.append('unformattedData1', unformattedData1);
     formData.append('unformattedData2', unformattedData2);
+    formData.append('userSubscriptionType', user.subscriptionType);
+    formData.append('userFreeComparisons', `${user.freeComparisons}`);
+    formData.append('userEmail', user.email);
 
     axios.post('http://localhost:3001/api/v1/uploadfile', formData, {
       headers: {
@@ -95,6 +104,9 @@ const UploadDocumentFormContainer = ({
       .then((res: any) => {
         hideError();
         uploadDocumentSuccess(res.data);
+        if (user.subscriptionType === FREE) {
+          updateUser({ ...user, freeComparisons: user.freeComparisons + 1 });
+        }
         setIsLoading(false);
         changeStep(activeStep += 1);
       })
@@ -114,13 +126,16 @@ const UploadDocumentFormContainer = ({
       setAllColumns={setAllColumns}
       handleColumnClick={handleColumnClick}
       handleUploadAndCompare={handleUploadAndCompare}
+      userFreeComparisons={user.freeComparisons}
+      userSubscriptionType={user.subscriptionType}
     />
   );
 }
 
 const mapStateToProps = (state: any) => ({
   activeStep: state.stepProgress.step,
-  document: state.document
+  document: state.document,
+  user: state.user
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
@@ -131,6 +146,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   changeStep: (activeStep: number) => dispatch(changeStep(activeStep)),
   setAllColumns: (columns: Array<string>, index: number) => dispatch(setAllColumns(columns, index)),
   changeComparisonColumn: (newValue: Array<string>, index: number) => dispatch(changeComparisonColumn(newValue, index)),
+  updateUser: (user: any) => dispatch(updateUser(user))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UploadDocumentFormContainer);
