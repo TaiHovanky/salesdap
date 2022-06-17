@@ -1,18 +1,6 @@
-export const logoutUser = (req: any, res: any) => {
-  return new Promise((resolve) => {
-    if (req.session) {
-      req.session.destroy((err: any) => {
-        res.clearCookie('connect.sid');
-        req.session = null;
-        if (err) {
-          console.log(err);
-          resolve(false);
-          return;
-        }
+import { sendRefreshToken } from '../utils/auth.utils';
 
-        return resolve(true);
-      })
-    }
-    return resolve(true);
-  });
+export const logoutUser = (_: any, res: any) => {
+  sendRefreshToken(res, '');
+  return res.status(200).send();
 }

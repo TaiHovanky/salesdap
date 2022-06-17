@@ -11,10 +11,10 @@ const PrivateRoute = (props: any) => {
     !user ||
     !user.email
   ) {
-    if (path === '/profile' && props.location && props.location.search && props.location.search.length) {
-      console.log('is profile success page');
-      return <Route {...props} />;
-    }
+    // if (path === '/profile' && props.location && props.location.search && props.location.search.length) {
+    //   console.log('is profile success page');
+    //   return <Route {...props} />;
+    // }
     return (
       <Redirect
         to={{

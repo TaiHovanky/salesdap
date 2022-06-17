@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcryptjs';
 import db from '../db/postgres';
+import { createAccessToken, createRefreshToken, sendRefreshToken } from '../utils/auth.utils';
 
 export const registerUser = async (req: any, res: any) => {
   try {
@@ -23,13 +24,10 @@ export const registerUser = async (req: any, res: any) => {
       subscription_type: subscriptionType
     };
   
-    db('users').insert(newUser)
-      .then(() => {
-        // req.session.user = newUser.userid;
-        return res.status(200).json({ email, firstname, lastname, company });
-      })
-      .catch((err: any) => console.log('register err', err));
-
+    await db('users').insert(newUser);
+    const token: string = createAccessToken(newUser);
+    sendRefreshToken(res, createRefreshToken(newUser));
+    return res.status(200).json({ email, firstname, lastname, company, token });
   } catch (err: any) {
     console.log('registration error', err);
     res.status(400).send();

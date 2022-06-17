@@ -33,19 +33,18 @@ const ProfileContainer = ({
   updateUser
 }: Props) => {
   useEffect(() => {
-    console.log('profile useeffect')
-    if (!user || !user.email) {
-      console.log('profile!user and !user email', user)
-      setIsLoading(true);
-      const query = new URLSearchParams(window.location.search);
-      const sessionId: string | null = query.get('session_id');
-      if (sessionId) {
-        console.log('about to update customer subscription info', sessionId);
-        updateCustomerSubscriptionInfo(sessionId);
+    const checkSubscriptionAndRefreshAuth = async () => {
+      if (!user || !user.email) {
+        setIsLoading(true);
+        const query = new URLSearchParams(window.location.search);
+        const sessionId: string | null = query.get('session_id');
+        if (sessionId) {
+          await updateCustomerSubscriptionInfo(sessionId);
+        }
+        await refreshUserAuthStatus();
       }
-      console.log('profiel refreshing user auth');
-      refreshUserAuthStatus();
-    }
+    };
+    checkSubscriptionAndRefreshAuth();
   }, []);
 
   const handlePinnedFileClick = async () => {
@@ -75,7 +74,7 @@ const ProfileContainer = ({
 
   const handleManageSubscriptionClick = () => {
     setIsLoading(true);
-    axios.post('http://localhost:3001/api/v1/create-portal-session', { email: user.email })
+    axios.post('http://localhost:3001/api/v1/create-portal-session', { email: user.email, isComingFromProfilePage: true })
       .then((res: any) => {
         setIsLoading(false);
         hideError();
@@ -152,15 +151,16 @@ const ProfileContainer = ({
     }
   }
 
-  const updateCustomerSubscriptionInfo = async (sessionId: string | null) => {
-    await axios.post('http://localhost:3001/api/v1/order-success', { sessionId })
+  const updateCustomerSubscriptionInfo = (sessionId: string | null) => {
+    return axios.post('http://localhost:3001/api/v1/order-success', { sessionId })
+      .then((res) => console.log('order success res', res.data))
       .catch(() => {
         showError('Problem with user registration');
       });
   }
 
   const refreshUserAuthStatus = () => {
-    axios.post("http://localhost:3001/api/v1/refresh_token", null, { withCredentials: true })
+    return axios.post("http://localhost:3001/api/v1/refresh_token", null, { withCredentials: true })
       .then(handleProfileLoginSuccess)
       .catch((err: any) => handleProfileActionFailure(err, 'failed to load profile'));
   }

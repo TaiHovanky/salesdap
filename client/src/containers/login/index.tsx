@@ -24,9 +24,11 @@ const LoginContainer = ({
   updateUser
 }: Props) => {
   const history = useHistory();
+  console.log('login contianer')
 
   useEffect(() => {
     setIsLoading(true);
+    console.log('login use effect refresh token')
     axios.post("http://localhost:3001/api/v1/refresh_token", null, { withCredentials: true })
       .then(handleLoginSuccess)
       .catch(handleLoginFailure);

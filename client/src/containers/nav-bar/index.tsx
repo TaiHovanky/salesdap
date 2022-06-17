@@ -1,11 +1,12 @@
 import React from 'react';
-// import axios from 'axios';
+import axios from 'axios';
+import NavBar from '../../components/nav-bar';
 import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { updateUser } from '../../state/actions/user';
 import { showError, hideError } from '../../state/actions/alert';
-import NavBar from '../../components/nav-bar';
 import { UserState, initialState } from '../../state/reducers/user';
+import { setAccessToken } from '../../utils/access-token.utils';
 
 interface Props {
   user: UserState;
@@ -17,19 +18,19 @@ const NavBarContainer = ({ user, hideError, updateUser }: Props) => {
   const history = useHistory();
 
   const handleLogout = () => {
-    // axios.post('/api/v1/logout') <-- until AWS Redis stuff gets setup, keep this commented
-    //   .then(() => {
-        // hideError();
+    axios.post('http://localhost:3001/api/v1/logout')
+      .then(() => {
+        hideError();
         updateUser({...initialState});
+        setAccessToken('');
         history.push('/');
-      // })
-      // .catch((err) => {
-      //   console.log('logout err', err);
-      //   showError('Failed to logout');
-      //   setTimeout(() => {
-      //     hideError();
-      //   }, 5000);
-      // });
+      })
+      .catch((err) => {
+        showError('Failed to logout');
+        setTimeout(() => {
+          hideError();
+        }, 5000);
+      });
   }
 
   return (

@@ -1,10 +1,11 @@
 import React from 'react';
 import axios from 'axios';
 import Register from '../../pages/register';
-// import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { showError, hideError } from '../../state/actions/alert';
 import { setIsLoading } from '../../state/actions/loading';
+import { FREE, PREMIUM } from '../../state/reducers/user';
+import { useHistory } from 'react-router-dom';
 
 interface Props {
   setIsLoading: any;
@@ -18,26 +19,18 @@ const RegisterContainer = ({
   showError,
   hideError,
 }: Props) => {
+  const history = useHistory();
 
   const handleCreateCheckoutSession = (email: string) => {
     return axios.post('http://localhost:3001/api/v1/create-checkout-session', {
       customerEmail: email
     })
       .then((res) => {
-        hideError();
-        setIsLoading(false);
         if (!!res && !!res.data) {
           window.location.href = res.data.url;
         }
       })
-      .catch((err: any) => {
-        console.log('err', err);
-        setIsLoading(false);
-        showError('There was a problem with accessing the payments page.');
-        setTimeout(() => {
-          hideError();
-        }, 5000)
-      });
+      .catch((err: any) => handleRegistrationFailure(err, 'There was a problem with accessing the payments page'));
   }
 
   const onSubmit = (values: any) => {
@@ -57,16 +50,28 @@ const RegisterContainer = ({
 
     axios.post('http://localhost:3001/api/v1/register', formData, config)
       .then(() => {
-        handleCreateCheckoutSession(values.email);
+        if (values.subscriptionType === PREMIUM) {
+          handleCreateCheckoutSession(values.email);
+        }
+        return;
       })
-      .catch((err: any) => {
-        console.log('err', err);
+      .then(() => {
+        hideError();
         setIsLoading(false);
-        showError('Registration failed.');
-        setTimeout(() => {
-          hideError();
-        }, 5000)
-      });
+        if (values.subscriptionType === FREE) {
+          history.push('/profile');
+        }
+      })
+      .catch((err: any) => handleRegistrationFailure(err, 'Registration failed'));
+  }
+
+  const handleRegistrationFailure = (err: any, errorMessage: string) => {
+    console.log('err', err);
+    setIsLoading(false);
+    showError(errorMessage);
+    setTimeout(() => {
+      hideError();
+    }, 5000);
   }
 
   return (

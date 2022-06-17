@@ -1,11 +1,15 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Box,
   Grid,
   Typography,
   Paper,
   Chip,
+  Tooltip,
   Fab,
+  styled,
+  TooltipProps,
+  tooltipClasses,
 } from '@mui/material';
 import { Attachment, Upload, Payment as PaymentIcon } from '@mui/icons-material';
 import { PREMIUM, UserState } from '../../state/reducers/user';
@@ -17,6 +21,14 @@ interface Props {
   handleManageSubscriptionClick: any;
   handleCreateCheckoutSession: any;
 }
+
+const PinnedFileTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    fontSize: theme.typography.pxToRem(18),
+  },
+}));
 
 const Profile = ({
   user,
@@ -34,7 +46,13 @@ const Profile = ({
     }
   };
 
-  const hasActiveSubscription = user.activeSubscription === true;
+  const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
+
+  useEffect(() => {
+    if (user && user.activeSubscription === true) {
+      setHasActiveSubscription(true);
+    }
+  }, [user])
 
   return (
     <>
@@ -72,15 +90,21 @@ const Profile = ({
                 justifyContent="start"
                 alignItems="start"
               >
-                <Fab
-                  variant="extended"
-                  aria-label="add"
-                  sx={{ marginTop: '2.5rem', minWidth: '208px' }}
-                  onClick={handleFileSelectionBtnClick}
+                <PinnedFileTooltip
+                  arrow
+                  open={!user.pinnedFileId}
+                  title="Upload and 'pin' a list that you will regularly be comparing to partner account lists"
                 >
-                  <Upload sx={{ mr: 1 }} />
-                  Select Pinned File
-                </Fab>
+                  <Fab
+                    variant="extended"
+                    aria-label="add"
+                    sx={{ marginTop: '2.5rem', minWidth: '208px' }}
+                    onClick={handleFileSelectionBtnClick}
+                  >
+                    <Upload sx={{ mr: 1 }} />
+                    Select Pinned File
+                  </Fab>
+                </PinnedFileTooltip>
                 <input
                   type="file"
                   ref={inputFileRef}

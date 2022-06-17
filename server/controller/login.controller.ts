@@ -32,7 +32,6 @@ export const loginUser = async (req: any, res: any) => {
         ...user
       } = users[0];
       sendRefreshToken(res, createRefreshToken(user));
-      console.log('user---------', user);
       return res.status(200).json({ ...user, token });
     }
 

@@ -7,7 +7,8 @@ const SuccessDisplay = ({ handleManageSubscriptionClick }: any) => {
   const history = useHistory();
 
   const handleLoginButtonClick = () => {
-    history.push('/login');
+    console.log('history pushing to login');
+    history.push('/');
   }
 
   return (

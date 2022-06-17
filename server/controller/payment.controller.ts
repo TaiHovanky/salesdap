@@ -22,9 +22,7 @@ export const createCheckoutSession = async (req: any, res: any) => {
         },
       ],
       mode: 'subscription',
-      success_url: isComingFromProfilePage ?
-        `http://localhost:3000/profile?session_id={CHECKOUT_SESSION_ID}` :
-        `http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: 'http://localhost:3000/profile?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: isComingFromProfilePage ?
         'http://localhost:3000/profile' :
         'http://localhost:3000/register'
@@ -135,7 +133,7 @@ export const createWebhook = (req: any, res: any) => {
 export const createCustomerPortal = async (req: any, res: any) => {
   // For demonstration purposes, we're using the Checkout session to retrieve the customer ID.
   // Typically this is stored alongside the authenticated user in your database.
-  const { sessionId, email } = req.body;
+  const { sessionId, email, isComingFromProfilePage } = req.body;
   let customer: any;
 
   try {
@@ -150,7 +148,9 @@ export const createCustomerPortal = async (req: any, res: any) => {
   
     // This is the url to which the customer will be redirected when they are done
     // managing their billing with the portal.
-    const returnUrl = 'http://localhost:3000/home';
+    const returnUrl = isComingFromProfilePage ?
+      'http://localhost:3000/profile' :
+      'http://localhost:3000/home';
   
     const portalSession = await stripe.billingPortal.sessions.create({
       customer,
@@ -175,6 +175,7 @@ export const handleSuccessfulSubscription = async (req: any, res: any) => {
       const hasActiveSubscription: boolean = !!customer.subscriptions.data.find((subscription: any) => {
         return subscription.status === 'active';
       });
+      console.log('handle successful subscription', hasActiveSubscription);
       if (hasActiveSubscription) {
         await db('users').where({ email: customer.email }).update({
           active_subscription: true,
