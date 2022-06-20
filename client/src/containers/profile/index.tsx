@@ -165,6 +165,29 @@ const ProfileContainer = ({
       .catch((err: any) => handleProfileActionFailure(err, 'failed to load profile'));
   }
 
+  const onSubmit = (values: any) => {
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append('email', values.email);
+    formData.append('firstname', values.firstName);
+    formData.append('lastname', values.lastName);
+    formData.append('company', values.company);
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${getAccessToken()}`
+      }
+    };
+    console.log('edit profile formdata', formData, values);
+    return axios.post('http://localhost:3001/api/v1/edit-profile', formData, config)
+    .then((res: any) => {
+      updateUser(res.data);
+      hideError();
+      setIsLoading(false);
+    })
+    .catch((err: any) => handleProfileActionFailure(err, 'Profile update failed'));
+  }
+
   return (
     <Profile
       user={user}
@@ -172,6 +195,7 @@ const ProfileContainer = ({
       handlePinnedFileClick={handlePinnedFileClick}
       handleManageSubscriptionClick={handleManageSubscriptionClick}
       handleCreateCheckoutSession={handleCreateCheckoutSession}
+      onSubmit={onSubmit}
     />
   );
 }

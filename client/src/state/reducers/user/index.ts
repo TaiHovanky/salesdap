@@ -36,15 +36,15 @@ export const userReducer = (state = initialState, action: any) => {
     case UPDATE_USER:
       return {
         ...state,
-        email: action.payload.email,
-        firstname: action.payload.firstname,
-        lastname: action.payload.lastname,
-        company: action.payload.company,
-        pinnedFileName: action.payload.pinned_filename,
-        pinnedFileId: action.payload.pinned_file_id,
-        activeSubscription: action.payload.active_subscription,
-        subscriptionType: action.payload.subscription_type,
-        freeComparisons: action.payload.free_comparisons
+        email: action.payload.email || state.email,
+        firstname: action.payload.firstname || state.firstname,
+        lastname: action.payload.lastname || state.lastname,
+        company: action.payload.company || state.company,
+        pinnedFileName: action.payload.pinned_filename || state.pinnedFileName,
+        pinnedFileId: action.payload.pinned_file_id || state.pinnedFileId,
+        activeSubscription: action.payload.active_subscription || state.activeSubscription,
+        subscriptionType: action.payload.subscription_type || state.subscriptionType,
+        freeComparisons: action.payload.free_comparisons || state.freeComparisons
       };
     case PIN_FILE_SUCCESS:
       console.log('action payload pin', action.payload);

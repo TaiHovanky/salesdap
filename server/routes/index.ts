@@ -10,6 +10,7 @@ import { logoutUser } from '../controller/logout.controller';
 import { forgotPassword } from '../controller/forgot-password.controller';
 import { verifyResetPasswordToken } from '../controller/reset-password.controller';
 import { updatePassword } from '../controller/update-password.controller';
+import { editProfile } from '../controller/profile.controller';
 import {
   createCheckoutSession,
   makePayment,
@@ -92,5 +93,9 @@ router.post(
 router.get('/api/v1/viewpinnedfile', (req: any, res: any) => {
   viewPinnedFile(req, res);
 });
+
+router.post('/api/v1/edit-profile', upload.none(), (req: any, res: any) => {
+  editProfile(req, res);
+})
 
 export default router;

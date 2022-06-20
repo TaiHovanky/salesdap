@@ -25,16 +25,16 @@ const PrivateRoute = (props: any) => {
     );
   }
 
-  if (path === '/home' && (user.subscriptionType !== FREE && !user.activeSubscription)) {
-    return (
-      <Redirect
-        to={{
-          pathname: "/profile",
-          state: { from: location }
-        }}
-      />
-    );
-  }
+  // if (path === '/home' && (user.subscriptionType !== FREE && !user.activeSubscription)) {
+  //   return (
+  //     <Redirect
+  //       to={{
+  //         pathname: "/profile",
+  //         state: { from: location }
+  //       }}
+  //     />
+  //   );
+  // }
 
   return <Route {...props} />;
 };

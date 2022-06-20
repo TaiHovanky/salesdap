@@ -5,7 +5,7 @@ import { Grid, Fab, Divider } from '@mui/material';
 import { Upload, Preview } from '@mui/icons-material';
 import { DocumentState } from '../../state/reducers/document';
 import { isSubmitButtonEnabled } from '../../utils/duplicates-table.utils';
-import { FREE, FREE_COMPARISONS_LIMIT } from '../../state/reducers/user';
+import { FREE, FREE_COMPARISONS_LIMIT, PREMIUM } from '../../state/reducers/user';
 import InfoTooltip from '../info-tooltip';
 
 interface UploadDocumentFormProps {
@@ -136,7 +136,7 @@ const UploadDocumentForm = ({
           </Fab>
           <InfoTooltip
             arrow
-            open={userSubscriptionType === FREE && userFreeComparisons >= FREE_COMPARISONS_LIMIT}
+            open={userSubscriptionType !== PREMIUM && userFreeComparisons >= FREE_COMPARISONS_LIMIT}
             title={`You've used the ${FREE_COMPARISONS_LIMIT} free comparisons.
             For an unlimited amount of comparisons, upgrade your subscription in your profile page.`}
           >
