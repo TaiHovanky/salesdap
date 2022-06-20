@@ -94,6 +94,7 @@ const ProfileContainer = ({
 
     if (isValidDocType) {
       hideError();
+      console.log('document being pinned', document);
       handleFilePinning(document);
     } else {
       showError('Invalid file type. Only pin .xls, .xlsx, or .csv');
@@ -178,7 +179,7 @@ const ProfileContainer = ({
         Authorization: `Bearer ${getAccessToken()}`
       }
     };
-    console.log('edit profile formdata', formData, values);
+
     return axios.post('http://localhost:3001/api/v1/edit-profile', formData, config)
     .then((res: any) => {
       updateUser(res.data);

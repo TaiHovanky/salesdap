@@ -5,16 +5,11 @@ import { FREE, UserState } from '../../state/reducers/user';
 const PrivateRoute = (props: any) => {
   const location = useLocation();
   const { user, path }: { user: UserState, path: string } = props;
-  console.log('props private route', props);
 
   if (
     !user ||
     !user.email
   ) {
-    // if (path === '/profile' && props.location && props.location.search && props.location.search.length) {
-    //   console.log('is profile success page');
-    //   return <Route {...props} />;
-    // }
     return (
       <Redirect
         to={{

@@ -48,7 +48,6 @@ const Profile = ({
     return errors;
   };
 
-  console.log('user in prof', user);
   const formik = useFormik({
     initialValues: {
       firstName: user.firstname,

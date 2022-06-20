@@ -1,17 +1,27 @@
 import React, { useRef } from 'react';
-import { AttachFile } from '@mui/icons-material';
+import { AttachFile, PushPin } from '@mui/icons-material';
 import {
   Fab,
+  IconButton,
   Typography,
 } from '@mui/material';
+import { UserState } from '../../state/reducers/user';
 
 interface Props {
   validateAndSetFileSelection: any;
   selectedDocument: any;
   index: number;
+  handleFilePinning: any;
+  user: UserState;
 }
 
-const FileSelectionField = ({ selectedDocument, validateAndSetFileSelection, index }: Props) => {
+const FileSelectionField = ({
+  selectedDocument,
+  validateAndSetFileSelection,
+  index,
+  handleFilePinning,
+  user
+}: Props) => {
   const inputFileRef: any = useRef( null );
   
   /**
@@ -43,9 +53,15 @@ const FileSelectionField = ({ selectedDocument, validateAndSetFileSelection, ind
         name="sales_file"
       />
       {selectedDocument && selectedDocument.name &&
-        <Typography variant="subtitle1" sx={{ marginTop: '1rem' }}>
-          {selectedDocument.name}
-        </Typography>
+        <div className="selected-file-div">
+          <Typography variant="subtitle1" sx={{ marginTop: '1rem' }}>
+            {selectedDocument.name}
+          </Typography>
+          {index === 0 && <IconButton
+            sx={{ margin: '0.5rem' }}
+            onClick={() => handleFilePinning(selectedDocument.fileBlob)}
+            disabled={user.pinnedFileName === selectedDocument.name}><PushPin /></IconButton>}
+        </div>
       }
     </>
   )

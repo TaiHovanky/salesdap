@@ -21,10 +21,6 @@ interface Props {
 }
 
 const Home = ({ activeStep, changeStep, user }: Props) => {
-  useEffect(() => {
-    console.log('user home', user);
-  }, []);
-
   return (
     <>
       <Box sx={{ width: '100%', height: '100%', marginTop: '3.5vh' }}>

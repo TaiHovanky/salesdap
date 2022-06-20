@@ -18,6 +18,7 @@ export interface SelectedDocument {
   name: string;
   allColumns: Array<string>;
   columnChooserGridData: Array<any>;
+  fileBlob: any;
 }
 
 export interface DocumentState {
@@ -44,13 +45,15 @@ const initialState: DocumentState = {
     data: [],
     name: '',
     allColumns: [],
-    columnChooserGridData: []
+    columnChooserGridData: [],
+    fileBlob: null
   },
   selectedDocument2: {
     data: [],
     name: '',
     allColumns: [],
-    columnChooserGridData: []
+    columnChooserGridData: [],
+    fileBlob: null
   },
   comparisonColumns1: [],
   comparisonColumns2: [],
@@ -155,7 +158,8 @@ export const documentReducer = (state = initialState, action: any) => {
             data: action.payload,
             name: action.name,
             columnChooserGridData: action.columnChooserGridData,
-            allColumns: []
+            allColumns: [],
+            fileBlob: action.fileBlob
           }
         };
       } else {
@@ -166,7 +170,8 @@ export const documentReducer = (state = initialState, action: any) => {
             data: action.payload,
             name: action.name,
             columnChooserGridData: action.columnChooserGridData,
-            allColumns: []
+            allColumns: [],
+            fileBlob: action.fileBlob
           }
         };
       }

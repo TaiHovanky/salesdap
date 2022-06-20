@@ -25,9 +25,8 @@ const PaymentButton = ({
           "Content-Type": "application/json",
         }
       });
-      console.log('response payment', response);
+
       if (response.status === 200) {
-        console.log('successful responses');
         handleSubmit(user);
       }
     } catch(err) {

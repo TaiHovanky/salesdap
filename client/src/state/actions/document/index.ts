@@ -23,7 +23,8 @@ export const uploadDocumentSuccess = (duplicatesData: any) => ({
 export const selectDocument = (
   document: any,
   index: number,
-  name: string
+  name: string,
+  eventFile: any
 ) => {
   return {
     type: SELECT_DOCUMENT,
@@ -32,7 +33,8 @@ export const selectDocument = (
     name,
     columnChooserGridData: document.length > 2 ?
       document.slice(0, 2) :
-      document
+      document,
+    fileBlob: eventFile
   };
 }
 

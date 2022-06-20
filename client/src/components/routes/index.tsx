@@ -16,6 +16,7 @@ import { AlertState } from '../../state/reducers/alert';
 import { UserState } from '../../state/reducers/user';
 import Payment from '../../pages/payment';
 import SuccessDisplayContainer from '../../containers/payment-success';
+import ContactUs from '../../pages/contact-us';
 
 interface Props {
   alert: AlertState;
@@ -43,6 +44,7 @@ const Routes = ({
           <Route path="/profile" component={ProfileContainer} />
           <Route exact path="/forgot-password" component={ForgotPasswordContainer} />
           <Route path="/reset-password/:token" component={PasswordResetContainer} />
+          <Route exact path="/contact-us" component={ContactUs} />
         </Switch>
         {alert.isOpen && <Alert
           variant="standard"
