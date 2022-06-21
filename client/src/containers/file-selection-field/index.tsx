@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import FileSelectionField from '../../components/file-selection-field';
 import { pinFileSuccess, selectDocument } from '../../state/actions/document';
-import { showError, hideError } from '../../state/actions/alert';
+import { showError, hideError, showSuccess, hideSuccess } from '../../state/actions/alert';
 import { setIsLoading } from '../../state/actions/loading';
 import { checkIsValidFileType } from '../../utils/validate-file-type';
 import { createJSONFromSpreadsheet } from '../../utils/spreadsheet.utils';
@@ -19,6 +19,8 @@ interface Props {
   index: number;
   user: UserState;
   pinFileSuccess: any;
+  showSuccess: any;
+  hideSuccess: any;
 }
 
 const FileSelectionFieldContainer = ({
@@ -29,7 +31,9 @@ const FileSelectionFieldContainer = ({
   selectDocument,
   index,
   user,
-  pinFileSuccess
+  pinFileSuccess,
+  showSuccess,
+  hideSuccess
 }: Props) => {
 
   /**
@@ -80,8 +84,18 @@ const FileSelectionFieldContainer = ({
         pinFileSuccess(res.data);
         hideError();
         setIsLoading(false);
+        showSuccess('Successfully pinned file');
+        setTimeout(() => {
+          hideSuccess();
+        }, 5000);
       })
-      .catch((err) => showError('Failed to pin file'));
+      .catch(() => {
+        setIsLoading(false);
+        showError('Failed to pin file');
+        setTimeout(() => {
+          hideError();
+        }, 7500)
+      });
   }
 
   return (
@@ -100,6 +114,8 @@ const mapStateToProps = (state: any) => ({
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
+  showSuccess: (message: string) => dispatch(showSuccess(message)),
+  hideSuccess: () => dispatch(hideSuccess()),
   showError: (message: string) => dispatch(showError(message)),
   hideError: () => dispatch(hideError()),
   setIsLoading: (isLoading: boolean) => dispatch(setIsLoading(isLoading)),

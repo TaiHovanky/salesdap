@@ -43,7 +43,7 @@ const EmailCaptureContainer = ({
         }, 5000);
       })
       .catch((err: any) => {
-        console.log('email err', err);
+        console.log('err', err);
         setIsLoading(false);
         showError('Waitlist registration failed. Please try again.');
         setTimeout(() => {

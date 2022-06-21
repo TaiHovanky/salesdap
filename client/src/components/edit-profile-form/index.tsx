@@ -28,7 +28,6 @@ const EditProfileForm = ({
     return errors;
   };
 
-  // console.log('about to make formik', user);
   const formik = useFormik({
     initialValues: {
       firstName: user.firstname,

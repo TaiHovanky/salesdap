@@ -3,6 +3,7 @@ import { AttachFile, PushPin } from '@mui/icons-material';
 import {
   Fab,
   IconButton,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { UserState } from '../../state/reducers/user';
@@ -57,10 +58,17 @@ const FileSelectionField = ({
           <Typography variant="subtitle1" sx={{ marginTop: '1rem' }}>
             {selectedDocument.name}
           </Typography>
-          {index === 0 && <IconButton
-            sx={{ margin: '0.5rem' }}
-            onClick={() => handleFilePinning(selectedDocument.fileBlob)}
-            disabled={user.pinnedFileName === selectedDocument.name}><PushPin /></IconButton>}
+          {index === 0 && (
+            <Tooltip title="Pin a list for future comparisons" arrow>
+              <IconButton
+                sx={{ margin: '0.5rem' }}
+                onClick={() => handleFilePinning(selectedDocument.fileBlob)}
+                disabled={user.pinnedFileName === selectedDocument.name}
+              >
+                <PushPin />
+              </IconButton>
+            </Tooltip>
+          )}
         </div>
       }
     </>

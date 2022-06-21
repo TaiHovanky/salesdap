@@ -46,7 +46,6 @@ export const getPinnedFile = (pinnedFileId: string) => {
     {
       responseType: 'blob',
       params: { pinnedFileId },
-      // withCredentials: true
       headers: {
         Authorization: `Bearer ${getAccessToken()}` //the token is a variable which holds the token
       }

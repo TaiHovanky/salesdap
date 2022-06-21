@@ -47,7 +47,6 @@ export const userReducer = (state = initialState, action: any) => {
         freeComparisons: action.payload.free_comparisons || state.freeComparisons
       };
     case PIN_FILE_SUCCESS:
-      console.log('action payload pin', action.payload);
       return {
         ...state,
         pinnedFileName: action.payload.pinned_filename,
