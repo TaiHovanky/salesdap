@@ -35,6 +35,7 @@ const Profile = ({
   const inputFileRef: any = useRef(null);
 
   const [isEditing, setIsEditing] = useState(false);
+  const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
 
   const validate = (values: any) => {
     const errors: any = {};
@@ -48,6 +49,7 @@ const Profile = ({
     return errors;
   };
 
+  console.log('about to make formik', user);
   const formik = useFormik({
     initialValues: {
       firstName: user.firstname,
@@ -56,10 +58,10 @@ const Profile = ({
       company: user.company,
     },
     validate,
-    onSubmit
+    onSubmit,
   });
 
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } = formik;
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } = formik;
 
   const handleFileSelectionBtnClick = () => {
     /*Collecting node-element and performing click*/
@@ -72,13 +74,25 @@ const Profile = ({
     setIsEditing(true);
   }
 
-  const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
-
   useEffect(() => {
     if (user && user.activeSubscription === true) {
+      console.log('setting active sub')
       setHasActiveSubscription(true);
     }
-  }, [user])
+    // if (user) {
+      // console.log('use effecting profile -----');
+      // if (user.firstname) {
+      //   setFieldValue('firstname', user.firstname);
+      // }
+      if (user.lastname && isEditing) {
+        setFieldValue('lastname', user.lastname);
+      }
+    // }
+  }, [user, setFieldValue, isEditing])
+
+  // if (user.lastname) {
+  //   setFieldValue('lastname', user.lastname);
+  // }
 
   return (
     <>
