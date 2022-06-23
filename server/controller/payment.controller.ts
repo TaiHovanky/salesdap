@@ -50,7 +50,6 @@ export const makePayment = async (req: any, res: any) => {
 
     if (customer) {
       const invoiceId = `${token.email}-${Math.random().toString()}-${Date.now().toString()}`;
-      // await db('users').where({ email: token.email }).update({ customer_id: customer.id });
   
       await stripe.charges.create({
         amount,
@@ -62,7 +61,7 @@ export const makePayment = async (req: any, res: any) => {
         console.log('creating charge errror', e);
         return null; 
       });
-      console.log('successfully charged', new Date().toLocaleString());
+
       return res.status(200).send();
     }
 
@@ -102,8 +101,6 @@ export const createWebhook = (req: any, res: any) => {
     data = req.body.data;
     eventType = req.body.type;
   }
-
-  console.log('data', data);
 
   switch (eventType) {
       case 'checkout.session.completed':
@@ -169,13 +166,12 @@ export const handleSuccessfulSubscription = async (req: any, res: any) => {
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     const customer = await stripe.customers.retrieve(session.customer, { expand: ['subscriptions']});
-    console.log('customer in successful session', customer, customer.subscriptions.data);
 
     if (customer && customer.subscriptions && customer.subscriptions.data) {
       const hasActiveSubscription: boolean = !!customer.subscriptions.data.find((subscription: any) => {
         return subscription.status === 'active';
       });
-      console.log('handle successful subscription', hasActiveSubscription);
+
       if (hasActiveSubscription) {
         await db('users').where({ email: customer.email }).update({
           active_subscription: true,

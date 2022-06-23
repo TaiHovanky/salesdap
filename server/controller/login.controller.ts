@@ -8,7 +8,6 @@ import { createAccessToken, createRefreshToken, sendRefreshToken } from '../util
 
 export const loginUser = async (req: any, res: any) => {
   const { email, password } = req.body;
-  console.log('req ip', req.ip);
 
   try {
     const users: Array<any> = await db('users').select().where({ email });
@@ -16,16 +15,10 @@ export const loginUser = async (req: any, res: any) => {
       return res.status(401).send();
     }
 
-    // const isActive: boolean = await checkForActiveSubscription(users[0].customer_id);
-    // if (!isActive && users[0].subscription_type !== FREE) {
-    //   return res.status(401).send();
-    // }
-
     const isPasswordValid: boolean = await compare(password, users[0].password);
     if (isPasswordValid) {
       const isActive: boolean = await checkForActiveSubscription(users[0].customer_id);
       if (!isActive && users[0].active_subscription === true) {
-        console.log('updating active subscription in ref')
         await db('users').update({ active_subscription: false, subscription_type: 'FREE' }).where({ email });
       }
 
@@ -70,7 +63,6 @@ export const refreshAccessToken = async (req: any, res: any) => {
 
     if (users && users[0]) {
       if (!isActive && users[0].active_subscription === true) {
-        console.log('updating active subscription in ref')
         await db('users').update({ active_subscription: false, subscription_type: 'FREE' }).where({ email: payload.email });
       }
       const token: string = createAccessToken(users[0]);

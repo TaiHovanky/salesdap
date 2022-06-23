@@ -14,7 +14,6 @@ export const editProfile = async (req: any, res: any) => {
       lastname,
       company,
     };
-    console.log('updated user', updatedUser, req.body)
   
     await db('users').update(updatedUser).where({ email });
     return res.status(200).json({ email, firstname, lastname, company });

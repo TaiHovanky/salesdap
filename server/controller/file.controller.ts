@@ -10,8 +10,6 @@ import {
 import db from '../db/postgres';
 
 export const uploadAndCompareFiles = async (req: any, res: any) => {
-  const startTs = new Date().getTime();
-  console.log('------------------start time file compare----------', startTs);
   const {
     comparisonColumns1,
     comparisonColumns2,
@@ -30,7 +28,6 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
   try {
     salesData1 = createSalesDataArray(fileStructure1, unformattedData1, sales_file1 ? sales_file1[0].path : null);
     salesData2 = createSalesDataArray(fileStructure2, unformattedData2, sales_file2 ? sales_file2[0].path : null);
-    // console.log('sales data 1 and 2', salesData1);
 
     /* Create list of rows where there is a duplicate value that is shared between the specified columns
       (comparisonColumns1 and comparisonColumns2) */
@@ -53,8 +50,7 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
 
     /* Create array of objects (rows a.k.a duplicates) that only contain the columns that the user wants to see */
     const result: Array<any> = setupResults(duplicatesList, columns);
-    const finishTs = new Date().getTime();
-    console.log('------------------------finish ts:', finishTs, '-----diff-----', finishTs - startTs, userSubscriptionType, userFreeComparisons, userEmail);
+
     if (userSubscriptionType === 'FREE') {
       await db('users').update({
         free_comparisons: parseInt(userFreeComparisons) + 1
