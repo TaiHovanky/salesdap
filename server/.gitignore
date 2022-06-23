@@ -8,3 +8,4 @@ uploads/
 package-lock.json
 .env
 pgdata
+utils/combined.log

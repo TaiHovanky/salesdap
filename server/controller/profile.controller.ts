@@ -1,4 +1,5 @@
 import db from '../db/postgres';
+import { logger } from '../utils/logger.utils';
 
 export const editProfile = async (req: any, res: any) => {
   try {
@@ -18,7 +19,7 @@ export const editProfile = async (req: any, res: any) => {
     await db('users').update(updatedUser).where({ email });
     return res.status(200).json({ email, firstname, lastname, company });
   } catch (err: any) {
-    console.log('registration error', err);
-    res.status(400).send();
+    logger.error(`edit profile error - email: ${req.body.email}`, err);
+    return res.status(400).send();
   }
 }

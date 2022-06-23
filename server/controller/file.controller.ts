@@ -8,6 +8,7 @@ import {
   createSalesDataArray
 } from '../utils/upload.util';
 import db from '../db/postgres';
+import { logger } from '../utils/logger.utils';
 
 export const uploadAndCompareFiles = async (req: any, res: any) => {
   const {
@@ -58,7 +59,8 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
     }
     res.send(result);
   } catch(err: any) {
-    res.status(400).send();
+    logger.error(`compare files error - email: ${userEmail}`, err);
+    return res.status(400).send();
   }
 }
 
@@ -80,11 +82,11 @@ export const pinFile = (req: any, res: any) => {
           });
       })
       .catch((err: any) => {
-        res.status(400).send();
-        console.log('failed to pin file: ', err);
+        logger.error(`pin file error - pinned file: ${pinned_file_id}`, err);
+        return res.status(400).send();
       });
   } else {
-    res.status(400).send();
+    return res.status(400).send();
   }
 }
 
@@ -95,7 +97,7 @@ export const viewPinnedFile = (req: any, res: any) => {
       return res.status(200).send(data);
     })
     .catch((err: any) => {
-      res.status(400).send();
-      console.log('failed to get pinned file: ', err);
+      logger.error(`view pinned file error - pinned file: ${pinnedFileId}`, err);
+      return res.status(400).send();
     });
 }

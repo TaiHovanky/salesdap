@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import db from '../db/postgres';
+import { logger } from '../utils/logger.utils';
 
 export const updatePassword = async (req: any, res: any) => {
   const { email, password } = req.body;
@@ -16,6 +17,7 @@ export const updatePassword = async (req: any, res: any) => {
       return res.status(200).send();
     }
   } catch(err) {
+    logger.error(`update password error - email: ${email}`, err);
     return res.status(400).send();
   }
 }

@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcryptjs';
 import db from '../db/postgres';
 import { createAccessToken, createRefreshToken, sendRefreshToken } from '../utils/auth.utils';
+import { logger } from '../utils/logger.utils';
 
 export const registerUser = async (req: any, res: any) => {
   try {
@@ -29,7 +30,7 @@ export const registerUser = async (req: any, res: any) => {
     sendRefreshToken(res, createRefreshToken(newUser));
     return res.status(200).json({ email, firstname, lastname, company, token });
   } catch (err: any) {
-    console.log('registration error', err);
-    res.status(400).send();
+    logger.error('registration error', err);
+    return res.status(400).send();
   }
 };

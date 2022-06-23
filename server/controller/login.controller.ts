@@ -3,15 +3,17 @@ const stripe = require('stripe')(process.env.STRIPE_TEST_SECRET);
 import { compare } from 'bcryptjs';
 import db from '../db/postgres';
 import { createAccessToken, createRefreshToken, sendRefreshToken } from '../utils/auth.utils';
+import { logger } from '../utils/logger.utils';
 
 // const FREE = 'FREE';
 
 export const loginUser = async (req: any, res: any) => {
   const { email, password } = req.body;
-
+  logger.warn('some login warning')
   try {
     const users: Array<any> = await db('users').select().where({ email });
     if (!users || !users[0]) {
+      logger.warn('login fail no user found', email);
       return res.status(401).send();
     }
 
@@ -33,11 +35,13 @@ export const loginUser = async (req: any, res: any) => {
       } = users[0];
       sendRefreshToken(res, createRefreshToken(user));
       return res.status(200).json({ ...user, token });
+    } else {
+      logger.warn('login fail invalid password', email);
     }
 
     return res.status(401).send();
   } catch (err: any) {
-    console.log('login err', err); // TO DO: need to replace this with winston
+    logger.error('login error', err);
     return res.status(401).send();
   }
 }
@@ -76,10 +80,12 @@ export const refreshAccessToken = async (req: any, res: any) => {
       } = users[0];
       sendRefreshToken(res, createRefreshToken(user));
       return res.status(200).json({ ...user, token });
+    } else {
+      logger.warn('refresh token fail no user found')
     }
     return res.status(200).send();
   } catch (err: any) {
-    console.log('login err', err); // TO DO: need to replace this with winston
+    logger.error('refresh token error', err);
     return res.status(200).send();
   }
 }

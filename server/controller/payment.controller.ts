@@ -1,4 +1,5 @@
 import db from '../db/postgres';
+import { logger } from '../utils/logger.utils';
 
 // const stripe = require('stripe')(process.env.STRIPE_SECRET);
 const stripe = require('stripe')(process.env.STRIPE_TEST_SECRET);
@@ -28,10 +29,10 @@ export const createCheckoutSession = async (req: any, res: any) => {
         'http://localhost:3000/register'
     });
   
-    res.json({url: session.url});
+    return res.json({url: session.url});
   } catch (err: any) {
-    console.log('checkout session creation err:', err);
-    res.status(500).send();
+    logger.error(`checkout session creation error - email: ${customerEmail}`, err);
+    return res.status(500).send();
   }
 }
 
@@ -43,8 +44,8 @@ export const makePayment = async (req: any, res: any) => {
       email: token.email,
       name: token.card.name,
       source: token.id, 
-    }).catch((e: any) => {
-      console.log('creating customer error', e);
+    }).catch((err: any) => {
+      logger.error(`creating customer error - email: ${token.email}, tokenId: ${token.id}`, err);
       return null; 
     });
 
@@ -57,8 +58,8 @@ export const makePayment = async (req: any, res: any) => {
         customer: customer.id,
         receipt_email: token.email,
         description: 'Donation',
-      }, { idempotencyKey: invoiceId }).catch((e: any) => {
-        console.log('creating charge errror', e);
+      }, { idempotencyKey: invoiceId }).catch((err: any) => {
+        logger.error(`creating charge errror - customerId: ${customer.id}, email: ${token.email}`, err);
         return null; 
       });
 
@@ -67,7 +68,7 @@ export const makePayment = async (req: any, res: any) => {
 
     return res.status(500).send();
   } catch (err) {
-    console.log('catch err', err);
+    logger.error(`make payment err - email: ${token.email}`, err);
     return res.status(500).send();
   }
 }
@@ -89,7 +90,7 @@ export const createWebhook = (req: any, res: any) => {
         webhookSecret
       );
     } catch (err) {
-      console.log(` Webhook signature verification failed.`);
+      logger.error(` Webhook signature verification failed.`);
       return res.sendStatus(400);
     }
     // Extract the object from the event.
@@ -101,6 +102,7 @@ export const createWebhook = (req: any, res: any) => {
     data = req.body.data;
     eventType = req.body.type;
   }
+  console.log('webhook data', data);
 
   switch (eventType) {
       case 'checkout.session.completed':
@@ -156,8 +158,8 @@ export const createCustomerPortal = async (req: any, res: any) => {
   
     res.json({ url: portalSession.url });
   } catch (err: any) {
-    console.log('err', err);
-    res.status(400).send();
+    logger.error(`create customer portal error - email: ${email}`, err);
+    return res.status(400).send();
   }
 }
 
@@ -182,6 +184,7 @@ export const handleSuccessfulSubscription = async (req: any, res: any) => {
     }
     res.status(200).json({ customer });
   } catch (err: any) {
-    console.log('err with handlesuccess', err);
+    logger.error(`handle successful subscription error - sessionId: ${sessionId}`, err);
+    return res.status(500).send();
   }
 }
