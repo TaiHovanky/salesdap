@@ -18,7 +18,7 @@ interface Props {
 const Login = ({ onSubmit }: Props) => {
   const [isEmailCaptureModalOpen, setIsEmailCaptureModalOpen] = useState(true);
 
-  const handleClose = (event: any) => {
+  const handleClose = () => {
     setIsEmailCaptureModalOpen(false);
   }
 

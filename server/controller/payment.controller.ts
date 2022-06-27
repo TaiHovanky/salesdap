@@ -23,10 +23,10 @@ export const createCheckoutSession = async (req: any, res: any) => {
         },
       ],
       mode: 'subscription',
-      success_url: 'http://localhost:3000/profile?session_id={CHECKOUT_SESSION_ID}',
+      success_url: 'https://salesdap.com/profile?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: isComingFromProfilePage ?
-        'http://localhost:3000/profile' :
-        'http://localhost:3000/register'
+        'https://salesdap.com/profile' :
+        'https://salesdap.com/register'
     });
   
     return res.json({url: session.url});
@@ -148,8 +148,8 @@ export const createCustomerPortal = async (req: any, res: any) => {
     // This is the url to which the customer will be redirected when they are done
     // managing their billing with the portal.
     const returnUrl = isComingFromProfilePage ?
-      'http://localhost:3000/profile' :
-      'http://localhost:3000/home';
+      'https://salesdap.com/profile' :
+      'https://salesdap.com/home';
   
     const portalSession = await stripe.billingPortal.sessions.create({
       customer,

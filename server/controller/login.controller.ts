@@ -47,7 +47,7 @@ export const loginUser = async (req: any, res: any) => {
 }
 
 export const refreshAccessToken = async (req: any, res: any) => {
-  const refreshToken: string = req.cookies.jid;
+  const refreshToken: string = req.cookies.rtsd;
 
   let payload: any = null;
   if (!!refreshToken && refreshToken !== 'undefined') {

@@ -75,7 +75,7 @@ const FileSelectionFieldContainer = ({
         user.email
       );
     }
-    axios.post('http://localhost:3001/api/v1/pinfile', formData, {
+    axios.post('/api/v1/pinfile', formData, {
       headers: {
         Authorization: `Bearer ${getAccessToken()}`
       }

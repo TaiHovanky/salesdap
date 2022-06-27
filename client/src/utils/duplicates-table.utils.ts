@@ -1,4 +1,3 @@
-import { NumberLiteralType } from "typescript";
 import { FORMATTED_DATA, UNFORMATTED_DATA } from "../state/actions/document"
 import { SelectedDocument } from "../state/reducers/document";
 import { FREE, FREE_COMPARISONS_LIMIT, UserState } from "../state/reducers/user";

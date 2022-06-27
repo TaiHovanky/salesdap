@@ -16,17 +16,21 @@ require("dotenv/config");
 require("reflect-metadata");
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const routes_1 = __importDefault(require("./routes"));
+const pinoHttp = require('pino-http')();
 (() => __awaiter(void 0, void 0, void 0, function* () {
     const app = (0, express_1.default)();
     app.use((0, cors_1.default)({
         origin: 'https://salesdap.com',
         credentials: true,
-        methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
+        methods: ["POST", "PUT", "GET"],
     }));
     app.use((0, body_parser_1.default)());
+    app.use((0, cookie_parser_1.default)());
     app.set('trust proxy', 1);
+    app.use(pinoHttp);
     app.use('/', routes_1.default);
     app.listen(3001, () => {
         console.log('app listening at 3001');

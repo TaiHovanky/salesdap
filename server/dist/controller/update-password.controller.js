@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updatePassword = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const postgres_1 = __importDefault(require("../db/postgres"));
+const logger_utils_1 = require("../utils/logger.utils");
 const updatePassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     try {
@@ -31,6 +32,7 @@ const updatePassword = (req, res) => __awaiter(void 0, void 0, void 0, function*
         }
     }
     catch (err) {
+        logger_utils_1.logger.error(`update password error - email: ${email}`, err);
         return res.status(400).send();
     }
 });

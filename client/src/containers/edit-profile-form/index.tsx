@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import axios from 'axios';
 import EditProfileForm from '../../components/edit-profile-form';
 import { connect } from 'react-redux';
@@ -47,7 +47,7 @@ const EditProfileFormContainer = ({
       }
     };
 
-    return axios.post('http://localhost:3001/api/v1/edit-profile', formData, config)
+    return axios.post('/api/v1/edit-profile', formData, config)
     .then((res: any) => {
       updateUser(res.data);
       hideError();

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Route, Redirect, useLocation } from 'react-router-dom';
-import { FREE, UserState } from '../../state/reducers/user';
+import { UserState } from '../../state/reducers/user';
 
 const PrivateRoute = (props: any) => {
   const location = useLocation();
-  const { user, path }: { user: UserState, path: string } = props;
+  const { user }: { user: UserState } = props;
 
   if (
     !user ||

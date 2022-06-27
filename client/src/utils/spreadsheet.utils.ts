@@ -42,7 +42,7 @@ export const createFileLink = (data: any, pinnedFileName: string) => {
 }
 
 export const getPinnedFile = (pinnedFileId: string) => {
-  return axios.get('http://localhost:3001/api/v1/viewpinnedfile',
+  return axios.get('/api/v1/viewpinnedfile',
     {
       responseType: 'blob',
       params: { pinnedFileId },

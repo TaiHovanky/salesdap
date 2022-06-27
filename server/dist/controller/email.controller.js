@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.saveEmail = void 0;
+const logger_utils_1 = require("../utils/logger.utils");
 const uuid_1 = require("uuid");
 const postgres_1 = __importDefault(require("../db/postgres"));
 const saveEmail = (req, res) => {
@@ -11,8 +12,8 @@ const saveEmail = (req, res) => {
     (0, postgres_1.default)('waitlist').insert({ id: (0, uuid_1.v4)(), email })
         .then(() => res.status(200).send())
         .catch((err) => {
-        console.log('email err', err);
-        res.status(400).send();
+        logger_utils_1.logger.error(`email waitlist err - ${email}`, err);
+        return res.status(400).send();
     });
 };
 exports.saveEmail = saveEmail;

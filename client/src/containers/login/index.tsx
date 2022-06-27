@@ -25,30 +25,6 @@ const LoginContainer = ({
 }: Props) => {
   const history = useHistory();
 
-  useEffect(() => {
-    setIsLoading(true);
-    axios.post("http://localhost:3001/api/v1/refresh_token", null, { withCredentials: true })
-      .then(handleLoginSuccess)
-      .catch(handleLoginFailure);
-  }, []);
-
-  const onSubmit = (values: any) => {
-    setIsLoading(true);
-    const formData = new FormData();
-    formData.append('email', values.email);
-    formData.append('password', values.password);
-    const config = {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-      withCredentials: true
-    };
-
-    axios.post('http://localhost:3001/api/v1/login', formData, config)
-      .then(handleLoginSuccess)
-      .catch(handleLoginFailure);
-  };
-
   const handleLoginSuccess = (res: any) => {
     const { token, email } = res.data;
     setAccessToken(token);
@@ -65,6 +41,30 @@ const LoginContainer = ({
     setIsLoading(false);
     showError('Wrong email or password');
   }
+
+  useEffect(() => {
+    setIsLoading(true);
+    axios.post('/api/v1/refresh_token', null, { withCredentials: true })
+      .then(handleLoginSuccess)
+      .catch(handleLoginFailure);
+  }, []);
+
+  const onSubmit = (values: any) => {
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append('email', values.email);
+    formData.append('password', values.password);
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      withCredentials: true
+    };
+
+    axios.post('/api/v1/login', formData, config)
+      .then(handleLoginSuccess)
+      .catch(handleLoginFailure);
+  };
 
   return (
     <Login onSubmit={onSubmit} />

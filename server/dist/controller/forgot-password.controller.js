@@ -14,8 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.forgotPassword = void 0;
 const crypto_1 = __importDefault(require("crypto"));
-const nodemailer = require("nodemailer");
+const logger_utils_1 = require("../utils/logger.utils");
 const postgres_1 = __importDefault(require("../db/postgres"));
+const nodemailer = require("nodemailer");
 const forgotPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email } = req.body;
     try {
@@ -51,11 +52,12 @@ const forgotPassword = (req, res) => __awaiter(void 0, void 0, void 0, function*
             }
         }
         else {
+            logger_utils_1.logger.error(`password reset invalid email - ${email}`);
             return res.status(401).send('Invalid email');
         }
     }
     catch (err) {
-        console.log('password reset err', err);
+        logger_utils_1.logger.error(`password reset email send error - email: ${email}`, err);
         return res.status(401).send('Password reset email failed to send');
     }
 });

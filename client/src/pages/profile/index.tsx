@@ -9,7 +9,6 @@ import {
   IconButton,
 } from '@mui/material';
 import { Attachment, Upload, Payment as PaymentIcon, Edit } from '@mui/icons-material';
-import { useFormik } from 'formik';
 import { UserState } from '../../state/reducers/user';
 import InfoTooltip from '../../components/info-tooltip';
 import EditProfileFormContainer from '../../containers/edit-profile-form';

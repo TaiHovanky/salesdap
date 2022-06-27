@@ -5,7 +5,7 @@ import { Grid, Fab, Divider } from '@mui/material';
 import { Upload, Preview } from '@mui/icons-material';
 import { DocumentState } from '../../state/reducers/document';
 import { isSubmitButtonEnabled } from '../../utils/duplicates-table.utils';
-import { FREE, FREE_COMPARISONS_LIMIT, PREMIUM } from '../../state/reducers/user';
+import { FREE_COMPARISONS_LIMIT, PREMIUM } from '../../state/reducers/user';
 import InfoTooltip from '../info-tooltip';
 
 interface UploadDocumentFormProps {
