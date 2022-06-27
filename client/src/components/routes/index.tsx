@@ -14,6 +14,9 @@ import {
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { AlertState } from '../../state/reducers/alert';
 import { UserState } from '../../state/reducers/user';
+import Payment from '../../pages/payment';
+import SuccessDisplayContainer from '../../containers/payment-success';
+import ContactUs from '../../pages/contact-us';
 
 interface Props {
   alert: AlertState;
@@ -26,7 +29,7 @@ const Routes = ({
   alert,
   loading,
   user,
-  handleAlertClose
+  handleAlertClose,
 }: Props) => {
   return (
     <BrowserRouter>
@@ -36,9 +39,12 @@ const Routes = ({
           <PrivateRoute exact path="/home" component={HomeContainer} user={user} />
           <Route exact path="/" component={LoginContainer} />
           <Route exact path="/register" component={RegisterContainer} />
-          <PrivateRoute exact path="/profile" component={ProfileContainer} user={user} />
+          <Route path="/pay" component={Payment} />
+          <Route path="/success" component={SuccessDisplayContainer} />
+          <Route path="/profile" component={ProfileContainer} />
           <Route exact path="/forgot-password" component={ForgotPasswordContainer} />
           <Route path="/reset-password/:token" component={PasswordResetContainer} />
+          <Route exact path="/contact-us" component={ContactUs} />
         </Switch>
         {alert.isOpen && <Alert
           variant="standard"

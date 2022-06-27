@@ -92,6 +92,9 @@ const NavBar = ({ user, handleLogout, hideError }: Props) => {
               <MenuItem onClick={handleClose}>
                 <Link style={{ color: 'black', textDecoration: 'none' }} to="/profile">Profile</Link>
               </MenuItem>
+              <MenuItem onClick={handleClose}>
+                <Link style={{ color: 'black', textDecoration: 'none' }} to="/contact-us">Contact Us</Link>
+              </MenuItem>
               <MenuItem onClick={logoutAndClose}>Logout</MenuItem>
             </Menu>
           </>}

@@ -5,19 +5,25 @@ import { Grid, Fab, Divider } from '@mui/material';
 import { Upload, Preview } from '@mui/icons-material';
 import { DocumentState } from '../../state/reducers/document';
 import { isSubmitButtonEnabled } from '../../utils/duplicates-table.utils';
+import { FREE_COMPARISONS_LIMIT, PREMIUM } from '../../state/reducers/user';
+import InfoTooltip from '../info-tooltip';
 
 interface UploadDocumentFormProps {
   document: DocumentState;
   setAllColumns: any;
   handleColumnClick: any;
   handleUploadAndCompare: any;
+  userFreeComparisons: number;
+  userSubscriptionType: string;
 }
 
 const UploadDocumentForm = ({
   document,
   setAllColumns,
   handleColumnClick,
-  handleUploadAndCompare
+  handleUploadAndCompare,
+  userFreeComparisons,
+  userSubscriptionType
 }: UploadDocumentFormProps): any => {
   /* For the preview modal, we use local state because we don't need its open state to be
   persisted when a user goes to another step */
@@ -56,7 +62,9 @@ const UploadDocumentForm = ({
     unformattedData1,
     unformattedData2,
     selectedDocument1,
-    selectedDocument2
+    selectedDocument2,
+    userFreeComparisons,
+    userSubscriptionType
   );
 
   return (
@@ -126,16 +134,23 @@ const UploadDocumentForm = ({
             <Preview sx={{ mr: 1 }} />
             Preview Results
           </Fab>
-          <Fab
-            variant="extended"
-            color="primary"
-            aria-label="add"
-            disabled={!isSubmitBtnEnabled}
-            onClick={handleUploadAndCompare}
+          <InfoTooltip
+            arrow
+            open={userSubscriptionType !== PREMIUM && userFreeComparisons >= FREE_COMPARISONS_LIMIT}
+            title={`You've used the ${FREE_COMPARISONS_LIMIT} free comparisons.
+            For an unlimited amount of comparisons, upgrade your subscription in your profile page.`}
           >
-            <Upload sx={{ mr: 1 }} />
-            Upload and Compare
-          </Fab>
+            <Fab
+              variant="extended"
+              color="primary"
+              aria-label="add"
+              disabled={!isSubmitBtnEnabled}
+              onClick={handleUploadAndCompare}
+            >
+              <Upload sx={{ mr: 1 }} />
+              Upload and Compare
+            </Fab>
+          </InfoTooltip>
         </Grid>
       </Grid>
       {isPreviewModalOpen && <ResultsPreviewModalContainer

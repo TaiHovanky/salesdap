@@ -1,6 +1,7 @@
 import crypto from 'crypto';
-const nodemailer = require("nodemailer");
+import { logger } from '../utils/logger.utils';
 import db from '../db/postgres';
+const nodemailer = require("nodemailer");
 
 export const forgotPassword = async (req: any, res: any) => {
   const { email } = req.body;
@@ -46,10 +47,11 @@ export const forgotPassword = async (req: any, res: any) => {
       }
       
     } else {
+      logger.error(`password reset invalid email - ${email}`);
       return res.status(401).send('Invalid email');
     }
   } catch(err) {
-    console.log('password reset err', err);
+    logger.error(`password reset email send error - email: ${email}`, err);
     return res.status(401).send('Password reset email failed to send');
   }
 }

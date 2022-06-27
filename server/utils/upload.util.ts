@@ -3,8 +3,8 @@ import * as fs from 'fs';
 import AWS from 'aws-sdk';
 
 // Constants for file structure
-export const UNFORMATTED_DATA = 'UNFORMATTED_DATA';
-export const FORMATTED_DATA = 'FORMATTED_DATA';
+export const UNFORMATTED_DATA: string = 'UNFORMATTED_DATA';
+export const FORMATTED_DATA: string = 'FORMATTED_DATA';
 
 /**
  * Converts the file buffer to JSON object

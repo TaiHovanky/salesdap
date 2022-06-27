@@ -16,10 +16,9 @@ exports.viewPinnedFile = exports.pinFile = exports.uploadAndCompareFiles = void 
 const uuid_1 = require("uuid");
 const upload_util_1 = require("../utils/upload.util");
 const postgres_1 = __importDefault(require("../db/postgres"));
+const logger_utils_1 = require("../utils/logger.utils");
 const uploadAndCompareFiles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const startTs = new Date().getTime();
-    console.log('------------------start time file compare----------', startTs);
-    const { comparisonColumns1, comparisonColumns2, fileStructure1, fileStructure2, unformattedData1, unformattedData2 } = req.body;
+    const { comparisonColumns1, comparisonColumns2, fileStructure1, fileStructure2, unformattedData1, unformattedData2, userSubscriptionType, userFreeComparisons, userEmail } = req.body;
     const { sales_file1, sales_file2 } = req.files;
     let salesData1 = [];
     let salesData2 = [];
@@ -29,12 +28,16 @@ const uploadAndCompareFiles = (req, res) => __awaiter(void 0, void 0, void 0, fu
         const duplicatesList = (0, upload_util_1.findDuplicates)(salesData1, salesData2, comparisonColumns1.split(','), comparisonColumns2.split(','), fileStructure1, fileStructure2);
         const columns = (0, upload_util_1.setupResultColumns)(comparisonColumns1.split(','), comparisonColumns2.split(','), fileStructure1, fileStructure2);
         const result = (0, upload_util_1.setupResults)(duplicatesList, columns);
-        const finishTs = new Date().getTime();
-        console.log('------------------------finish ts:', finishTs, '-----diff-----', finishTs - startTs);
+        if (userSubscriptionType === 'FREE') {
+            yield (0, postgres_1.default)('users').update({
+                free_comparisons: parseInt(userFreeComparisons) + 1
+            }).where({ email: userEmail });
+        }
         res.send(result);
     }
     catch (err) {
-        res.status(400).send();
+        logger_utils_1.logger.error(`compare files error - email: ${userEmail}`, err);
+        return res.status(400).send();
     }
 });
 exports.uploadAndCompareFiles = uploadAndCompareFiles;
@@ -55,12 +58,12 @@ const pinFile = (req, res) => {
             });
         })
             .catch((err) => {
-            res.status(400).send();
-            console.log('failed to pin file: ', err);
+            logger_utils_1.logger.error(`pin file error - pinned file: ${pinned_file_id}`, err);
+            return res.status(400).send();
         });
     }
     else {
-        res.status(400).send();
+        return res.status(400).send();
     }
 };
 exports.pinFile = pinFile;
@@ -71,8 +74,8 @@ const viewPinnedFile = (req, res) => {
         return res.status(200).send(data);
     })
         .catch((err) => {
-        res.status(400).send();
-        console.log('failed to get pinned file: ', err);
+        logger_utils_1.logger.error(`view pinned file error - pinned file: ${pinnedFileId}`, err);
+        return res.status(400).send();
     });
 };
 exports.viewPinnedFile = viewPinnedFile;

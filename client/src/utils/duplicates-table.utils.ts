@@ -1,6 +1,6 @@
 import { FORMATTED_DATA, UNFORMATTED_DATA } from "../state/actions/document"
 import { SelectedDocument } from "../state/reducers/document";
-import { UserState } from "../state/reducers/user";
+import { FREE, FREE_COMPARISONS_LIMIT, UserState } from "../state/reducers/user";
 
 export const isSubmitButtonEnabled = (
   fileStructure1: string,
@@ -10,7 +10,9 @@ export const isSubmitButtonEnabled = (
   unformattedData1: string,
   unformattedData2: string,
   selectedDocument1: SelectedDocument,
-  selectedDocument2: SelectedDocument
+  selectedDocument2: SelectedDocument,
+  userFreeComparisons: number,
+  userSubscriptionType: string
 ): boolean => {
   const isUserAccountDataValid = checkOnePersonsAccountData(
     fileStructure1,
@@ -31,7 +33,9 @@ export const isSubmitButtonEnabled = (
     }
   }
 
-  return isUserAccountDataValid && isPartnerAccountDataValid;
+  const userCanMakeComparisons: boolean = !isUserOutOfFreeComparisons(userFreeComparisons, userSubscriptionType);
+
+  return isUserAccountDataValid && isPartnerAccountDataValid && userCanMakeComparisons;
 }
 
 export const checkOnePersonsAccountData = (
@@ -80,3 +84,10 @@ export const createCapitalizedUserName = (user: UserState) => {
 }
 
 export const capitalizeFirstLetterOfWord = (word: string) => word[0].toUpperCase() + word.substring(1);
+
+export const isUserOutOfFreeComparisons = (userFreeComparisons: number, userSubscriptionType: string) => {
+  if (userSubscriptionType === FREE && userFreeComparisons >= FREE_COMPARISONS_LIMIT) {
+    return true;
+  }
+  return false;
+}

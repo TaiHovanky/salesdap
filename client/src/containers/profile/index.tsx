@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import Profile from '../../pages/profile';
 import {
@@ -11,6 +11,9 @@ import { UserState } from '../../state/reducers/user';
 import { checkIsValidFileType } from '../../utils/validate-file-type';
 import { showError, hideError } from '../../state/actions/alert';
 import { setIsLoading } from '../../state/actions/loading';
+import { getAccessToken } from '../../utils/access-token.utils';
+import { updateUser } from '../../state/actions/user';
+import { setAccessToken } from '../../utils/access-token.utils';
 
 interface Props {
   user: UserState;
@@ -18,6 +21,7 @@ interface Props {
   showError: any;
   hideError: any;
   pinFileSuccess: any;
+  updateUser: any;
 }
 
 const ProfileContainer = ({
@@ -25,8 +29,24 @@ const ProfileContainer = ({
   setIsLoading,
   showError,
   hideError,
-  pinFileSuccess
+  pinFileSuccess,
+  updateUser
 }: Props) => {
+  useEffect(() => {
+    const checkSubscriptionAndRefreshAuth = async () => {
+      if (!user || !user.email) {
+        setIsLoading(true);
+        const query = new URLSearchParams(window.location.search);
+        const sessionId: string | null = query.get('session_id');
+        if (sessionId) {
+          await updateCustomerSubscriptionInfo(sessionId);
+        }
+        await refreshUserAuthStatus();
+      }
+    };
+    checkSubscriptionAndRefreshAuth();
+  }, []);
+
   const handlePinnedFileClick = async () => {
     try {
       setIsLoading(true);
@@ -34,11 +54,36 @@ const ProfileContainer = ({
       setIsLoading(false);
       createFileLink(pinnedFileData.data, user.pinnedFileName);
     } catch (err: any) {
-      console.log('err', err);
-      setIsLoading(false);
-      showError('Failed to download pinned file.');
+      handleProfileActionFailure(err, 'Failed to download pinned file');
     }
   };
+
+  const handleCreateCheckoutSession = (email: string) => {
+    return axios.post('/api/v1/create-checkout-session', {
+      customerEmail: email, isComingFromProfilePage: true
+    })
+      .then((res) => {
+        hideError();
+        setIsLoading(false);
+        if (!!res && !!res.data) {
+          window.location.href = res.data.url;
+        }
+      })
+      .catch((err: any) => handleProfileActionFailure(err, 'Failed to create payment session'));
+  }
+
+  const handleManageSubscriptionClick = () => {
+    setIsLoading(true);
+    axios.post('/api/v1/create-portal-session', { email: user.email, isComingFromProfilePage: true })
+      .then((res: any) => {
+        setIsLoading(false);
+        hideError();
+        if (!!res && !!res.data) {
+          window.location.href = res.data.url;
+        }
+      })
+      .catch((err) => handleProfileActionFailure(err, 'There was a problem with connecting with the subscription portal'));
+  }
 
   const validateFileSelection = (event: any) => {
     const document: any = event && event.target && event.target.files ?
@@ -72,20 +117,50 @@ const ProfileContainer = ({
         user.email
       );
     }
-    axios.post('/api/v1/pinfile', formData)
+    axios.post('/api/v1/pinfile', formData, {
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`
+      }
+    })
       .then((res: any) => {
         pinFileSuccess(res.data);
         hideError();
         setIsLoading(false);
       })
-      .catch((err) => {
-        console.log(err);
-        setIsLoading(false);
-        showError('Failed to pin file.');
-        setTimeout(() => {
-          hideError();
-        }, 5000)
+      .catch((err) => handleProfileActionFailure(err, 'Failed to pin file'));
+  }
+
+  const handleProfileActionFailure = (err: any, errorMessage: string) => {
+    console.log('err', err);
+    setIsLoading(false);
+    showError(errorMessage);
+    setTimeout(() => {
+      hideError();
+    }, 7500)
+  }
+
+  const handleProfileLoginSuccess = (res: any) => {
+    const { token, email } = res.data;
+    setAccessToken(token);
+    hideError();
+    setIsLoading(false);
+
+    if (res.data && email) {
+      updateUser(res.data);
+    }
+  }
+
+  const updateCustomerSubscriptionInfo = (sessionId: string | null) => {
+    return axios.post('/api/v1/order-success', { sessionId })
+      .catch(() => {
+        showError('Problem with user registration');
       });
+  }
+
+  const refreshUserAuthStatus = () => {
+    return axios.post('/api/v1/refresh_token', null, { withCredentials: true })
+      .then(handleProfileLoginSuccess)
+      .catch((err: any) => handleProfileActionFailure(err, 'failed to load profile'));
   }
 
   return (
@@ -93,6 +168,8 @@ const ProfileContainer = ({
       user={user}
       validateFileSelection={validateFileSelection}
       handlePinnedFileClick={handlePinnedFileClick}
+      handleManageSubscriptionClick={handleManageSubscriptionClick}
+      handleCreateCheckoutSession={handleCreateCheckoutSession}
     />
   );
 }
@@ -105,7 +182,8 @@ const mapDispatchToProps = (dispatch: any) => ({
   showError: (message: string) => dispatch(showError(message)),
   hideError: () => dispatch(hideError()),
   setIsLoading: (isLoading: boolean) => dispatch(setIsLoading(isLoading)),
-  pinFileSuccess: (fileMetadata: any) => dispatch(pinFileSuccess(fileMetadata))
+  pinFileSuccess: (fileMetadata: any) => dispatch(pinFileSuccess(fileMetadata)),
+  updateUser: (user: any) => dispatch(updateUser(user))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileContainer);

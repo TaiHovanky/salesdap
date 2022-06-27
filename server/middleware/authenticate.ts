@@ -1,9 +1,19 @@
+import { verify } from 'jsonwebtoken';
+
 export const authenticate = (req: any, _: any, next: any) => {
-  console.log('req session ---- authenticate', req.session, req.sessionID);
-  if (!req.session || !req.session.user) {
+  const authorization = req.headers.authorization;
+  if (!authorization) {
     const err = new Error('Unauthenticated');
-    // err.statusCode = 401;
     next(err);
   }
-  next();
+  try {
+    const token = authorization.split(' ')[1];
+    const payload = verify(token, process.env.REFRESH_TOKEN_SECRET as string);
+    if (payload) {
+      return next();
+    }
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
 }

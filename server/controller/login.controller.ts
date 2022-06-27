@@ -1,41 +1,112 @@
+const jwt = require("jsonwebtoken");
+const stripe = require('stripe')(process.env.STRIPE_TEST_SECRET);
 import { compare } from 'bcryptjs';
 import db from '../db/postgres';
+import { createAccessToken, createRefreshToken, sendRefreshToken } from '../utils/auth.utils';
+import { logger } from '../utils/logger.utils';
+
+// const FREE = 'FREE';
 
 export const loginUser = async (req: any, res: any) => {
   const { email, password } = req.body;
-  // console.log('res body login', res.body)
 
+  logger.warn('some login warning')
   try {
-    const users: Array<any> = await db('users').select().where({ email })
-    // console.log('users', users);
-    if (users && users[0]) {
-      // console.log('if users and users0', users[0])
-      const isPasswordValid: boolean = await compare(password, users[0].password);
-      if (isPasswordValid) {
-        // console.log('is password valid')
-        // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-        // res.header('Access-Control-Allow-Origin', 'https://salesdap.com');
-        // res.header('Access-Control-Allow-Credentials', true);
-        // res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-        // res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, HEAD, OPTIONS');
-        // req.session.user = users[0].userid;
-        // req.session.save();
-        // console.log('req session user after login', req.session, req.sessionID);
-        const { password, userid, ...user } = users[0];
-        return res
-        .status(200)
-        // .cookie(
-        //   req.session.user,
-        //   JSON.stringify(process.env.SESSION_SECRET),
-        //   req.session.cookie
-        // )
-        .send(user);
-      }
+    const users: Array<any> = await db('users').select().where({ email });
+    if (!users || !users[0]) {
+      logger.warn('login fail no user found', email);
       return res.status(401).send();
     }
+
+    const isPasswordValid: boolean = await compare(password, users[0].password);
+    if (isPasswordValid) {
+      const isActive: boolean = await checkForActiveSubscription(users[0].customer_id);
+      if (!isActive && users[0].active_subscription === true) {
+        await db('users').update({ active_subscription: false, subscription_type: 'FREE' }).where({ email });
+      }
+
+      const token: string = createAccessToken(users[0]);
+      const {
+        password,
+        userid,
+        customer_id,
+        passwordtoken,
+        passwordtoken_expiration,
+        ...user
+      } = users[0];
+      sendRefreshToken(res, createRefreshToken(user));
+      return res.status(200).json({ ...user, token });
+    } else {
+      logger.warn('login fail invalid password', email);
+    }
+
     return res.status(401).send();
   } catch (err: any) {
-    console.log('login err', err); // TO DO: need to replace this with winston
+    logger.error('login error', err);
     return res.status(401).send();
   }
+}
+
+export const refreshAccessToken = async (req: any, res: any) => {
+  const refreshToken: string = req.cookies.rtsd;
+
+  let payload: any = null;
+  if (!!refreshToken && refreshToken !== 'undefined') {
+    payload = jwt.verify(refreshToken, 'refreshtokensecret');
+  } else {
+    return res.status(200).send();
+  }
+
+  try {
+    const users: Array<any> = await db('users').select().where({ email: payload.email });
+
+    // if (!users[0] || users[0].token_version !== payload.tokenVersion) {
+    //   // safeguard for refresh token version
+    //   return res.status(200).send();
+    // }
+    const isActive: boolean = await checkForActiveSubscription(users[0].customer_id);
+
+    if (users && users[0]) {
+      if (!isActive && users[0].active_subscription === true) {
+        await db('users').update({ active_subscription: false, subscription_type: 'FREE' }).where({ email: payload.email });
+      }
+      const token: string = createAccessToken(users[0]);
+      const {
+        password,
+        userid,
+        customer_id,
+        passwordtoken,
+        passwordtoken_expiration,
+        ...user
+      } = users[0];
+      sendRefreshToken(res, createRefreshToken(user));
+      return res.status(200).json({ ...user, token });
+    } else {
+      logger.warn('refresh token fail no user found')
+    }
+    return res.status(200).send();
+  } catch (err: any) {
+    logger.error('refresh token error', err);
+    return res.status(200).send();
+  }
+}
+
+export const checkForActiveSubscription = async (customerId: string): Promise<boolean> => {
+  if (!customerId) {
+    return false;
+  }
+
+  const customer = await stripe.customers.retrieve(customerId, { expand: ['subscriptions']});
+
+  if (customer && customer.subscriptions && customer.subscriptions.data) {
+    const hasActiveSubscription: boolean = !!customer.subscriptions.data.find((subscription: any) => {
+      return subscription.status === 'active';
+        // && subscription.cancel_at_period_end === false;
+    });
+
+    if (hasActiveSubscription) {
+      return true;
+    }
+  }
+  return false;
 }

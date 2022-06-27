@@ -8,17 +8,19 @@ import {
   createSalesDataArray
 } from '../utils/upload.util';
 import db from '../db/postgres';
+import { logger } from '../utils/logger.utils';
 
 export const uploadAndCompareFiles = async (req: any, res: any) => {
-  const startTs = new Date().getTime();
-  console.log('------------------start time file compare----------', startTs);
   const {
     comparisonColumns1,
     comparisonColumns2,
     fileStructure1,
     fileStructure2,
     unformattedData1,
-    unformattedData2
+    unformattedData2,
+    userSubscriptionType,
+    userFreeComparisons,
+    userEmail
   } = req.body;
   const { sales_file1, sales_file2 }: any = req.files;
 
@@ -27,7 +29,6 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
   try {
     salesData1 = createSalesDataArray(fileStructure1, unformattedData1, sales_file1 ? sales_file1[0].path : null);
     salesData2 = createSalesDataArray(fileStructure2, unformattedData2, sales_file2 ? sales_file2[0].path : null);
-    // console.log('sales data 1 and 2', salesData1);
 
     /* Create list of rows where there is a duplicate value that is shared between the specified columns
       (comparisonColumns1 and comparisonColumns2) */
@@ -50,11 +51,16 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
 
     /* Create array of objects (rows a.k.a duplicates) that only contain the columns that the user wants to see */
     const result: Array<any> = setupResults(duplicatesList, columns);
-    const finishTs = new Date().getTime();
-    console.log('------------------------finish ts:', finishTs, '-----diff-----', finishTs - startTs);
+
+    if (userSubscriptionType === 'FREE') {
+      await db('users').update({
+        free_comparisons: parseInt(userFreeComparisons) + 1
+      }).where({ email: userEmail });
+    }
     res.send(result);
   } catch(err: any) {
-    res.status(400).send();
+    logger.error(`compare files error - email: ${userEmail}`, err);
+    return res.status(400).send();
   }
 }
 
@@ -76,11 +82,11 @@ export const pinFile = (req: any, res: any) => {
           });
       })
       .catch((err: any) => {
-        res.status(400).send();
-        console.log('failed to pin file: ', err);
+        logger.error(`pin file error - pinned file: ${pinned_file_id}`, err);
+        return res.status(400).send();
       });
   } else {
-    res.status(400).send();
+    return res.status(400).send();
   }
 }
 
@@ -91,7 +97,7 @@ export const viewPinnedFile = (req: any, res: any) => {
       return res.status(200).send(data);
     })
     .catch((err: any) => {
-      res.status(400).send();
-      console.log('failed to get pinned file: ', err);
+      logger.error(`view pinned file error - pinned file: ${pinnedFileId}`, err);
+      return res.status(400).send();
     });
 }

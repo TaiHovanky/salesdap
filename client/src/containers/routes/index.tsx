@@ -17,8 +17,9 @@ const RoutesContainer = ({
   loading,
   user,
   hideError,
-  hideSuccess
+  hideSuccess,
 }: Props) => {
+
   const handleAlertClose = () => {
     if (alert.alertType === 'error') {
       hideError();
@@ -45,7 +46,7 @@ const mapStateToProps = (state: any) => ({
 
 const mapDispatchToProps = (dispatch: any) => ({
   hideError: () => dispatch(hideError()),
-  hideSuccess: () => dispatch(hideSuccess())
+  hideSuccess: () => dispatch(hideSuccess()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoutesContainer);

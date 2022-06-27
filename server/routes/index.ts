@@ -5,12 +5,19 @@ const upload = multer({ dest: 'uploads/' });
 import { uploadAndCompareFiles, pinFile, viewPinnedFile } from '../controller/file.controller';
 import { saveEmail } from '../controller/email.controller';
 import { registerUser } from '../controller/register.controller';
-import { loginUser } from '../controller/login.controller';
+import { loginUser, refreshAccessToken } from '../controller/login.controller';
 import { logoutUser } from '../controller/logout.controller';
 import { forgotPassword } from '../controller/forgot-password.controller';
 import { verifyResetPasswordToken } from '../controller/reset-password.controller';
 import { updatePassword } from '../controller/update-password.controller';
-// import { authenticate } from '../middleware/authenticate';
+import { editProfile } from '../controller/profile.controller';
+import {
+  createCheckoutSession,
+  makePayment,
+  createCustomerPortal,
+  handleSuccessfulSubscription
+} from '../controller/payment.controller';
+import { authenticate } from '../middleware/authenticate';
 
 const router = express.Router();
 
@@ -22,6 +29,10 @@ router.post('/api/v1/register', upload.none(), (req: any, res: any) => {
 
 router.post('/api/v1/login', upload.none(), (req: any, res: any) => {
   loginUser(req, res);
+});
+
+router.post('/api/v1/refresh_token', upload.none(), (req: any, res: any) => {
+  refreshAccessToken(req, res);
 });
 
 router.post('/api/v1/logout', (req: any, res: any) => {
@@ -44,8 +55,24 @@ router.post('/api/v1/updatepassword', upload.none(), (req: any, res: any) => {
   updatePassword(req, res);
 });
 
+router.post('/api/v1/payment', (req: any, res: any) => {
+  makePayment(req, res);
+});
+
+router.post('/api/v1/create-checkout-session', async (req: any, res: any) => {
+  createCheckoutSession(req, res);
+});
+
+router.post('/api/v1/create-portal-session', (req: any, res: any) => {
+  createCustomerPortal(req, res);
+});
+
+router.post('/api/v1/order-success', async (req: any, res: any) => {
+  handleSuccessfulSubscription(req, res);
+});
+
 // Protected routes
-// router.use(authenticate);
+router.use(authenticate);
 
 router.post(
   '/api/v1/uploadfile',
@@ -64,13 +91,11 @@ router.post(
 );
 
 router.get('/api/v1/viewpinnedfile', (req: any, res: any) => {
-  // console.log('req session:', req.session, 'req sess user:', req.session.user, req.sessionID);
-  // if (!req.session || !req.session.user) {
-  //   const err = new Error('Unauthenticated');
-  //   // err.statusCode = 401;
-  //   return res.status(404).send(err);
-  // }
   viewPinnedFile(req, res);
 });
+
+router.post('/api/v1/edit-profile', upload.none(), (req: any, res: any) => {
+  editProfile(req, res);
+})
 
 export default router;

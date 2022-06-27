@@ -49,3 +49,9 @@ code {
   background-color: #1976D2;
   color: #fff;
 }
+
+.selected-file-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
