@@ -19,7 +19,7 @@ export const editProfile = async (req: any, res: any) => {
     await db('users').update(updatedUser).where({ email });
     return res.status(200).json({ email, firstname, lastname, company });
   } catch (err: any) {
-    logger.error(`edit profile error - email: ${req.body.email}`, err);
+    logger.error(`edit profile error - email: ${req.body.email} - err: ${err}`);
     return res.status(400).send();
   }
 }

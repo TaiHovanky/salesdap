@@ -36,7 +36,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield (0, postgres_1.default)('users').select().where({ email });
         if (!users || !users[0]) {
-            logger_utils_1.logger.warn('login fail no user found', email);
+            logger_utils_1.logger.warn(`login fail no user found - email: ${email}`);
             return res.status(401).send();
         }
         const isPasswordValid = yield (0, bcryptjs_1.compare)(password, users[0].password);
@@ -51,12 +51,12 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             return res.status(200).json(Object.assign(Object.assign({}, user), { token }));
         }
         else {
-            logger_utils_1.logger.warn('login fail invalid password', email);
+            logger_utils_1.logger.warn(`login fail invalid password - email: ${email}`);
         }
         return res.status(401).send();
     }
     catch (err) {
-        logger_utils_1.logger.error('login error', err);
+        logger_utils_1.logger.error(`login error - err: ${err}`);
         return res.status(401).send();
     }
 });
@@ -88,7 +88,7 @@ const refreshAccessToken = (req, res) => __awaiter(void 0, void 0, void 0, funct
         return res.status(200).send();
     }
     catch (err) {
-        logger_utils_1.logger.error('refresh token error', err);
+        logger_utils_1.logger.error(`refresh token error - err: ${err}`);
         return res.status(200).send();
     }
 });

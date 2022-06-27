@@ -20,7 +20,6 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const routes_1 = __importDefault(require("./routes"));
 const pinoHttp = require('pino-http')();
-
 (() => __awaiter(void 0, void 0, void 0, function* () {
     const app = (0, express_1.default)();
     app.use((0, cors_1.default)({

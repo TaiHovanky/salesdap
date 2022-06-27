@@ -28,7 +28,7 @@ const editProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         return res.status(200).json({ email, firstname, lastname, company });
     }
     catch (err) {
-        logger_utils_1.logger.error(`edit profile error - email: ${req.body.email}`, err);
+        logger_utils_1.logger.error(`edit profile error - email: ${req.body.email} - err: ${err}`);
         return res.status(400).send();
     }
 });

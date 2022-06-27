@@ -36,7 +36,7 @@ const uploadAndCompareFiles = (req, res) => __awaiter(void 0, void 0, void 0, fu
         res.send(result);
     }
     catch (err) {
-        logger_utils_1.logger.error(`compare files error - email: ${userEmail}`, err);
+        logger_utils_1.logger.error(`compare files error - email: ${userEmail} - err: ${err}`);
         return res.status(400).send();
     }
 });
@@ -58,7 +58,7 @@ const pinFile = (req, res) => {
             });
         })
             .catch((err) => {
-            logger_utils_1.logger.error(`pin file error - pinned file: ${pinned_file_id}`, err);
+            logger_utils_1.logger.error(`pin file error - pinned file: ${pinned_file_id} - err: ${err}`);
             return res.status(400).send();
         });
     }
@@ -74,7 +74,7 @@ const viewPinnedFile = (req, res) => {
         return res.status(200).send(data);
     })
         .catch((err) => {
-        logger_utils_1.logger.error(`view pinned file error - pinned file: ${pinnedFileId}`, err);
+        logger_utils_1.logger.error(`view pinned file error - pinned file: ${pinnedFileId} - err: ${err}`);
         return res.status(400).send();
     });
 };

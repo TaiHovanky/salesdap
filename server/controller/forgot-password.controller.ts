@@ -51,7 +51,7 @@ export const forgotPassword = async (req: any, res: any) => {
       return res.status(401).send('Invalid email');
     }
   } catch(err) {
-    logger.error(`password reset email send error - email: ${email}`, err);
+    logger.error(`password reset email send error - email: ${email} - err: ${err}`);
     return res.status(401).send('Password reset email failed to send');
   }
 }

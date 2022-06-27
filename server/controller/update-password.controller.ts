@@ -17,7 +17,7 @@ export const updatePassword = async (req: any, res: any) => {
       return res.status(200).send();
     }
   } catch(err) {
-    logger.error(`update password error - email: ${email}`, err);
+    logger.error(`update password error - email: ${email} - err: ${err}`);
     return res.status(400).send();
   }
 }

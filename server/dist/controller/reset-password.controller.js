@@ -24,7 +24,7 @@ const verifyResetPasswordToken = (req, res) => __awaiter(void 0, void 0, void 0,
         }
     }
     catch (err) {
-        logger_utils_1.logger.error('verify reset password token error', err);
+        logger_utils_1.logger.error(`verify reset password token error - err: ${err}`);
         return res.status(400).send('Invalid password reset link');
     }
 });

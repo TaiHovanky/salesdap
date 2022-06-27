@@ -9,7 +9,7 @@ export const verifyResetPasswordToken = async (req: any, res: any) => {
       return res.status(200).send('Password reset link is valid');
     }
   } catch(err: any) {
-    logger.error('verify reset password token error', err);
+    logger.error(`verify reset password token error - err: ${err}`);
     return res.status(400).send('Invalid password reset link');
   }
 }

@@ -7,7 +7,7 @@ export const saveEmail = (req: any, res: any) => {
   db('waitlist').insert({ id: uuidv4(), email })
     .then(() => res.status(200).send())
     .catch((err: any) => {
-      logger.error(`email waitlist err - ${email}`, err);
+      logger.error(`email waitlist err - ${email} - err: ${err}`);
       return res.status(400).send();
     });
 }

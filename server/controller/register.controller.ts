@@ -31,7 +31,7 @@ export const registerUser = async (req: any, res: any) => {
     return res.status(200).json({ email, firstname, lastname, company, token });
   } catch (err: any) {
     console.info('reg err-------------------------------------', err);
-    logger.error('registration error', err);
+    logger.error(`registration error: ${err}`);
     return res.status(400).send();
   }
 };

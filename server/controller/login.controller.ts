@@ -5,8 +5,6 @@ import db from '../db/postgres';
 import { createAccessToken, createRefreshToken, sendRefreshToken } from '../utils/auth.utils';
 import { logger } from '../utils/logger.utils';
 
-// const FREE = 'FREE';
-
 export const loginUser = async (req: any, res: any) => {
   const { email, password } = req.body;
 
@@ -14,7 +12,7 @@ export const loginUser = async (req: any, res: any) => {
   try {
     const users: Array<any> = await db('users').select().where({ email });
     if (!users || !users[0]) {
-      logger.warn('login fail no user found', email);
+      logger.warn(`login fail no user found - email: ${email}`);
       return res.status(401).send();
     }
 
@@ -37,12 +35,12 @@ export const loginUser = async (req: any, res: any) => {
       sendRefreshToken(res, createRefreshToken(user));
       return res.status(200).json({ ...user, token });
     } else {
-      logger.warn('login fail invalid password', email);
+      logger.warn(`login fail invalid password - email: ${email}`);
     }
 
     return res.status(401).send();
   } catch (err: any) {
-    logger.error('login error', err);
+    logger.error(`login error - err: ${err}`);
     return res.status(401).send();
   }
 }
@@ -86,7 +84,7 @@ export const refreshAccessToken = async (req: any, res: any) => {
     }
     return res.status(200).send();
   } catch (err: any) {
-    logger.error('refresh token error', err);
+    logger.error(`refresh token error - err: ${err}`);
     return res.status(200).send();
   }
 }

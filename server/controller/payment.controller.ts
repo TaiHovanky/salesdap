@@ -31,7 +31,7 @@ export const createCheckoutSession = async (req: any, res: any) => {
   
     return res.json({url: session.url});
   } catch (err: any) {
-    logger.error(`checkout session creation error - email: ${customerEmail}`, err);
+    logger.error(`checkout session creation error - email: ${customerEmail} - err: ${err}`);
     return res.status(500).send();
   }
 }
@@ -45,7 +45,7 @@ export const makePayment = async (req: any, res: any) => {
       name: token.card.name,
       source: token.id, 
     }).catch((err: any) => {
-      logger.error(`creating customer error - email: ${token.email}, tokenId: ${token.id}`, err);
+      logger.error(`creating customer error - email: ${token.email}, tokenId: ${token.id} - err: ${err}`);
       return null; 
     });
 
@@ -59,7 +59,7 @@ export const makePayment = async (req: any, res: any) => {
         receipt_email: token.email,
         description: 'Donation',
       }, { idempotencyKey: invoiceId }).catch((err: any) => {
-        logger.error(`creating charge errror - customerId: ${customer.id}, email: ${token.email}`, err);
+        logger.error(`creating charge errror - customerId: ${customer.id}, email: ${token.email} - err: ${err}`);
         return null; 
       });
 
@@ -68,7 +68,7 @@ export const makePayment = async (req: any, res: any) => {
 
     return res.status(500).send();
   } catch (err) {
-    logger.error(`make payment err - email: ${token.email}`, err);
+    logger.error(`make payment err - email: ${token.email} - err: ${err}`);
     return res.status(500).send();
   }
 }
@@ -158,7 +158,7 @@ export const createCustomerPortal = async (req: any, res: any) => {
   
     res.json({ url: portalSession.url });
   } catch (err: any) {
-    logger.error(`create customer portal error - email: ${email}`, err);
+    logger.error(`create customer portal error - email: ${email} - err: ${err}`);
     return res.status(400).send();
   }
 }
@@ -184,7 +184,7 @@ export const handleSuccessfulSubscription = async (req: any, res: any) => {
     }
     res.status(200).json({ customer });
   } catch (err: any) {
-    logger.error(`handle successful subscription error - sessionId: ${sessionId}`, err);
+    logger.error(`handle successful subscription error - sessionId: ${sessionId} - err: ${err}`);
     return res.status(500).send();
   }
 }

@@ -37,7 +37,8 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         return res.status(200).json({ email, firstname, lastname, company, token });
     }
     catch (err) {
-        logger_utils_1.logger.error('registration error', err);
+        console.info('reg err-------------------------------------', err);
+        logger_utils_1.logger.error(`registration error: ${err}`);
         return res.status(400).send();
     }
 });

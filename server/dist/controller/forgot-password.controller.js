@@ -57,7 +57,7 @@ const forgotPassword = (req, res) => __awaiter(void 0, void 0, void 0, function*
         }
     }
     catch (err) {
-        logger_utils_1.logger.error(`password reset email send error - email: ${email}`, err);
+        logger_utils_1.logger.error(`password reset email send error - email: ${email} - err: ${err}`);
         return res.status(401).send('Password reset email failed to send');
     }
 });

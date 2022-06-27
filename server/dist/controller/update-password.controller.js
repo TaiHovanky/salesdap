@@ -32,7 +32,7 @@ const updatePassword = (req, res) => __awaiter(void 0, void 0, void 0, function*
         }
     }
     catch (err) {
-        logger_utils_1.logger.error(`update password error - email: ${email}`, err);
+        logger_utils_1.logger.error(`update password error - email: ${email} - err: ${err}`);
         return res.status(400).send();
     }
 });

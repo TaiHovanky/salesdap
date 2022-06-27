@@ -12,7 +12,7 @@ const saveEmail = (req, res) => {
     (0, postgres_1.default)('waitlist').insert({ id: (0, uuid_1.v4)(), email })
         .then(() => res.status(200).send())
         .catch((err) => {
-        logger_utils_1.logger.error(`email waitlist err - ${email}`, err);
+        logger_utils_1.logger.error(`email waitlist err - ${email} - err: ${err}`);
         return res.status(400).send();
     });
 };

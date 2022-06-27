@@ -40,7 +40,7 @@ const createCheckoutSession = (req, res) => __awaiter(void 0, void 0, void 0, fu
         return res.json({ url: session.url });
     }
     catch (err) {
-        logger_utils_1.logger.error(`checkout session creation error - email: ${customerEmail}`, err);
+        logger_utils_1.logger.error(`checkout session creation error - email: ${customerEmail} - err: ${err}`);
         return res.status(500).send();
     }
 });
@@ -53,7 +53,7 @@ const makePayment = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             name: token.card.name,
             source: token.id,
         }).catch((err) => {
-            logger_utils_1.logger.error(`creating customer error - email: ${token.email}, tokenId: ${token.id}`, err);
+            logger_utils_1.logger.error(`creating customer error - email: ${token.email}, tokenId: ${token.id} - err: ${err}`);
             return null;
         });
         if (customer) {
@@ -65,7 +65,7 @@ const makePayment = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                 receipt_email: token.email,
                 description: 'Donation',
             }, { idempotencyKey: invoiceId }).catch((err) => {
-                logger_utils_1.logger.error(`creating charge errror - customerId: ${customer.id}, email: ${token.email}`, err);
+                logger_utils_1.logger.error(`creating charge errror - customerId: ${customer.id}, email: ${token.email} - err: ${err}`);
                 return null;
             });
             return res.status(200).send();
@@ -73,7 +73,7 @@ const makePayment = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         return res.status(500).send();
     }
     catch (err) {
-        logger_utils_1.logger.error(`make payment err - email: ${token.email}`, err);
+        logger_utils_1.logger.error(`make payment err - email: ${token.email} - err: ${err}`);
         return res.status(500).send();
     }
 });
@@ -138,7 +138,7 @@ const createCustomerPortal = (req, res) => __awaiter(void 0, void 0, void 0, fun
         res.json({ url: portalSession.url });
     }
     catch (err) {
-        logger_utils_1.logger.error(`create customer portal error - email: ${email}`, err);
+        logger_utils_1.logger.error(`create customer portal error - email: ${email} - err: ${err}`);
         return res.status(400).send();
     }
 });
@@ -163,7 +163,7 @@ const handleSuccessfulSubscription = (req, res) => __awaiter(void 0, void 0, voi
         res.status(200).json({ customer });
     }
     catch (err) {
-        logger_utils_1.logger.error(`handle successful subscription error - sessionId: ${sessionId}`, err);
+        logger_utils_1.logger.error(`handle successful subscription error - sessionId: ${sessionId} - err: ${err}`);
         return res.status(500).send();
     }
 });
