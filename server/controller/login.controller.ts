@@ -9,6 +9,7 @@ import { logger } from '../utils/logger.utils';
 
 export const loginUser = async (req: any, res: any) => {
   const { email, password } = req.body;
+
   logger.warn('some login warning')
   try {
     const users: Array<any> = await db('users').select().where({ email });

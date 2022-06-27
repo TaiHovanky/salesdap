@@ -58,7 +58,7 @@ const LoginContainer = ({
       headers: {
         'Content-Type': 'multipart/form-data'
       },
-      withCredentials: true
+      // withCredentials: true
     };
 
     axios.post('/api/v1/login', formData, config)
