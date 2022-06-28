@@ -25,7 +25,7 @@ const pinoHttp = require('pino-http')();
     const whitelist = ['https://salesdap.com', 'https://stripe.com', 'http://localhost:3000'];
     const corsOptions = {
         origin: (origin, callback) => {
-            if (whitelist.indexOf(origin) !== -1) {
+            if (whitelist.indexOf(origin) !== -1 || origin.includes('amazonaws')) {
                 callback(null, true);
             }
             else {

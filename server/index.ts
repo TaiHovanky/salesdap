@@ -13,7 +13,7 @@ const pinoHttp = require('pino-http')();
   const corsOptions = {
     // origin: 'http://localhost:3000',
     origin: (origin: any, callback: any) => {
-      if (whitelist.indexOf(origin) !== -1) {
+      if (whitelist.indexOf(origin) !== -1 || origin.includes('amazonaws')) {
         callback(null, true)
       } else {
         callback(new Error('Not allowed by CORS'))

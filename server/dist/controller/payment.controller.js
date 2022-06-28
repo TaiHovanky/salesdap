@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleSuccessfulSubscription = exports.createCustomerPortal = exports.createWebhook = exports.makePayment = exports.createCheckoutSession = void 0;
+require("dotenv/config");
 const postgres_1 = __importDefault(require("../db/postgres"));
 const logger_utils_1 = require("../utils/logger.utils");
 console.log('-----------------------------------testsec-----', process.env.STRIPE_TEST_SECRET);

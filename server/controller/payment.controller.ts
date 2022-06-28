@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import db from '../db/postgres';
 import { logger } from '../utils/logger.utils';
 
