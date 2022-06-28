@@ -65,7 +65,13 @@ const refreshAccessToken = (req, res) => __awaiter(void 0, void 0, void 0, funct
     const refreshToken = req.cookies.rtsd;
     let payload = null;
     if (!!refreshToken && refreshToken !== 'undefined') {
-        payload = jwt.verify(refreshToken, 'refreshtokensecret');
+        try {
+            payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+        }
+        catch (err) {
+            console.log('ref token verification failed');
+            return res.status(200).send();
+        }
     }
     else {
         return res.status(200).send();

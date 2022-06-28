@@ -50,7 +50,12 @@ export const refreshAccessToken = async (req: any, res: any) => {
 
   let payload: any = null;
   if (!!refreshToken && refreshToken !== 'undefined') {
-    payload = jwt.verify(refreshToken, 'refreshtokensecret');
+    try {
+      payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    } catch(err) {
+      console.log('ref token verification failed')
+      return res.status(200).send();
+    }
   } else {
     return res.status(200).send();
   }
