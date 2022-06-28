@@ -26,7 +26,7 @@ const pinoHttp = require('pino-http')();
     const corsOptions = {
         origin: (origin, callback) => {
             console.log('origin-------------------------------------', origin, '===');
-            if (whitelist.indexOf(origin) !== -1 || origin.includes('amazonaws')) {
+            if (whitelist.indexOf(origin) !== -1 || !origin) {
                 callback(null, true);
             }
             else {
