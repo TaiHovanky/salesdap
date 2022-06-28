@@ -22,11 +22,20 @@ const routes_1 = __importDefault(require("./routes"));
 const pinoHttp = require('pino-http')();
 (() => __awaiter(void 0, void 0, void 0, function* () {
     const app = (0, express_1.default)();
-    app.use((0, cors_1.default)({
-        origin: 'https://salesdap.com',
+    const whitelist = ['https://salesdap.com', 'https://stripe.com', 'http://localhost:3000'];
+    const corsOptions = {
+        origin: (origin, callback) => {
+            if (whitelist.indexOf(origin) !== -1) {
+                callback(null, true);
+            }
+            else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
         credentials: true,
         methods: ["POST", "PUT", "GET"],
-    }));
+    };
+    app.use((0, cors_1.default)(corsOptions));
     app.use((0, body_parser_1.default)());
     app.use((0, cookie_parser_1.default)());
     app.set('trust proxy', 1);

@@ -9,15 +9,21 @@ const pinoHttp = require('pino-http')();
 
 (async () => {
   const app = express();
-
-  app.use(cors({
-    /* Use IP address of droplet with the exposed port that React app container runs on.
-    Note that port isn't needed because Web container exposes port 80 */
+  const whitelist: Array<string> = ['https://salesdap.com', 'https://stripe.com', 'http://localhost:3000'];
+  const corsOptions = {
     // origin: 'http://localhost:3000',
-    origin: 'https://salesdap.com',
+    origin: (origin: any, callback: any) => {
+      if (whitelist.indexOf(origin) !== -1) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
     credentials: true,
     methods: ["POST", "PUT", "GET"],
-  }));
+  }
+
+  app.use(cors(corsOptions));
   app.use(bodyParser());
   app.use(cookieParser());
   app.set('trust proxy', 1);
