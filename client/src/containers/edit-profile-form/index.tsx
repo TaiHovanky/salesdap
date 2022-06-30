@@ -47,7 +47,7 @@ const EditProfileFormContainer = ({
       }
     };
 
-    return axios.post('/api/v1/edit-profile', formData, config)
+    return axios.post('http://localhost:3001/api/v1/edit-profile', formData, config)
     .then((res: any) => {
       updateUser(res.data);
       hideError();

@@ -17,7 +17,7 @@ const PaymentButton = ({
   const handlePayment = async (token: any) => {
     try {
       setIsLoading(true);
-      const response = await axios.post('/api/v1/payment', {
+      const response = await axios.post('http://localhost:3001/api/v1/payment', {
         amount: PREMIUM_PRICE,
         token
       }, {

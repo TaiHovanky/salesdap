@@ -96,7 +96,7 @@ const UploadDocumentFormContainer = ({
     formData.append('userFreeComparisons', `${user.freeComparisons}`);
     formData.append('userEmail', user.email);
 
-    axios.post('/api/v1/uploadfile', formData, {
+    axios.post('http://localhost:3001/api/v1/uploadfile', formData, {
       headers: {
         Authorization: `Bearer ${getAccessToken()}`
       }

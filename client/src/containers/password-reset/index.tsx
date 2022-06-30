@@ -17,7 +17,7 @@ const PasswordResetContainer = ({ setIsLoading, showError, hideError }: Props) =
   const params: any = useParams();
 
   useEffect(() => {
-    axios.post('/api/v1/resetpassword', { token: params.token })
+    axios.post('http://localhost:3001/api/v1/resetpassword', { token: params.token })
       .catch((err) => {
         history.push('/');
       });
@@ -33,7 +33,7 @@ const PasswordResetContainer = ({ setIsLoading, showError, hideError }: Props) =
       }
     };
     setIsLoading(true);
-    axios.post('/api/v1/updatepassword', formData, config)
+    axios.post('http://localhost:3001/api/v1/updatepassword', formData, config)
       .then(() => {
         hideError();
         setIsLoading(false);

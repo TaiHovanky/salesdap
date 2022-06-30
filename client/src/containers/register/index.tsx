@@ -22,7 +22,7 @@ const RegisterContainer = ({
   const history = useHistory();
 
   const handleCreateCheckoutSession = (email: string) => {
-    return axios.post('/api/v1/create-checkout-session', {
+    return axios.post('http://localhost:3001/api/v1/create-checkout-session', {
       customerEmail: email
     })
       .then((res) => {
@@ -48,7 +48,7 @@ const RegisterContainer = ({
       },
     };
 
-    axios.post('/api/v1/register', formData, config)
+    axios.post('http://localhost:3001/api/v1/register', formData, config)
       .then(() => {
         if (values.subscriptionType === PREMIUM) {
           handleCreateCheckoutSession(values.email);

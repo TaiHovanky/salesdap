@@ -44,7 +44,7 @@ const LoginContainer = ({
 
   useEffect(() => {
     setIsLoading(true);
-    axios.post('/api/v1/refresh_token', null, { withCredentials: true })
+    axios.post('http://localhost:3001/api/v1/refresh_token', null, { withCredentials: true })
       .then(handleLoginSuccess)
       .catch(handleLoginFailure);
   }, []);
@@ -61,7 +61,7 @@ const LoginContainer = ({
       // withCredentials: true
     };
 
-    axios.post('/api/v1/login', formData, config)
+    axios.post('http://localhost:3001/api/v1/login', formData, config)
       .then(handleLoginSuccess)
       .catch(handleLoginFailure);
   };
