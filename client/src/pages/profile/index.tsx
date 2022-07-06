@@ -12,6 +12,8 @@ import { Attachment, Upload, Payment as PaymentIcon, Edit } from '@mui/icons-mat
 import { UserState } from '../../state/reducers/user';
 import InfoTooltip from '../../components/info-tooltip';
 import EditProfileFormContainer from '../../containers/edit-profile-form';
+import PinnedFileCardContainer from '../../containers/pinned-file-card';
+import EditPinnedFileModal from '../../components/edit-pinned-file-modal';
 
 interface Props {
   user: UserState;
@@ -56,34 +58,33 @@ const Profile = ({
         <Grid
           container
           spacing={2}
-          justifyContent="center"
-          alignItems="center"
+          // justifyContent="center"
+          // alignItems="center"
           sx={{ height: '100%' }}
         >
           <Grid
             item
             container
-            xs={8}
-            p={0}
+            xs={6}
             sx={{ height: '100%' }}
             direction="column"
             justifyContent="start"
-            alignItems="center"
+            alignItems="start"
           >
-            <Paper elevation={3} sx={{ width: '100%', padding: '3rem 0 3rem 3rem', margin: '3rem auto 3rem auto' }}>
-              <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Profile <IconButton onClick={handleEditButtonClick}><Edit /></IconButton></Typography>
+            {/* <Paper elevation={3} sx={{ width: '100%', padding: '3rem 0 3rem 3rem', margin: '3rem auto 3rem auto' }}> */}
+              <Typography variant="h5" className="profile-info-text">Profile <IconButton onClick={handleEditButtonClick}><Edit /></IconButton></Typography>
               {isEditing ?
                 <EditProfileFormContainer /> :
                 <>
-                  <Typography variant="subtitle1" sx={{ marginBottom: '2rem' }}>Name: {user.firstname} {user.lastname}</Typography>
-                  <Typography variant="subtitle1" sx={{ marginBottom: '2rem' }}>Email: {user.email}</Typography>
-                  <Typography variant="subtitle1" sx={{ marginBottom: '2rem' }}>Company: {user.company}</Typography>
+                  <Typography variant="subtitle1" className="profile-info-text">Name: {user.firstname} {user.lastname}</Typography>
+                  <Typography variant="subtitle1" className="profile-info-text">Email: {user.email}</Typography>
+                  <Typography variant="subtitle1" className="profile-info-text">Company: {user.company}</Typography>
                 </>
               }
-              <Typography variant="subtitle1" sx={{ marginBottom: '2rem' }}>Subscription Type: {user.subscriptionType}</Typography>
-              <Typography variant="subtitle1" sx={{ marginBottom: '2rem' }}>Paid Subscription: {user.activeSubscription ? 'Yes' : 'No'}</Typography>
-              <Typography variant="subtitle1">Pinned File:</Typography>
-              <Chip onClick={handlePinnedFileClick} icon={<Attachment />} label={user.pinnedFileName} />
+              <Typography variant="subtitle1" className="profile-info-text">Subscription Type: {user.subscriptionType}</Typography>
+              <Typography variant="subtitle1" className="profile-info-text">Paid Subscription: {user.activeSubscription ? 'Yes' : 'No'}</Typography>
+              {/* <Typography variant="subtitle1">Pinned File:</Typography> */}
+              {/* <Chip onClick={handlePinnedFileClick} icon={<Attachment />} label={user.pinnedFileName} /> */}
               <Grid
                 item
                 container
@@ -93,7 +94,7 @@ const Profile = ({
                 justifyContent="start"
                 alignItems="start"
               >
-                <InfoTooltip
+                {/* <InfoTooltip
                   arrow
                   placement="top-start"
                   open={!user.pinnedFileId}
@@ -115,12 +116,12 @@ const Profile = ({
                   className="file-input"
                   onChange={validateFileSelection}
                   name="sales_file"
-                />
+                /> */}
                 {hasActiveSubscription ?
                   <Fab
                     variant="extended"
                     aria-label="add"
-                    sx={{ marginTop: '2.5rem', minWidth: '208px' }}
+                    sx={{ marginTop: '2.5rem', minWidth: '208px', marginLeft: '6rem' }}
                     onClick={handleManageSubscriptionClick}
                   >
                     <PaymentIcon sx={{ mr: 1 }} />
@@ -137,7 +138,21 @@ const Profile = ({
                   </Fab>
                 }
               </Grid>
-            </Paper>
+            {/* </Paper> */}
+          </Grid>
+          <Grid
+            item
+            container
+            xs={6}
+            p={0}
+            sx={{ height: '100%' }}
+            direction="column"
+            justifyContent="start"
+            alignItems="start"
+          >
+            <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Pinned Files <EditPinnedFileModal /></Typography>
+            <PinnedFileCardContainer pinnedFile={{ label: 'file for SHI', name: 'shi-related sales accounts', id: 'asdf234f', pinned_filename: 'jr-shi-list' }} />
+            <PinnedFileCardContainer pinnedFile={{ label: 'file for Sailpoint', name: 'sailpoint-related sales accounts', id: '34wef3', pinned_filename: 'jr-sailpoint-list' }} />
           </Grid>
         </Grid>
       </Box>
