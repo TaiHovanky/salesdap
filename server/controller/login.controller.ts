@@ -10,7 +10,11 @@ export const loginUser = async (req: any, res: any) => {
 
   logger.warn('some login warning')
   try {
-    const users: Array<any> = await db('users').select().where({ email });
+    const users: Array<any> = await db('users')
+      .select()
+      .where({ email });
+
+    console.log('users ------------------------------------------------------', users);
     if (!users || !users[0]) {
       logger.warn(`login fail no user found - email: ${email}`);
       return res.status(401).send();
@@ -24,6 +28,11 @@ export const loginUser = async (req: any, res: any) => {
       }
 
       const token: string = createAccessToken(users[0]);
+
+      const pinnedFiles: Array<any> = await db('pinned_files')
+        .select('file_label', 'pinned_file_id', 'file_name')
+        .where({ user_id: users[0].userid });
+
       const {
         password,
         userid,
@@ -32,6 +41,7 @@ export const loginUser = async (req: any, res: any) => {
         passwordtoken_expiration,
         ...user
       } = users[0];
+      user.pinnedFiles = pinnedFiles;
       sendRefreshToken(res, createRefreshToken(user));
       return res.status(200).json({ ...user, token });
     } else {
@@ -82,6 +92,12 @@ export const refreshAccessToken = async (req: any, res: any) => {
         passwordtoken_expiration,
         ...user
       } = users[0];
+
+      const pinnedFiles: Array<any> = await db('pinned_files')
+        .select('file_label', 'pinned_file_id', 'file_name')
+        .where({ user_id: users[0].userid });
+
+      user.pinnedFiles = pinnedFiles;
       sendRefreshToken(res, createRefreshToken(user));
       return res.status(200).json({ ...user, token });
     } else {

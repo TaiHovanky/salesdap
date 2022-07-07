@@ -4,10 +4,10 @@ import PinnedFileCard from '../../components/pinned-file-card';
 import { hideError, showError } from '../../state/actions/alert';
 import { createFileLink, getPinnedFile } from '../../utils/spreadsheet.utils';
 
-const PinnedFileCardContainer = ({ pinnedFile, showError }: any) => {
-  const handlePinnedFileClick = async () => {
+const PinnedFileCardContainer = ({ pinnedFiles, showError }: any) => {
+  const handlePinnedFileClick = async (file: any) => {
     try {
-      const pinnedFileData = await getPinnedFile(pinnedFile.id);
+      const pinnedFileData = await getPinnedFile(file.id);
       // createFileLink(pinnedFileData.data, pinnedFile.name);
     } catch (err: any) {
       console.log('err', err);
@@ -16,7 +16,7 @@ const PinnedFileCardContainer = ({ pinnedFile, showError }: any) => {
   };
 
   return (
-    <PinnedFileCard handlePinnedFileClick={handlePinnedFileClick} pinnedFile={pinnedFile} />
+    <PinnedFileCard handlePinnedFileClick={handlePinnedFileClick} pinnedFiles={pinnedFiles} />
   );
 }
 

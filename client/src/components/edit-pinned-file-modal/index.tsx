@@ -7,20 +7,11 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Chip, Fab, Grid } from '@mui/material';
-import { Add, Attachment, Upload } from '@mui/icons-material';
+import { Attachment, Upload } from '@mui/icons-material';
 
-const EditPinnedFileModal = () => {
-  const [open, setOpen] = React.useState(false);
+const EditPinnedFileModal = ({ isOpen, handleClose }: any) => {
   const [pinnedFileLabel, setPinnedFileLabel] = useState('');
   const inputFileRef: any = useRef(null);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const handleFileSelectionBtnClick = () => {
     /*Collecting node-element and performing click*/
@@ -39,10 +30,7 @@ const EditPinnedFileModal = () => {
 
   return (
     <>
-      <Fab  color="primary" aria-label="add" onClick={handleClickOpen}>
-        <Add />
-      </Fab>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={isOpen} onClose={handleClose}>
         <DialogTitle>Add a Pinned File</DialogTitle>
         <DialogContent>
           <DialogContentText>

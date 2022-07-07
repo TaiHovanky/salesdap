@@ -17,6 +17,7 @@ export interface UserState {
   activeSubscription: boolean;
   subscriptionType: string;
   freeComparisons: number;
+  pinnedFiles: Array<any>;
 }
 
 export const initialState: UserState = {
@@ -28,29 +29,39 @@ export const initialState: UserState = {
   pinnedFileId: '',
   activeSubscription: false,
   subscriptionType: '',
-  freeComparisons: 0
+  freeComparisons: 0,
+  pinnedFiles: []
 }
 
 export const userReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case UPDATE_USER:
+      const {
+        email,
+        firstname,
+        lastname,
+        company,
+        pinnedFiles,
+        active_subscription,
+        subscription_type,
+        free_comparisons
+      } = action.payload;
       return {
         ...state,
-        email: action.payload.email || state.email,
-        firstname: action.payload.firstname || state.firstname,
-        lastname: action.payload.lastname || state.lastname,
-        company: action.payload.company || state.company,
-        pinnedFileName: action.payload.pinned_filename || state.pinnedFileName,
-        pinnedFileId: action.payload.pinned_file_id || state.pinnedFileId,
-        activeSubscription: action.payload.active_subscription || state.activeSubscription,
-        subscriptionType: action.payload.subscription_type || state.subscriptionType,
-        freeComparisons: action.payload.free_comparisons || state.freeComparisons
+        email: email || state.email,
+        firstname: firstname || state.firstname,
+        lastname: lastname || state.lastname,
+        company: company || state.company,
+        activeSubscription: active_subscription || state.activeSubscription,
+        subscriptionType: subscription_type || state.subscriptionType,
+        freeComparisons: free_comparisons || state.freeComparisons,
+        pinnedFiles: pinnedFiles || state.pinnedFiles,
       };
     case PIN_FILE_SUCCESS:
       return {
         ...state,
-        pinnedFileName: action.payload.pinned_filename,
-        pinnedFileId: action.payload.pinned_file_id
+        // pinnedFileName: action.payload.pinned_filename,
+        // pinnedFileId: action.payload.pinned_file_id
       };
     default:
       return state;
