@@ -58,10 +58,12 @@ export const userReducer = (state = initialState, action: any) => {
         pinnedFiles: pinnedFiles || state.pinnedFiles,
       };
     case PIN_FILE_SUCCESS:
+      console.log('action payload --------------', action.payload)
       return {
         ...state,
         // pinnedFileName: action.payload.pinned_filename,
         // pinnedFileId: action.payload.pinned_file_id
+        pinnedFiles: [...state.pinnedFiles, action.payload]
       };
     default:
       return state;

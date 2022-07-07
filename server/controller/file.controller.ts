@@ -64,19 +64,24 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
   }
 }
 
-export const pinFile = (req: any, res: any) => {
+export const pinFile = async (req: any, res: any) => {
   if (req.files && req.files.sales_file) {
     const file = req.files.sales_file[0];
-    const { email } = req.body;
+    console.log('req files name', req.files.sales_file[0])
+    const { email, file_label } = req.body;
     const pinned_file_id: string = uuidv4();
+    const [user] = await db('users').select('userid').where({ email });
     const fileMetadata: any = {
-      pinned_filename: file.originalname,
-      pinned_file_id
+      file_name: file.originalname,
+      file_label,
+      pinned_file_id,
+      user_id: user.userid
     }
+    console.log('file metadata user', user.userid, fileMetadata);
   
     storeFile(file, pinned_file_id)
       .then(() => {
-        db('users').update(fileMetadata).where({ email })
+        db('pinned_files').insert(fileMetadata)
           .then(() => {
             res.status(200).json(fileMetadata);
           });

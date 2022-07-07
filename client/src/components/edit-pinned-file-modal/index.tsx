@@ -8,10 +8,26 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Chip, Fab, Grid } from '@mui/material';
 import { Attachment, Upload } from '@mui/icons-material';
+import { useHistory } from 'react-router-dom';
 
-const EditPinnedFileModal = ({ isOpen, handleClose }: any) => {
+interface Props {
+  isOpen: boolean;
+  handleClose: any;
+  handleFilePinning: any;
+  validateFileSelection: any;
+}
+
+const EditPinnedFileModal = ({
+  isOpen,
+  handleClose,
+  handleFilePinning,
+  validateFileSelection
+}: Props) => {
   const [pinnedFileLabel, setPinnedFileLabel] = useState('');
+  const [pinnedFileName, setPinnedFileName] = useState();
+  const [pinnedFile, setPinnedFile] = useState();
   const inputFileRef: any = useRef(null);
+  const history = useHistory();
 
   const handleFileSelectionBtnClick = () => {
     /*Collecting node-element and performing click*/
@@ -26,6 +42,27 @@ const EditPinnedFileModal = ({ isOpen, handleClose }: any) => {
 
   const handlePinnedFileClick = () => {
     return;
+  }
+
+  const handleFileSelection = (event: any) => {
+    validateFileSelection(event);
+    const document: any = event && event.target && event.target.files ?
+      event.target.files[0] :
+      null;
+    if (document && document.name) {
+      setPinnedFileName(document.name);
+      setPinnedFile(document);
+    }
+  }
+
+  const savePinnedFile = () => {
+    handleFilePinning(pinnedFile, pinnedFileLabel);
+    handleClose();
+  }
+
+  const saveAndLeave = () => {
+    savePinnedFile();
+    history.push('/home');
   }
 
   return (
@@ -58,7 +95,7 @@ const EditPinnedFileModal = ({ isOpen, handleClose }: any) => {
             <Chip
               onClick={handlePinnedFileClick}
               icon={<Attachment />}
-              label={pinnedFileLabel}
+              label={pinnedFileName}
               sx={{ marginBottom: '1.5rem' }}
             />
             <Fab
@@ -74,14 +111,15 @@ const EditPinnedFileModal = ({ isOpen, handleClose }: any) => {
               type="file"
               ref={inputFileRef}
               className="file-input"
-              // onChange={validateFileSelection}
+              onChange={handleFileSelection}
               name="sales_file"
             />
           </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Subscribe</Button>
+          <Button onClick={savePinnedFile}>Save</Button>
+          <Button onClick={saveAndLeave}>Save & Leave Profile</Button>
         </DialogActions>
       </Dialog>
     </>

@@ -26,8 +26,6 @@ interface Props {
 
 const Profile = ({
   user,
-  validateFileSelection,
-  handlePinnedFileClick,
   handleManageSubscriptionClick,
   handleCreateCheckoutSession,
 }: Props) => {

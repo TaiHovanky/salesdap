@@ -19,7 +19,7 @@ import {
   Divider,
 } from '@mui/material';
 import InfoTooltip from '../info-tooltip';
-import EditPinnedFileModal from '../edit-pinned-file-modal';
+import EditPinnedFileModalContainer from '../../containers/edit-pinned-file-modal';
 
 function generate(element: React.ReactElement) {
   return [0, 1, 2].map((value) =>
@@ -60,7 +60,7 @@ const PinnedFileCard = ({ handlePinnedFileClick, pinnedFiles }: any) => {
 
   return (
     <Grid item xs={12} md={6}>
-      <EditPinnedFileModal isOpen={isOpen} handleClose={handleClose} />
+      <EditPinnedFileModalContainer isOpen={isOpen} handleClose={handleClose} />
       <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
         Pinned Files <IconButton edge="end" onClick={handleClickOpen}><Add /></IconButton>
       </Typography>

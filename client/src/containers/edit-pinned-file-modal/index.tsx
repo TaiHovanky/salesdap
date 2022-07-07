@@ -12,7 +12,6 @@ import { showError, hideError } from '../../state/actions/alert';
 import { setIsLoading } from '../../state/actions/loading';
 import { getAccessToken } from '../../utils/access-token.utils';
 import { updateUser } from '../../state/actions/user';
-import { setAccessToken } from '../../utils/access-token.utils';
 import EditPinnedFileModal from '../../components/edit-pinned-file-modal';
 
 interface Props {
@@ -22,6 +21,8 @@ interface Props {
   hideError: any;
   pinFileSuccess: any;
   updateUser: any;
+  isOpen: boolean;
+  handleClose: any;
 }
 
 const EditPinnedFileModalContainer = ({
@@ -30,19 +31,21 @@ const EditPinnedFileModalContainer = ({
   showError,
   hideError,
   pinFileSuccess,
-  updateUser
+  updateUser,
+  isOpen,
+  handleClose
 }: Props) => {
 
-  const handlePinnedFileClick = async () => {
-    try {
-      setIsLoading(true);
-      const pinnedFileData = await getPinnedFile(user.pinnedFileId);
-      setIsLoading(false);
-      createFileLink(pinnedFileData.data, user.pinnedFileName);
-    } catch (err: any) {
-      handleProfileActionFailure(err, 'Failed to download pinned file');
-    }
-  };
+  // const handlePinnedFileClick = async () => {
+  //   try {
+  //     setIsLoading(true);
+  //     const pinnedFileData = await getPinnedFile(user.pinnedFileId);
+  //     setIsLoading(false);
+  //     createFileLink(pinnedFileData.data, user.pinnedFileName);
+  //   } catch (err: any) {
+  //     handleProfileActionFailure(err, 'Failed to download pinned file');
+  //   }
+  // };
 
   const validateFileSelection = (event: any) => {
     const document: any = event && event.target && event.target.files ?
@@ -53,28 +56,22 @@ const EditPinnedFileModalContainer = ({
 
     if (isValidDocType) {
       hideError();
-      handleFilePinning(document);
+      // handleFilePinning(document);
     } else {
       showError('Invalid file type. Only pin .xls, .xlsx, or .csv');
     }
   };
 
-  const handleFilePinning = (file: any) => {
+  const handleFilePinning = (file: any, fileLabel: string) => {
     setIsLoading(true);
     const formData = new FormData();
     if (
       file &&
       file.name
     ) {
-      formData.append(
-        'sales_file',
-        file,
-        file.name
-      );
-      formData.append(
-        'email',
-        user.email
-      );
+      formData.append('sales_file', file, file.name);
+      formData.append('email', user.email);
+      formData.append('file_label', fileLabel);
     }
     axios.post('http://localhost:3001/api/v1/pinfile', formData, {
       headers: {
@@ -97,24 +94,13 @@ const EditPinnedFileModalContainer = ({
     }, 7500)
   }
 
-  const handleProfileLoginSuccess = (res: any) => {
-    const { token, email } = res.data;
-    setAccessToken(token);
-    hideError();
-    setIsLoading(false);
-
-    if (res.data && email) {
-      updateUser(res.data);
-    }
-  }
-
   return (
     <EditPinnedFileModal
-      user={user}
+      isOpen={isOpen}
+      handleClose={handleClose}
       validateFileSelection={validateFileSelection}
-      handlePinnedFileClick={handlePinnedFileClick}
-      handleManageSubscriptionClick={handleManageSubscriptionClick}
-      handleCreateCheckoutSession={handleCreateCheckoutSession}
+      // handlePinnedFileClick={handlePinnedFileClick}
+      handleFilePinning={handleFilePinning}
     />
   );
 }
