@@ -1,6 +1,8 @@
 /* load 'fs' for readFile and writeFile support */
 import * as fs from 'fs';
 import AWS from 'aws-sdk';
+import db from '../db/postgres';
+import { logger } from './logger.utils';
 
 // Constants for file structure
 export const UNFORMATTED_DATA: string = 'UNFORMATTED_DATA';
@@ -346,3 +348,16 @@ export const readPinnedFile = (pinnedFileId: string) => new Promise((resolve, re
     return resolve(data.Body);
   });
 });
+
+export const updatePinnedFileTable = (fileMetadata: any, res: any) => {
+  return db('pinned_files')
+    .insert(fileMetadata)
+    .onConflict('pinned_file_id')
+    .merge()
+    .returning('*')
+    .then((data) => res.status(200).json(data[0]))
+    .catch((err) => {
+      logger.error(`update pinned file table error: ${err}`);
+      return res.status(400).send();
+    });
+}

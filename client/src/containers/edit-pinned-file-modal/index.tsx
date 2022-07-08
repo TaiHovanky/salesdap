@@ -20,9 +20,9 @@ interface Props {
   showError: any;
   hideError: any;
   pinFileSuccess: any;
-  updateUser: any;
   isOpen: boolean;
   handleClose: any;
+  existingPinnedFile: any;
 }
 
 const EditPinnedFileModalContainer = ({
@@ -31,9 +31,9 @@ const EditPinnedFileModalContainer = ({
   showError,
   hideError,
   pinFileSuccess,
-  updateUser,
   isOpen,
-  handleClose
+  handleClose,
+  existingPinnedFile
 }: Props) => {
 
   // const handlePinnedFileClick = async () => {
@@ -56,23 +56,26 @@ const EditPinnedFileModalContainer = ({
 
     if (isValidDocType) {
       hideError();
-      // handleFilePinning(document);
     } else {
       showError('Invalid file type. Only pin .xls, .xlsx, or .csv');
     }
   };
 
-  const handleFilePinning = (file: any, fileLabel: string) => {
+  const handleFilePinning = (file: any, fileLabel: string, pinned_file_id?: string) => {
     setIsLoading(true);
     const formData = new FormData();
-    if (
-      file &&
-      file.name
-    ) {
+    formData.append('email', user.email);
+    if (file && file.name) {
       formData.append('sales_file', file, file.name);
-      formData.append('email', user.email);
+    }
+    if (fileLabel) {
       formData.append('file_label', fileLabel);
     }
+    if (pinned_file_id) {
+      formData.append('pinned_file_id', pinned_file_id)
+    }
+    console.log('form data afterwards-------------------', formData);
+
     axios.post('http://localhost:3001/api/v1/pinfile', formData, {
       headers: {
         Authorization: `Bearer ${getAccessToken()}`
@@ -99,7 +102,7 @@ const EditPinnedFileModalContainer = ({
       isOpen={isOpen}
       handleClose={handleClose}
       validateFileSelection={validateFileSelection}
-      // handlePinnedFileClick={handlePinnedFileClick}
+      existingPinnedFile={existingPinnedFile}
       handleFilePinning={handleFilePinning}
     />
   );

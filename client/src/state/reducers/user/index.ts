@@ -58,12 +58,17 @@ export const userReducer = (state = initialState, action: any) => {
         pinnedFiles: pinnedFiles || state.pinnedFiles,
       };
     case PIN_FILE_SUCCESS:
-      console.log('action payload --------------', action.payload)
+      const newPinnedFile = action.payload;
+      const pinnedFileIndex = state.pinnedFiles.findIndex((file) => file.pinned_file_id === newPinnedFile.pinned_file_id);
+      let newPinnedFiles = [...state.pinnedFiles];
+      if (pinnedFileIndex > -1) {
+        newPinnedFiles.splice(pinnedFileIndex, 1, newPinnedFile);
+      } else {
+        newPinnedFiles.push(newPinnedFile);
+      }
       return {
         ...state,
-        // pinnedFileName: action.payload.pinned_filename,
-        // pinnedFileId: action.payload.pinned_file_id
-        pinnedFiles: [...state.pinnedFiles, action.payload]
+        pinnedFiles: newPinnedFiles
       };
     default:
       return state;

@@ -5,7 +5,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import router from './routes';
-const pinoHttp = require('pino-http')();
+// const pinoHttp = require('pino-http')();
 
 (async () => {
   const app = express();
@@ -28,7 +28,7 @@ const pinoHttp = require('pino-http')();
   app.use(bodyParser());
   app.use(cookieParser());
   app.set('trust proxy', 1);
-  app.use(pinoHttp);
+  // app.use(pinoHttp);
   app.use('/', router);
 
   app.listen(3001, () => {

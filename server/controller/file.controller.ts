@@ -5,7 +5,8 @@ import {
   storeFile,
   setupResultColumns,
   setupResults,
-  createSalesDataArray
+  createSalesDataArray,
+  updatePinnedFileTable
 } from '../utils/upload.util';
 import db from '../db/postgres';
 import { logger } from '../utils/logger.utils';
@@ -65,34 +66,28 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
 }
 
 export const pinFile = async (req: any, res: any) => {
-  if (req.files && req.files.sales_file) {
-    const file = req.files.sales_file[0];
-    console.log('req files name', req.files.sales_file[0])
-    const { email, file_label } = req.body;
-    const pinned_file_id: string = uuidv4();
+  const { email, file_label } = req.body;
+  const pinned_file_id: string = req.body.pinned_file_id || uuidv4();
+
+  try {
     const [user] = await db('users').select('userid').where({ email });
     const fileMetadata: any = {
-      file_name: file.originalname,
       file_label,
       pinned_file_id,
       user_id: user.userid
     }
-    console.log('file metadata user', user.userid, fileMetadata);
   
-    storeFile(file, pinned_file_id)
-      .then(() => {
-        db('pinned_files').insert(fileMetadata)
-          .then(() => {
-            res.status(200).json(fileMetadata);
-          });
-      })
-      .catch((err: any) => {
-        logger.error(`pin file error - pinned file: ${pinned_file_id} - err: ${err}`);
-        return res.status(400).send();
-      });
-  } else {
+    if (req.files && req.files.sales_file) {
+      const file = req.files.sales_file[0];
+      fileMetadata.file_name = file.originalname;
+      await storeFile(file, pinned_file_id)
+    }
+  
+    await updatePinnedFileTable(fileMetadata, res);
+  } catch (err: any) {
+    logger.error(`pin file error - pinned file: ${pinned_file_id} - err: ${err}`);
     return res.status(400).send();
-  }
+  };
 }
 
 export const viewPinnedFile = (req: any, res: any) => {

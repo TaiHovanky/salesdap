@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -15,19 +15,29 @@ interface Props {
   handleClose: any;
   handleFilePinning: any;
   validateFileSelection: any;
+  existingPinnedFile: any;
 }
 
 const EditPinnedFileModal = ({
   isOpen,
   handleClose,
   handleFilePinning,
-  validateFileSelection
+  validateFileSelection,
+  existingPinnedFile
 }: Props) => {
   const [pinnedFileLabel, setPinnedFileLabel] = useState('');
   const [pinnedFileName, setPinnedFileName] = useState();
   const [pinnedFile, setPinnedFile] = useState();
   const inputFileRef: any = useRef(null);
   const history = useHistory();
+  
+  useEffect(() => {
+    if (existingPinnedFile) {
+      const { file_label, file_name } = existingPinnedFile;
+      setPinnedFileLabel(file_label);
+      setPinnedFileName(file_name);
+    }
+  }, [existingPinnedFile])
 
   const handleFileSelectionBtnClick = () => {
     /*Collecting node-element and performing click*/
@@ -56,7 +66,7 @@ const EditPinnedFileModal = ({
   }
 
   const savePinnedFile = () => {
-    handleFilePinning(pinnedFile, pinnedFileLabel);
+    handleFilePinning(pinnedFile, pinnedFileLabel, existingPinnedFile.pinned_file_id);
     handleClose();
   }
 
