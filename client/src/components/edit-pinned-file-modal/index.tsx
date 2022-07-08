@@ -99,7 +99,10 @@ const EditPinnedFileModal = ({
               onChange={handlePinnedFileLabel}
               value={pinnedFileLabel}
             />
-            <PinnedFileChipContainer fileName={pinnedFileName} fileId={existingPinnedFile.pinned_file_id} />
+            <PinnedFileChipContainer
+              fileName={pinnedFileName}
+              fileId={existingPinnedFile ? existingPinnedFile.pinned_file_id : ''}
+            />
             <Fab
               variant="extended"
               aria-label="add"
