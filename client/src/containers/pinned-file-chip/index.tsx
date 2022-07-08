@@ -6,34 +6,31 @@ import { UserState } from '../../state/reducers/user';
 import { createFileLink, getPinnedFile } from '../../utils/spreadsheet.utils';
 
 interface Props {
-  user: UserState;
   showError: any;
-  hideError: any;
+  fileName?: string;
+  fileId?: string;
 }
 
-const PinnedFileChipContainer = ({ user, showError, hideError }: Props) => {
+const PinnedFileChipContainer = ({ fileName, fileId, showError }: Props) => {
   const handlePinnedFileClick = async () => {
-    try {
-      const pinnedFileData = await getPinnedFile(user.pinnedFileId);
-      createFileLink(pinnedFileData.data, user.pinnedFileName);
-    } catch (err: any) {
-      console.log('err', err);
-      showError('Failed to download pinned file.');
+    if (fileId && fileName) {
+      try {
+        const pinnedFileData = await getPinnedFile(fileId);
+        createFileLink(pinnedFileData.data, fileName);
+      } catch (err: any) {
+        console.log('err', err);
+        showError('Failed to download pinned file.');
+      }
     }
   };
 
   return (
-    <PinnedFileChip user={user} handlePinnedFileClick={handlePinnedFileClick} />
+    <PinnedFileChip fileName={fileName} handlePinnedFileClick={handlePinnedFileClick} />
   );
-}
-
-const mapStateToProps = (state: any) => ({
-  user: state.user,
-});
+};
 
 const mapDispatchToProps = (dispatch: any) => ({
   showError: (message: string) => dispatch(showError(message)),
-  hideError: () => dispatch(hideError()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PinnedFileChipContainer);
+export default connect(null, mapDispatchToProps)(PinnedFileChipContainer);

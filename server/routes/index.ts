@@ -90,7 +90,7 @@ router.post(
   }
 );
 
-router.get('http://localhost:3001/api/v1/viewpinnedfile', (req: any, res: any) => {
+router.get('/api/v1/viewpinnedfile', (req: any, res: any) => {
   viewPinnedFile(req, res);
 });
 

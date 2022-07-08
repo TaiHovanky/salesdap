@@ -77,7 +77,7 @@ const UploadDocumentColumn = ({
           <div className="file-selection">
             {fileSource === 'upload' ?
               <FileSelectionFieldContainer selectedDocument={selectedDocument} index={index} /> :
-              <PinnedFileChipContainer />
+              <PinnedFileChipContainer fileId={user.pinnedFiles[0].pinned_file_id} fileName={user.pinnedFiles[0].file_name} />
             }
           </div>
           <FormLabel sx={{ marginTop: '4.5rem', marginBottom: '0.25rem' }}>Use autocomplete field or data grid to pick columns <IconButton onClick={handleOpenChooseColumnHelpModal}><Help /></IconButton></FormLabel>

@@ -1,21 +1,17 @@
 import React from 'react';
-import {
-  Typography,
-  Chip,
-} from '@mui/material';
+import { Typography, Chip } from '@mui/material';
 import { Attachment } from '@mui/icons-material';
-import { UserState } from '../../state/reducers/user';
 
 interface Props {
-  user: UserState;
   handlePinnedFileClick: any;
+  fileName?: string;
 }
 
-const PinnedFileChip = ({ user, handlePinnedFileClick }: Props) => {
+const PinnedFileChip = ({ fileName, handlePinnedFileClick }: Props) => {
   return (
     <>
       <Typography variant="subtitle1">Pinned File:</Typography>
-      <Chip onClick={handlePinnedFileClick} icon={<Attachment />} label={user.pinnedFileName} />
+      <Chip onClick={handlePinnedFileClick} icon={<Attachment />} label={fileName} />
     </>
   );
 }

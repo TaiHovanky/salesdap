@@ -341,6 +341,7 @@ export const readPinnedFile = (pinnedFileId: string) => new Promise((resolve, re
     Key: pinnedFileId,
   };
 
+  console.log('params s3', params)
   s3.getObject(params, (err, data) => {
     if (err) {
       return reject(err)

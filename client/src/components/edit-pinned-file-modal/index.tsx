@@ -9,6 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Chip, Fab, Grid } from '@mui/material';
 import { Attachment, Upload } from '@mui/icons-material';
 import { useHistory } from 'react-router-dom';
+import PinnedFileChipContainer from '../../containers/pinned-file-chip';
 
 interface Props {
   isOpen: boolean;
@@ -50,10 +51,6 @@ const EditPinnedFileModal = ({
     setPinnedFileLabel(e.target.value);
   }
 
-  const handlePinnedFileClick = () => {
-    return;
-  }
-
   const handleFileSelection = (event: any) => {
     validateFileSelection(event);
     const document: any = event && event.target && event.target.files ?
@@ -80,7 +77,7 @@ const EditPinnedFileModal = ({
       <Dialog open={isOpen} onClose={handleClose}>
         <DialogTitle>Add a Pinned File</DialogTitle>
         <DialogContent>
-          <DialogContentText>
+          <DialogContentText sx={{ marginBottom: '2rem' }}>
             To save time on future account list comparisons, pin a file that you will regularly be
             comparing with your partner reps' lists.
           </DialogContentText>
@@ -98,20 +95,15 @@ const EditPinnedFileModal = ({
               label="Pinned file label"
               name="pinnedFileLabel"
               variant="standard"
-              sx={{ width: '100%', marginBottom: '1.5rem' }}
+              sx={{ width: '100%', marginBottom: '2rem' }}
               onChange={handlePinnedFileLabel}
               value={pinnedFileLabel}
             />
-            <Chip
-              onClick={handlePinnedFileClick}
-              icon={<Attachment />}
-              label={pinnedFileName}
-              sx={{ marginBottom: '1.5rem' }}
-            />
+            <PinnedFileChipContainer fileName={pinnedFileName} fileId={existingPinnedFile.pinned_file_id} />
             <Fab
               variant="extended"
               aria-label="add"
-              sx={{ minWidth: '208px' }}
+              sx={{ minWidth: '208px', marginTop: '2rem' }}
               onClick={handleFileSelectionBtnClick}
             >
               <Upload sx={{ mr: 1 }} />
