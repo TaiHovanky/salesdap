@@ -9,7 +9,8 @@ import {
   CHANGE_UNFORMATTED_DATA,
   FORMATTED_DATA,
   CHANGE_PARTNER_NAME,
-  CHANGE_PARTNER_COMPANY
+  CHANGE_PARTNER_COMPANY,
+  SELECT_PINNED_FILE
 } from '../../actions/document';
 import { addMessageToErrorList, removeMessageFromErrorList } from '../../../utils/update-comparison-columns';
 
@@ -25,6 +26,7 @@ export interface DocumentState {
   duplicatesData: Array<any>;
   selectedDocument1: SelectedDocument;
   selectedDocument2: SelectedDocument;
+  selectedPinnedFileId: string;
   comparisonColumns1: Array<string>;
   comparisonColumns2: Array<string>;
   fileSource1: string;
@@ -55,6 +57,7 @@ const initialState: DocumentState = {
     columnChooserGridData: [],
     fileBlob: null
   },
+  selectedPinnedFileId: '',
   comparisonColumns1: [],
   comparisonColumns2: [],
   fileSource1: 'upload',
@@ -263,6 +266,11 @@ export const documentReducer = (state = initialState, action: any) => {
       return {
         ...state,
         partnerCompany: action.payload
+      }
+    case SELECT_PINNED_FILE:
+      return {
+        ...state,
+        selectedPinnedFileId: action.payload
       }
     default:
       return state;

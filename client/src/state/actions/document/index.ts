@@ -10,6 +10,7 @@ export const SET_ALL_COLUMNS = 'SET_ALL_COLUMNS';
 export const CHANGE_UNFORMATTED_DATA = 'CHANGE_UNFORMATTED_DATA';
 export const CHANGE_PARTNER_NAME = 'CHANGE_PARTNER_NAME';
 export const CHANGE_PARTNER_COMPANY = 'CHANGE_PARTNER_COMPANY';
+export const SELECT_PINNED_FILE = 'SELECT_PINNED_FILE';
 
 // Constants for file structure
 export const UNFORMATTED_DATA = 'UNFORMATTED_DATA';
@@ -88,5 +89,10 @@ export const changePartnerName = (value: string) => ({
 
 export const changePartnerCompany = (value: string) => ({
   type: CHANGE_PARTNER_COMPANY,
+  payload: value
+});
+
+export const selectPinnedFile = (value: string) => ({
+  type: SELECT_PINNED_FILE,
   payload: value
 });
