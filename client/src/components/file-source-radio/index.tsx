@@ -3,27 +3,18 @@ import {
   FormControlLabel,
   FormControl,
   Radio,
-  Select,
-  RadioGroup,
-  MenuItem,
-  InputLabel
+  RadioGroup
 } from '@mui/material';
 
 interface Props {
   fileSource: string;
-  selectedPinnedFileId: string;
   handleFileTypeChange: any;
-  handlePinnedFileSelection: any;
-  pinnedFiles: Array<any>;
   index: number;
 }
 
-const FileSourceRadio = ({ // to do: separate out to dropdown and radio components
+const FileSourceRadio = ({
   fileSource,
-  selectedPinnedFileId,
   handleFileTypeChange,
-  handlePinnedFileSelection,
-  pinnedFiles,
   index
 }: Props) => {
   return (
@@ -39,27 +30,6 @@ const FileSourceRadio = ({ // to do: separate out to dropdown and radio componen
         <FormControlLabel value="upload" control={<Radio />} label="Upload a file" />
         <FormControlLabel value="pinned" control={<Radio />} label="Use your pinned file" />
       </RadioGroup>
-      {fileSource === 'pinned' &&
-        <FormControl>
-          <InputLabel id="demo-simple-select-standard-label">Select Pinned File</InputLabel>
-          <Select
-            id="pinned-file-selection"
-            value={selectedPinnedFileId}
-            onChange={handlePinnedFileSelection}
-            label="Select Pinned File"
-          >
-            {pinnedFiles.map((file: any, index: number) => (
-              <MenuItem
-                value={file.pinned_file_id}
-                key={`pinned-file-${index}`}
-                // name={file.file_name}
-              >
-                {file.file_label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      }
     </FormControl>
   );
 }

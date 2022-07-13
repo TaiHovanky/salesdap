@@ -27,6 +27,7 @@ code {
 .file-selection {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .dx-datagrid .dx-datagrid-table .dx-header-row > td {

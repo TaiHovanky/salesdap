@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { FormLabel, IconButton, Typography } from '@mui/material';
 import { UserState } from '../../state/reducers/user';
 import FileSelectionFieldContainer from '../../containers/file-selection-field';
-import PinnedFileChipContainer from '../../containers/pinned-file-chip';
 import FileSourceRadioContainer from '../../containers/file-source-radio';
 import ComparisonColumnAutocompleteContainer from '../../containers/comparison-column-autocomplete';
 import FileStructureRadioContainer from '../../containers/file-structure-radio';
@@ -15,6 +14,7 @@ import { SelectedDocument } from '../../state/reducers/document';
 import { Help } from '@mui/icons-material';
 import ChooseColumnHelpModal from '../choose-column-help-modal';
 import FileSourceHelpModal from '../file-source-help-modal';
+import PinnedFileDropdownContainer from '../../containers/pinned-file-dropdown';
 
 interface UploadDocumentColumnProps {
   selectedDocument: SelectedDocument;
@@ -77,7 +77,7 @@ const UploadDocumentColumn = ({
           <div className="file-selection">
             {fileSource === 'upload' ?
               <FileSelectionFieldContainer selectedDocument={selectedDocument} index={index} /> :
-              <PinnedFileChipContainer fileId={user.pinnedFiles[0].pinned_file_id} fileName={user.pinnedFiles[0].file_name} />
+              <PinnedFileDropdownContainer index={index} />
             }
           </div>
           <FormLabel sx={{ marginTop: '4.5rem', marginBottom: '0.25rem' }}>Use autocomplete field or data grid to pick columns <IconButton onClick={handleOpenChooseColumnHelpModal}><Help /></IconButton></FormLabel>
