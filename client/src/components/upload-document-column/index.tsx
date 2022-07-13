@@ -105,7 +105,7 @@ const UploadDocumentColumn = ({
         </>
       }
       {index === 1 && <>
-        <FormLabel sx={{ marginTop: fileStructure === FORMATTED_DATA ? '3.5rem' : '4rem', marginBottom: '0.5rem' }}>Enter partner info</FormLabel>
+        <FormLabel sx={{ marginTop: fileStructure === FORMATTED_DATA ? '3.5rem' : '4rem', marginBottom: '0.5rem' }}>Enter partner info (optional)</FormLabel>
         <PartnerNameTextfieldContainer />
         <PartnerCompanyTextfieldContainer />
       </>}

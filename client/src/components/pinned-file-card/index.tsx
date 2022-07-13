@@ -1,9 +1,8 @@
 import React, { useRef, useState } from 'react';
-import { AttachFile, Attachment, PushPin, Upload, Add, Folder, Edit } from '@mui/icons-material';
+import { Add, Folder, Edit } from '@mui/icons-material';
 import {
   Grid,
   IconButton,
-  Tooltip,
   Typography,
   List,
   ListItem,
@@ -12,7 +11,6 @@ import {
   Avatar,
   Divider,
 } from '@mui/material';
-import InfoTooltip from '../info-tooltip';
 import EditPinnedFileModalContainer from '../../containers/edit-pinned-file-modal';
 
 const PinnedFileCard = ({ handlePinnedFileClick, pinnedFiles }: any) => {
