@@ -97,7 +97,6 @@ const UploadDocumentForm = ({
             fileStructure={fileStructure1}
             unformattedData={unformattedData1}
           />
-          <Divider sx={{ marginTop: '3rem', width: '100%', borderColor: '#1976D2' }} variant="middle" />
           <UploadDocumentColumnContainer
             comparisonColumns={comparisonColumns2}
             comparisonColumnsError={comparisonColumns2Error}

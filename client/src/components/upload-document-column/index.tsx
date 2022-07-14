@@ -69,7 +69,6 @@ const UploadDocumentColumn = ({
       />
       {fileStructure === FORMATTED_DATA ?
         <>
-          <FormLabel sx={{ marginTop: '4rem', marginBottom: '0.25rem' }}>Select a file <IconButton onClick={handleOpenFileSourceHelpModal}><Help /></IconButton></FormLabel>
           {!!user.pinnedFiles && user.pinnedFiles.length > 0 && index === 0 && <FileSourceRadioContainer
             fileSource={fileSource}
             index={index}
@@ -97,7 +96,6 @@ const UploadDocumentColumn = ({
           </div>
         </>:
         <>
-          <FormLabel sx={{ marginTop: '4.5rem', marginBottom: '0.25rem' }}>Copy and Paste unformatted data</FormLabel>
           <UnformattedDataTextfieldContainer
             unformattedData={unformattedData}
             index={index}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import UnformattedPinnedFileModalContainer from '../../containers/unformatted-pinned-file-modal';
-import { IconButton, TextField } from '@mui/material';
+import { IconButton, TextField, FormLabel, Tooltip } from '@mui/material';
 import { PushPin } from '@mui/icons-material';
 
 interface Props {
@@ -20,6 +20,11 @@ const UnformattedDataTextField = ({
 
   return (
     <>
+      <FormLabel sx={{ marginBottom: '0.25rem' }}>
+        Copy and Paste unformatted data <Tooltip title="Pin a list for future comparisons" arrow>
+            <IconButton sx={{ margin: '0.5rem' }} onClick={() => setIsModalOpen(true)}><PushPin /></IconButton>
+          </Tooltip>
+      </FormLabel>
       <TextField
         multiline
         maxRows={5}
@@ -29,13 +34,6 @@ const UnformattedDataTextField = ({
         value={unformattedData}
         onChange={handleUnformattedDataChange}
       />
-      <IconButton
-        sx={{ margin: '0.5rem' }}
-        onClick={() => setIsModalOpen(true)}
-        // disabled={user.pinnedFileName === selectedDocument.name}
-      >
-        <PushPin />
-      </IconButton>
       {isModalOpen && <UnformattedPinnedFileModalContainer isOpen={isModalOpen} handleClose={handleClose} />}
     </>
   );
