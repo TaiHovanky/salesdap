@@ -22,7 +22,7 @@ const FileSourceHelpModal = ({ isHelpModalOpen, handleOpenHelpModal }: Props) =>
         <DialogTitle>Upload a file from your computer or use a pinned file</DialogTitle>
         <DialogContent dividers={true}>
         <DialogContentText sx={{ marginTop: '1.5rem' }}>Upload a file from your computer:</DialogContentText>
-        <Typography variant="body2">Click the Select File button and search for a file.</Typography>
+        <Typography variant="body2">Click the Select File button and search for a file that will be used for comparison.</Typography>
         <DialogContentText sx={{ marginTop: '1.5rem' }}>Use a pinned file:</DialogContentText>
         <Typography variant="body2">In your profile page, you can save a file as a "pinned file". This would be used when you
           have a file that you will regularly be compared to partners' files. Typically, it would be the file that contains all of

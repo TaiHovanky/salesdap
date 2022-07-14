@@ -72,6 +72,7 @@ const UploadDocumentColumn = ({
           {!!user.pinnedFiles && user.pinnedFiles.length > 0 && index === 0 && <FileSourceRadioContainer
             fileSource={fileSource}
             index={index}
+            handleOpenFileSourceHelpModal={handleOpenFileSourceHelpModal}
           />}
           <div className="file-selection">
             {fileSource === 'upload' ?
@@ -79,7 +80,7 @@ const UploadDocumentColumn = ({
               <PinnedFileDropdownContainer index={index} />
             }
           </div>
-          <FormLabel sx={{ marginTop: '4.5rem', marginBottom: '0.25rem' }}>Use autocomplete field or data grid to pick columns <IconButton onClick={handleOpenChooseColumnHelpModal}><Help /></IconButton></FormLabel>
+          <FormLabel sx={{ marginTop: '4.5rem', marginBottom: '0.25rem' }}>Use autocomplete field or data grid to pick a website column and a DUNS column <IconButton onClick={handleOpenChooseColumnHelpModal}><Help /></IconButton></FormLabel>
           <ComparisonColumnAutocompleteContainer
             selectedDocument={selectedDocument}
             comparisonColumns={comparisonColumns}

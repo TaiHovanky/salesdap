@@ -4,24 +4,28 @@ import {
   FormControl,
   Radio,
   RadioGroup,
-  FormLabel
+  FormLabel,
+  IconButton
 } from '@mui/material';
+import { Help } from '@mui/icons-material';
 
 interface Props {
   fileSource: string;
   handleFileTypeChange: any;
+  handleOpenFileSourceHelpModal?: any;
   index: number;
 }
 
 const FileSourceRadio = ({
   fileSource,
   handleFileTypeChange,
+  handleOpenFileSourceHelpModal,
   index
 }: Props) => {
   return (
     <FormControl>
       {/* <IconButton onClick={handleOpenFileSourceHelpModal}><Help /></IconButton> */}
-      <FormLabel sx={{ marginTop: '4rem', marginBottom: '0.25rem' }}>Do you want to upload a new file or use one of your pinned files?</FormLabel>
+      <FormLabel sx={{ marginTop: '4rem', marginBottom: '0.25rem' }}>Do you want to upload a new file or use one of your pinned files? <IconButton onClick={handleOpenFileSourceHelpModal}><Help /></IconButton></FormLabel>
       <RadioGroup
         aria-labelledby="demo-controlled-radio-buttons-group"
         name="controlled-radio-buttons-group"

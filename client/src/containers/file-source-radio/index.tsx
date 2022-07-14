@@ -9,6 +9,7 @@ interface Props {
   selectDocument: any;
   setFileSource: any;
   fileSource: string;
+  handleOpenFileSourceHelpModal: any;
   index: number;
 }
 
@@ -16,6 +17,7 @@ const FileSourceRadioContainer = ({
   selectDocument,
   setFileSource,
   fileSource,
+  handleOpenFileSourceHelpModal,
   index
 }: Props) => {
 
@@ -29,6 +31,7 @@ const FileSourceRadioContainer = ({
   return (
     <FileSourceRadio
       handleFileTypeChange={handleFileTypeChange}
+      handleOpenFileSourceHelpModal={handleOpenFileSourceHelpModal}
       fileSource={fileSource}
       index={index}
     />

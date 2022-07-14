@@ -27,7 +27,7 @@ const FileStructureRadio = ({ fileStructure, handleFileStructureChange, index }:
   return (
     <>
       <FormControl>
-        <FormLabel>Do you want to use a spreadsheet file or copy/paste a list of accounts?</FormLabel>
+        <FormLabel>Do you want to use a spreadsheet file or copy/paste a list of accounts? <IconButton onClick={handleOpenHelpModal}><Help /></IconButton></FormLabel>
         <RadioGroup
           row
           aria-labelledby="demo-controlled-radio-buttons-group"

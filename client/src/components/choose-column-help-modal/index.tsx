@@ -22,7 +22,7 @@ const ChooseColumnHelpModal = ({ isHelpModalOpen, handleOpenHelpModal }: Props) 
         <DialogTitle>Choose columns to compare/match with the other file's columns</DialogTitle>
         <DialogContent dividers={true}>
         <Typography variant="body2">Columns from file A that will be compared with columns
-          from file B to determine a matching account. Limit: 5 columns. Hint: the more unique a column's value is
+          from file B to determine a matching account. Limit: 2 columns. Hint: the more unique a column's value is
           to a company, the better (DUNS number, company website, etc.).</Typography>
         <DialogContentText sx={{ marginTop: '1.5rem' }}>Using the text input:</DialogContentText>
         <Typography variant="body2">Type in a column that you're trying to find. If it appears in the
