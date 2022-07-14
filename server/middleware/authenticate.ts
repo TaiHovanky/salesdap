@@ -8,7 +8,6 @@ export const authenticate = (req: any, _: any, next: any) => {
     next(err);
   }
   try {
-    console.log('authorization ---------', authorization);
     const token = authorization.split(' ')[1];
     const payload = verify(token, process.env.ACCESS_TOKEN_SECRET as string);
     if (payload) {

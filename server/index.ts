@@ -13,7 +13,6 @@ import router from './routes';
   const corsOptions = {
     // origin: 'http://localhost:3000',
     origin: (origin: any, callback: any) => {
-      console.log('origin-------------------------------------', origin, '===');
       if (whitelist.indexOf(origin) !== -1 || !origin) {
         callback(null, true)
       } else {

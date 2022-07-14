@@ -103,7 +103,26 @@ export const viewPinnedFile = (req: any, res: any) => {
     });
 }
 
-export const pinUnformattedList = (req: any, res: any) => {
-  console.log('req body-------------------', req.body, req.files)
-  return res.status(200).send();
-}
+// export const pinUnformattedList = async (req: any, res: any) => {
+//   console.log('req body-------------------', req.body, req.files);
+//   const { email, file_label } = req.body;
+//   const pinned_file_id: string = uuidv4();
+
+
+//   try {
+//     const [user] = await db('users').select('userid').where({ email });
+//     const fileMetadata: any = {
+//       file_label,
+//       pinned_file_id,
+//       user_id: user.userid,
+//       // unformatted_data,
+//       // column_name
+//     };
+//     console.log('file metadata', fileMetadata)
+
+//   } catch(err) {
+
+//   }
+
+//   return res.status(200).send();
+// }

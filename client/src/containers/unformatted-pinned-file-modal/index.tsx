@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { WorkSheet, WorkBook, utils, read, write } from 'xlsx';
 import { connect } from 'react-redux';
 import { pinFileSuccess } from '../../state/actions/document';
 import { UserState } from '../../state/reducers/user';
@@ -7,6 +8,7 @@ import { showError, hideError } from '../../state/actions/alert';
 import { setIsLoading } from '../../state/actions/loading';
 import { getAccessToken } from '../../utils/access-token.utils';
 import UnformattedPinnedFileModal from '../../components/unformatted-pinned-file-modal';
+import { createWorkbookBLOBFromUnformattedList, downloadSpreadsheetFromJSON } from '../../utils/spreadsheet.utils';
 
 interface Props {
   user: UserState;
@@ -34,18 +36,15 @@ const UnformattedPinnedFileModalContainer = ({
     setIsLoading(true);
     const formData = new FormData();
     formData.append('email', user.email);
-    formData.append('unformatted_data', unformattedData);
 
     if (fileLabel) {
       formData.append('file_label', fileLabel);
     }
 
-    if (columnName) {
-      formData.append('column_name', columnName);
-    }
-    console.log('form data afterwards-------------------', formData);
+    const unformattedDataBlob = createWorkbookBLOBFromUnformattedList(unformattedData, columnName);
+    formData.append('sales_file', unformattedDataBlob, `${fileLabel}.xlsx`);
 
-    axios.post('http://localhost:3001/api/v1/pin-unformatted-list', formData, {
+    axios.post('http://localhost:3001/api/v1/pinfile', formData, {
       headers: {
         Authorization: `Bearer ${getAccessToken()}`
       }

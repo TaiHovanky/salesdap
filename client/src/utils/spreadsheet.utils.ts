@@ -1,4 +1,4 @@
-import { WorkSheet, WorkBook, utils, read, writeFile } from 'xlsx';
+import { WorkSheet, WorkBook, utils, read, writeFile, write } from 'xlsx';
 import axios from 'axios';
 import { getAccessToken } from './access-token.utils';
 
@@ -32,6 +32,21 @@ export const downloadSpreadsheetFromJSON = async (data: Array<any>) => {
   writeFile(workbook, 'account-mapping.xls');
 }
 
+export const createWorkbookBLOBFromUnformattedList = (unformattedData: string, columnName: string) => {
+  const dataArray: Array<string> = unformattedData.split('\n');
+  const dataObjList: Array<any> = dataArray.map((item: any) => {
+    return { [columnName]: item };
+  });
+  const worksheet: WorkSheet = utils.json_to_sheet(dataObjList);
+
+  const workbook: WorkBook = utils.book_new();
+  utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+  const wbout = write(workbook, { bookType: 'xlsx', type: 'array' });
+
+  /* prepare data for POST */
+  return new Blob([new Uint8Array(wbout)], {type: 'application/octet-stream'});
+}
+
 export const createFileLink = (data: any, pinnedFileName: string) => {
   const url = window.URL.createObjectURL(new Blob([data]));
   const link = document.createElement('a');
@@ -42,7 +57,6 @@ export const createFileLink = (data: any, pinnedFileName: string) => {
 }
 
 export const getPinnedFile = (pinnedFileId: string) => {
-  console.log('pinned file id', pinnedFileId);
   return axios.get('http://localhost:3001/api/v1/viewpinnedfile',
     {
       responseType: 'blob',
