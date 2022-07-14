@@ -2,7 +2,7 @@ import express from 'express';
 import multer from 'multer';
 const upload = multer({ dest: 'uploads/' });
 
-import { uploadAndCompareFiles, pinFile, viewPinnedFile } from '../controller/file.controller';
+import { uploadAndCompareFiles, pinFile, viewPinnedFile, pinUnformattedList } from '../controller/file.controller';
 import { saveEmail } from '../controller/email.controller';
 import { registerUser } from '../controller/register.controller';
 import { loginUser, refreshAccessToken } from '../controller/login.controller';
@@ -96,6 +96,14 @@ router.get('/api/v1/viewpinnedfile', (req: any, res: any) => {
 
 router.post('/api/v1/edit-profile', upload.none(), (req: any, res: any) => {
   editProfile(req, res);
-})
+});
+
+router.post(
+  '/api/v1/pin-unformatted-list',
+  upload.fields([{ name: 'unformatted_data', maxCount: 1}]),
+  (req: any, res: any) => {
+    pinUnformattedList(req, res);
+  }
+);
 
 export default router;

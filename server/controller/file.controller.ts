@@ -102,3 +102,8 @@ export const viewPinnedFile = (req: any, res: any) => {
       return res.status(400).send();
     });
 }
+
+export const pinUnformattedList = (req: any, res: any) => {
+  console.log('req body-------------------', req.body, req.files)
+  return res.status(200).send();
+}

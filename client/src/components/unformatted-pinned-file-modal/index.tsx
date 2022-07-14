@@ -12,16 +12,12 @@ interface Props {
   isOpen: boolean;
   handleClose: any;
   handleFilePinning: any;
-  validateFileSelection: any;
-  existingPinnedFile: any;
 }
 
 const UnformattedPinnedFileModal = ({
   isOpen,
   handleClose,
-  handleFilePinning,
-  validateFileSelection,
-  existingPinnedFile
+  handleFilePinning
 }: Props) => {
   const [pinnedFileLabel, setPinnedFileLabel] = useState('');
   const [columnNameForValues, setColumnNameForValues] = useState('');
@@ -36,17 +32,17 @@ const UnformattedPinnedFileModal = ({
   }
 
   const savePinnedFile = () => {
-    
+    handleFilePinning(pinnedFileLabel, columnNameForValues);
     handleClose();
   }
 
   return (
     <>
       <Dialog open={isOpen} onClose={handleClose}>
-        <DialogTitle>Add a Pinned File</DialogTitle>
+        <DialogTitle>Pin unformatted list</DialogTitle>
         <DialogContent>
           <DialogContentText sx={{ marginBottom: '2rem' }}>
-            To save time on future account list comparisons, pin a file that you will regularly be
+            To save time on future account list comparisons, save this list as a pinned file that you will regularly be
             comparing with your partner reps' lists.
           </DialogContentText>
           <Grid
@@ -60,7 +56,7 @@ const UnformattedPinnedFileModal = ({
           >
             <TextField
               id="standard-basic"
-              label="Pinned file label"
+              label="Label your pinned file"
               name="pinnedFileLabel"
               variant="standard"
               sx={{ width: '100%', marginBottom: '2rem' }}
@@ -69,7 +65,7 @@ const UnformattedPinnedFileModal = ({
             />
             <TextField
               id="standard-basic"
-              label="Column header for copy pasted data (website, DUNS, or something else?)"
+              label="Column header for copy pasted data (i.e. what is this data? Website, DUNS, or something else?)"
               name="columnName"
               variant="standard"
               sx={{ width: '100%', marginBottom: '2rem' }}
@@ -81,7 +77,7 @@ const UnformattedPinnedFileModal = ({
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={savePinnedFile}>Save</Button>
-          <Button onClick={saveAndLeave}>Save & Leave Profile</Button>
+          {/* <Button onClick={() => {}}>Save & Leave Profile</Button> */}
         </DialogActions>
       </Dialog>
     </>
