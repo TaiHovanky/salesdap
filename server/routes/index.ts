@@ -79,7 +79,6 @@ router.post(
   upload.any(),
     // .fields([{ name: 'sales_file1', maxCount: 1}, { name: 'sales_file2', maxCount: 1}]),
   (req: any, res: any) => {
-    console.log('comparing files')
     uploadAndCompareFiles(req, res);
   }
 );

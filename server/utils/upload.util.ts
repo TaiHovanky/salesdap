@@ -38,7 +38,6 @@ export const createSalesDataArray = (
     salesData = parseJSONFromFile(filePath);
   } else if (fileStructure === UNFORMATTED_DATA) {
     salesData = unformattedData.split('\n');
-    console.log('sales data unformatted', salesData)
   }
   return salesData;
 }
@@ -62,7 +61,6 @@ export const findDuplicates = (
 ): Array<Array<any>> => {
   const valueHash: any = {};
   let resultsList: Array<Array<any>> = comparisonColumns1.map((_) => []);
-  console.log('starting find dupes')
 
   addCellValueToHash(
     salesData1,
@@ -80,7 +78,7 @@ export const findDuplicates = (
     fileStructure1,
     fileStructure2
   );
-  console.log('results list', resultsList)
+
   return resultsList;
 }
 

@@ -30,9 +30,9 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
   let salesData1: Array<any> = [];
   let salesData2: Array<any> = [];
   try {
-    salesData1 = createSalesDataArray(fileStructure1, unformattedData1, sales_file1 ? sales_file1[0].path : null);
-    salesData2 = createSalesDataArray(fileStructure2, unformattedData2, sales_file2 ? sales_file2[0].path : null);
-    console.log('saelsdata', salesData1, salesData2)
+    salesData1 = createSalesDataArray(fileStructure1, unformattedData1, sales_file1 ? sales_file1.path : null);
+    salesData2 = createSalesDataArray(fileStructure2, unformattedData2, sales_file2 ? sales_file2.path : null);
+
     /* Create list of rows where there is a duplicate value that is shared between the specified columns
       (comparisonColumns1 and comparisonColumns2) */
     const duplicatesList: Array<any> = findDuplicates(
@@ -43,7 +43,6 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
       fileStructure1,
       fileStructure2
     );
-    console.log('duplicates list', duplicatesList);
 
     /* Create array of  columns that the user wants to see */
     const columns: Array<string> = setupResultColumns(
@@ -52,7 +51,6 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
       fileStructure1,
       fileStructure2
     );
-    console.log('columns', columns);
 
     /* Create array of objects (rows a.k.a duplicates) that only contain the columns that the user wants to see */
     const result: Array<any> = setupResults(duplicatesList, columns);
@@ -97,7 +95,6 @@ export const pinFile = async (req: any, res: any) => {
 
 export const viewPinnedFile = (req: any, res: any) => {
   const { pinnedFileId } = req.query;
-  console.log('pinned file id', pinnedFileId);
   readPinnedFile(pinnedFileId)
     .then((data: any) => {
       return res.status(200).send(data);
