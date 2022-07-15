@@ -11,6 +11,7 @@ export const authenticate = (req: any, _: any, next: any) => {
     const token = authorization.split(' ')[1];
     const payload = verify(token, process.env.ACCESS_TOKEN_SECRET as string);
     if (payload) {
+      console.log('auth payload', payload);
       return next();
     }
   } catch (err) {

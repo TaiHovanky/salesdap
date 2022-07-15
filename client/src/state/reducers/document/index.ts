@@ -72,7 +72,7 @@ const initialState: DocumentState = {
   partnerCompany: ''
 };
 
-export const COMPARISON_COLUMNS_LIMIT: number = 5;
+export const COMPARISON_COLUMNS_LIMIT: number = 2;
 export const MISMATCHED_COLUMNS_ERR: string = 'The number of selected columns for each file needs to match.';
 export const TOO_MANY_COLUMNS_ERR: string = `Limit of ${COMPARISON_COLUMNS_LIMIT} columns exceeded.`;
 export const REQUIRED_ERR: string = 'At least 1 column is required';

@@ -63,7 +63,10 @@ const EditPinnedFileModal = ({
   }
 
   const savePinnedFile = () => {
-    handleFilePinning(pinnedFile, pinnedFileLabel, existingPinnedFile.pinned_file_id);
+    handleFilePinning(
+      pinnedFile,
+      pinnedFileLabel,
+      existingPinnedFile ? existingPinnedFile.pinned_file_id : null);
     handleClose();
   }
 

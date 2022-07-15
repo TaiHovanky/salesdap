@@ -10,7 +10,7 @@ export const createJSONFromSpreadsheet = async (document: any) => {
     workbook.Sheets[sheetName as any] : null;
 
   if (worksheet) {
-    return utils.sheet_to_json(worksheet);
+    return utils.sheet_to_json(worksheet, { defval: '' });
   }
   return [];
 }

@@ -74,7 +74,6 @@ const EditPinnedFileModalContainer = ({
     if (pinned_file_id) {
       formData.append('pinned_file_id', pinned_file_id)
     }
-    console.log('form data afterwards-------------------', formData);
 
     axios.post('http://localhost:3001/api/v1/pinfile', formData, {
       headers: {
