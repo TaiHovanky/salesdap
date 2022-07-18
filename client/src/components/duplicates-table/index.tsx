@@ -10,6 +10,8 @@ interface Props {
   duplicatesData: Array<any>;
   comparisonColumns1: Array<string>;
   comparisonColumns2: Array<string>;
+  allColumns1: Array<string>;
+  allColumns2: Array<string>;
   fileStructure1: string;
   fileStructure2: string;
   partnerName: string;
@@ -24,6 +26,8 @@ const DuplicatesTable = ({
   duplicatesData,
   comparisonColumns1,
   comparisonColumns2,
+  allColumns1,
+  allColumns2,
   fileStructure1,
   fileStructure2,
   partnerName,
@@ -50,24 +54,24 @@ const DuplicatesTable = ({
     });
 
     /* Create a list of column names */
-    let comparisonColumns: Array<string> = [];
-    comparisonColumns = updateColumnsForDocument(fileStructure1, comparisonColumns1, 1);
-    comparisonColumns = [...comparisonColumns, ...updateColumnsForDocument(fileStructure2, comparisonColumns2, 2)];
+    let resColumns: Array<string> = [];
+    resColumns = updateColumnsForDocument(fileStructure1, allColumns1, 1);
+    resColumns = [...resColumns, ...updateColumnsForDocument(fileStructure2, allColumns2, 2)];
 
     /* userAccountColumnCount is for determining how many columns should have the my-accounts css class
     and belong to the ownerBand */
     let userAccountColumnCount = fileStructure1 === FORMATTED_DATA ?
-      comparisonColumns1.length : 1;
+      allColumns1.length : 1;
 
     /* Assign the columns belonging to the user to one owner band and CSS class, and the columns belonging to
     their partner's accounts into another owner band and CSS class */
     for (let i = COLUMN_OFFSET; i < columns.length - 1; i++) {
-      if (comparisonColumns[i - COLUMN_OFFSET] === columns[i].caption && i < userAccountColumnCount + COLUMN_OFFSET) {
+      if (resColumns[i - COLUMN_OFFSET] === columns[i].caption && i < userAccountColumnCount + COLUMN_OFFSET) {
         columns[i].ownerBand = columns.length - 2;
-        columns[i].cssClass = 'my-accounts'
-      } else if (comparisonColumns[i - COLUMN_OFFSET] === columns[i].caption) {
+        columns[i].cssClass = 'my-accounts';
+      } else if (resColumns[i - COLUMN_OFFSET] === columns[i].caption) {
         columns[i].ownerBand = columns.length - 1;
-        columns[i].cssClass = 'their-accounts'
+        columns[i].cssClass = 'their-accounts';
       }
     }
   }

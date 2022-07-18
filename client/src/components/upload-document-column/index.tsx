@@ -46,7 +46,7 @@ const UploadDocumentColumn = ({
 
   useEffect(() => {
     if (selectedDocument.data && selectedDocument.data[0]) {
-      setAllColumns(Array.from(Object.keys(selectedDocument.data[0])), index);
+      setAllColumns(Array.from(Object.keys(selectedDocument.data[0])).filter((column: string) => !column.includes('__EMPTY')), index);
     }
   }, [selectedDocument.data, setAllColumns, index]);
 

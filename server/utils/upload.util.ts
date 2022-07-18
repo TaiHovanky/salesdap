@@ -35,11 +35,9 @@ export const createSalesDataArray = (
 ): Array<any> => {
   let salesData: Array<any> = [];
   if (fileStructure === FORMATTED_DATA) {
-    console.log('file path formatted', filePath);
     salesData = parseJSONFromFile(filePath);
   } else if (fileStructure === UNFORMATTED_DATA) {
     salesData = unformattedData.split('\n');
-    console.log('sales data unformatted', salesData)
   }
   return salesData;
 }
@@ -63,7 +61,6 @@ export const findDuplicates = (
 ): Array<Array<any>> => {
   const valueHash: any = {};
   let resultsList: Array<Array<any>> = comparisonColumns1.map((_) => []);
-  console.log('starting find dupes')
 
   addCellValueToHash(
     salesData1,
@@ -71,7 +68,6 @@ export const findDuplicates = (
     valueHash,
     fileStructure1
   );
-  console.log('value hash', valueHash)
 
   checkForMatches(
     salesData1,
@@ -82,7 +78,7 @@ export const findDuplicates = (
     fileStructure1,
     fileStructure2
   );
-  console.log('results list', resultsList)
+
   return resultsList;
 }
 
@@ -145,7 +141,6 @@ const updateMatchedIndexesForRow = (cellValue: string, valueHash: any, matchedIn
     /* Add the rowIndex for the match to the list of matched indexes. Later, we'll
     use that list to determine how many columns of that row in file 2 match how many columns
     in file 1 */
-    console.log('updateding match indexes', cellValue, valueHash)
     matchedIndxesForRow.push(valueHash[cellValue] - 1);
     // for some reason, when the valuehash[cellval] index was 0, it failed. Prob because valueHash[cellval] would be falsy
   }
@@ -186,7 +181,6 @@ const checkForMatches = (
       });
     } else {
       const cellValue: string = sanitizeValue(row);
-      console.log('unstructure cellval', cellValue);
       updateMatchedIndexesForRow(cellValue, valueHash, matchedIndxesForRow);
     }
 

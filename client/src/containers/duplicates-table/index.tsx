@@ -7,6 +7,8 @@ interface Props {
   duplicatesData: Array<any>;
   comparisonColumns1: Array<string>;
   comparisonColumns2: Array<string>;
+  allColumns1: Array<string>;
+  allColumns2: Array<string>;
   fileStructure1: string;
   fileStructure2: string;
   partnerName: string;
@@ -18,6 +20,8 @@ const DuplicatesTableContainer = ({
   duplicatesData,
   comparisonColumns1,
   comparisonColumns2,
+  allColumns1,
+  allColumns2,
   fileStructure1,
   fileStructure2,
   partnerName,
@@ -29,6 +33,8 @@ const DuplicatesTableContainer = ({
       duplicatesData={duplicatesData}
       comparisonColumns1={comparisonColumns1}
       comparisonColumns2={comparisonColumns2}
+      allColumns1={allColumns1}
+      allColumns2={allColumns2}
       fileStructure1={fileStructure1}
       fileStructure2={fileStructure2}
       partnerName={partnerName}
@@ -42,6 +48,8 @@ const mapStateToProps = (state: any) => ({
   duplicatesData: state.document.duplicatesData,
   comparisonColumns1: state.document.comparisonColumns1,
   comparisonColumns2: state.document.comparisonColumns2,
+  allColumns1: state.document.selectedDocument1.allColumns,
+  allColumns2: state.document.selectedDocument2.allColumns,
   fileStructure1: state.document.fileStructure1,
   fileStructure2: state.document.fileStructure2,
   partnerName: state.document.partnerName,

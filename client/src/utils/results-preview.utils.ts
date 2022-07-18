@@ -25,14 +25,14 @@ export const createDocumentSampleRows = (
 
 export const updateColumnsForDocument = (
   fileStructure: string,
-  comparisonColumns: Array<string>,
+  columns: Array<string>,
   documentNumber: number
 ) => {
-  let columns: Array<string> = [];
+  let updatedColumns: Array<string> = [];
   if (fileStructure === FORMATTED_DATA) {
-    columns = columns.concat([...comparisonColumns]);
+    updatedColumns = updatedColumns.concat([...columns]);
   } else if (fileStructure === UNFORMATTED_DATA) {
-    columns.push(`Unformatted Data ${documentNumber}`);
+    updatedColumns.push(`Unformatted Data ${documentNumber}`);
   }
-  return columns;
+  return updatedColumns;
 }

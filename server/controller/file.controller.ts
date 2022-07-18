@@ -13,7 +13,6 @@ import db from '../db/postgres';
 import { logger } from '../utils/logger.utils';
 
 export const uploadAndCompareFiles = async (req: any, res: any) => {
-  console.log('compare files uplad and compare')
   const {
     comparisonColumns1,
     comparisonColumns2,
@@ -23,7 +22,9 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
     unformattedData2,
     userSubscriptionType,
     userFreeComparisons,
-    userEmail
+    userEmail,
+    allColumns1,
+    allColumns2
   } = req.body;
   // const [ sales_file1, sales_file2 ]: any = req.files;
   const sales_file1 = fileStructure1 === FORMATTED_DATA ? req.files[0] : null;
@@ -35,14 +36,13 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
       sales_file2 = req.files[0]
     }
   }
-  console.log('sales file 1', sales_file1, sales_file2)
 
   let salesData1: Array<any> = [];
   let salesData2: Array<any> = [];
   try {
     salesData1 = createSalesDataArray(fileStructure1, unformattedData1, sales_file1 ? sales_file1.path : null);
     salesData2 = createSalesDataArray(fileStructure2, unformattedData2, sales_file2 ? sales_file2.path : null);
-    console.log('saelsdata', salesData1, salesData2)
+
     /* Create list of rows where there is a duplicate value that is shared between the specified columns
       (comparisonColumns1 and comparisonColumns2) */
     const duplicatesList: Array<any> = findDuplicates(
@@ -53,24 +53,24 @@ export const uploadAndCompareFiles = async (req: any, res: any) => {
       fileStructure1,
       fileStructure2
     );
-    console.log('duplicates list', duplicatesList);
 
     /* Create array of  columns that the user wants to see */
     const columns: Array<string> = setupResultColumns(
-      comparisonColumns1.split(','),
-      comparisonColumns2.split(','),
+      allColumns1 ? allColumns1.split(',') : null,
+      allColumns2 ? allColumns2.split(',') : null,
       fileStructure1,
       fileStructure2
     );
-    console.log('columns', columns);
 
     /* Create array of objects (rows a.k.a duplicates) that only contain the columns that the user wants to see */
     const result: Array<any> = setupResults(duplicatesList, columns);
 
     if (userSubscriptionType === 'FREE') {
-      await db('users').update({
-        free_comparisons: parseInt(userFreeComparisons) + 1
-      }).where({ email: userEmail });
+      await db('users')
+        .update({
+          free_comparisons: parseInt(userFreeComparisons) + 1
+        })
+        .where({ email: userEmail });
     }
     res.send(result);
   } catch(err: any) {
