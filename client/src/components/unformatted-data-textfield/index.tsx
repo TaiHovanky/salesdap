@@ -30,7 +30,7 @@ const UnformattedDataTextField = ({
         maxRows={5}
         variant="standard"
         sx={{ width: '100%' }}
-        helperText="Unformatted data"
+        helperText="Limit: 4000 rows"
         value={unformattedData}
         onChange={handleUnformattedDataChange}
       />
