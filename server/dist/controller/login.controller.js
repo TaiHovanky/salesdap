@@ -32,18 +32,22 @@ const auth_utils_1 = require("../utils/auth.utils");
 const logger_utils_1 = require("../utils/logger.utils");
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
+    console.log('login user', email, password);
     try {
         const users = yield (0, postgres_1.default)('users')
             .select()
             .where({ email });
+        console.log('users', users);
         if (!users || !users[0]) {
             logger_utils_1.logger.warn(`login fail no user found - email: ${email}`);
             return res.status(401).send();
         }
         const isPasswordValid = yield (0, bcryptjs_1.compare)(password, users[0].password);
         if (isPasswordValid) {
+            console.log('is password valid');
             const isActive = yield (0, exports.checkForActiveSubscription)(users[0].customer_id);
             if (!isActive && users[0].active_subscription === true) {
+                console.log('updating users');
                 yield (0, postgres_1.default)('users').update({ active_subscription: false, subscription_type: 'FREE' }).where({ email });
             }
             const token = (0, auth_utils_1.createAccessToken)(users[0]);
@@ -52,11 +56,12 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 .where({ user_id: users[0].userid });
             const _a = users[0], { password, userid, customer_id, passwordtoken, passwordtoken_expiration } = _a, user = __rest(_a, ["password", "userid", "customer_id", "passwordtoken", "passwordtoken_expiration"]);
             user.pinnedFiles = pinnedFiles;
+            console.log('pinned files', pinnedFiles);
             (0, auth_utils_1.sendRefreshToken)(res, (0, auth_utils_1.createRefreshToken)(user));
             return res.status(200).json(Object.assign(Object.assign({}, user), { token }));
         }
         else {
-            logger_utils_1.logger.warn(`login fail invalid password - email: ${email}`);
+            console.log('wrong password');
         }
         return res.status(401).send();
     }
@@ -74,6 +79,7 @@ const refreshAccessToken = (req, res) => __awaiter(void 0, void 0, void 0, funct
             payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
         }
         catch (err) {
+            console.log('ref token verification failed');
             return res.status(200).send();
         }
     }
