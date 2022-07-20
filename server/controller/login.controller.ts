@@ -8,11 +8,14 @@ import { logger } from '../utils/logger.utils';
 export const loginUser = async (req: any, res: any) => {
   const { email, password } = req.body;
 
+  // logger.warn('some login warning')
+  console.log('login user', email, password);
   try {
     const users: Array<any> = await db('users')
       .select()
       .where({ email });
 
+    console.log('users', users);
     if (!users || !users[0]) {
       logger.warn(`login fail no user found - email: ${email}`);
       return res.status(401).send();
@@ -20,8 +23,10 @@ export const loginUser = async (req: any, res: any) => {
 
     const isPasswordValid: boolean = await compare(password, users[0].password);
     if (isPasswordValid) {
+      console.log('is password valid')
       const isActive: boolean = await checkForActiveSubscription(users[0].customer_id);
       if (!isActive && users[0].active_subscription === true) {
+        console.log('updating users')
         await db('users').update({ active_subscription: false, subscription_type: 'FREE' }).where({ email });
       }
 
@@ -40,11 +45,12 @@ export const loginUser = async (req: any, res: any) => {
         ...user
       } = users[0];
       user.pinnedFiles = pinnedFiles;
-
+      console.log('pinned files', pinnedFiles)
       sendRefreshToken(res, createRefreshToken(user));
       return res.status(200).json({ ...user, token });
     } else {
-      logger.warn(`login fail invalid password - email: ${email}`);
+      console.log('wrong password')
+      // logger.warn(`login fail invalid password - email: ${email}`);
     }
 
     return res.status(401).send();
@@ -62,6 +68,7 @@ export const refreshAccessToken = async (req: any, res: any) => {
     try {
       payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     } catch(err) {
+      console.log('ref token verification failed')
       return res.status(200).send();
     }
   } else {
