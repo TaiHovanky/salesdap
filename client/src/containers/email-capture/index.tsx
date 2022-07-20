@@ -32,7 +32,7 @@ const EmailCaptureContainer = ({
       }
     };
 
-    axios.post('http://localhost:3001/api/v1/email', formData, config)
+    axios.post('/api/v1/email', formData, config)
       .then(() => {
         hideError();
         setIsLoading(false);

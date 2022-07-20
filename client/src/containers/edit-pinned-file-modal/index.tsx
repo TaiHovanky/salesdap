@@ -75,7 +75,7 @@ const EditPinnedFileModalContainer = ({
       formData.append('pinned_file_id', pinned_file_id)
     }
 
-    axios.post('http://localhost:3001/api/v1/pinfile', formData, {
+    axios.post('/api/v1/pinfile', formData, {
       headers: {
         Authorization: `Bearer ${getAccessToken()}`
       }

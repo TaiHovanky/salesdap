@@ -18,7 +18,7 @@ const NavBarContainer = ({ user, hideError, updateUser }: Props) => {
   const history = useHistory();
 
   const handleLogout = () => {
-    axios.post('http://localhost:3001/api/v1/logout')
+    axios.post('/api/v1/logout')
       .then(() => {
         hideError();
         updateUser({...initialState});
