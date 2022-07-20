@@ -22,9 +22,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.readPinnedFile = exports.storeFile = exports.createResultRow = exports.setupResults = exports.setupResultColumns = exports.updateColumns = exports.findDuplicates = exports.createSalesDataArray = exports.parseJSONFromFile = exports.FORMATTED_DATA = exports.UNFORMATTED_DATA = void 0;
+exports.updatePinnedFileTable = exports.readPinnedFile = exports.storeFile = exports.createResultRow = exports.setupResults = exports.setupResultColumns = exports.updateColumns = exports.findDuplicates = exports.createSalesDataArray = exports.parseJSONFromFile = exports.FORMATTED_DATA = exports.UNFORMATTED_DATA = void 0;
 const fs = __importStar(require("fs"));
 const aws_sdk_1 = __importDefault(require("aws-sdk"));
+const postgres_1 = __importDefault(require("../db/postgres"));
+const logger_utils_1 = require("./logger.utils");
 exports.UNFORMATTED_DATA = 'UNFORMATTED_DATA';
 exports.FORMATTED_DATA = 'FORMATTED_DATA';
 const parseJSONFromFile = (file) => {
@@ -63,7 +65,7 @@ const sanitizeValue = (value) => {
 };
 const lookUpPropertyAndUpdateValueHash = (cellValue, valueHash, rowIndex) => {
     if (cellValue && !valueHash.hasOwnProperty(cellValue)) {
-        valueHash[cellValue] = rowIndex;
+        valueHash[cellValue] = rowIndex + 1;
     }
 };
 const addCellValueToHash = (salesData, comparisonColumnList, valueHash, fileStructure1) => {
@@ -82,7 +84,7 @@ const addCellValueToHash = (salesData, comparisonColumnList, valueHash, fileStru
 };
 const updateMatchedIndexesForRow = (cellValue, valueHash, matchedIndxesForRow) => {
     if (cellValue && valueHash[cellValue]) {
-        matchedIndxesForRow.push(valueHash[cellValue]);
+        matchedIndxesForRow.push(valueHash[cellValue] - 1);
     }
 };
 const checkForMatches = (salesData1, salesData2, comparisonColumnList, valueHash, resultsList, fileStructure1, fileStructure2) => {
@@ -209,4 +211,17 @@ const readPinnedFile = (pinnedFileId) => new Promise((resolve, reject) => {
     });
 });
 exports.readPinnedFile = readPinnedFile;
+const updatePinnedFileTable = (fileMetadata, res) => {
+    return (0, postgres_1.default)('pinned_files')
+        .insert(fileMetadata)
+        .onConflict('pinned_file_id')
+        .merge()
+        .returning('*')
+        .then((data) => res.status(200).json(data[0]))
+        .catch((err) => {
+        logger_utils_1.logger.error(`update pinned file table error: ${err}`);
+        return res.status(400).send();
+    });
+};
+exports.updatePinnedFileTable = updatePinnedFileTable;
 //# sourceMappingURL=upload.util.js.map

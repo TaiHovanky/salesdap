@@ -34,7 +34,9 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     logger_utils_1.logger.warn('some login warning');
     try {
-        const users = yield (0, postgres_1.default)('users').select().where({ email });
+        const users = yield (0, postgres_1.default)('users')
+            .select()
+            .where({ email });
         if (!users || !users[0]) {
             logger_utils_1.logger.warn(`login fail no user found - email: ${email}`);
             return res.status(401).send();
@@ -46,7 +48,11 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 yield (0, postgres_1.default)('users').update({ active_subscription: false, subscription_type: 'FREE' }).where({ email });
             }
             const token = (0, auth_utils_1.createAccessToken)(users[0]);
+            const pinnedFiles = yield (0, postgres_1.default)('pinned_files')
+                .select('file_label', 'pinned_file_id', 'file_name')
+                .where({ user_id: users[0].userid });
             const _a = users[0], { password, userid, customer_id, passwordtoken, passwordtoken_expiration } = _a, user = __rest(_a, ["password", "userid", "customer_id", "passwordtoken", "passwordtoken_expiration"]);
+            user.pinnedFiles = pinnedFiles;
             (0, auth_utils_1.sendRefreshToken)(res, (0, auth_utils_1.createRefreshToken)(user));
             return res.status(200).json(Object.assign(Object.assign({}, user), { token }));
         }
@@ -85,6 +91,10 @@ const refreshAccessToken = (req, res) => __awaiter(void 0, void 0, void 0, funct
             }
             const token = (0, auth_utils_1.createAccessToken)(users[0]);
             const _b = users[0], { password, userid, customer_id, passwordtoken, passwordtoken_expiration } = _b, user = __rest(_b, ["password", "userid", "customer_id", "passwordtoken", "passwordtoken_expiration"]);
+            const pinnedFiles = yield (0, postgres_1.default)('pinned_files')
+                .select('file_label', 'pinned_file_id', 'file_name')
+                .where({ user_id: users[0].userid });
+            user.pinnedFiles = pinnedFiles;
             (0, auth_utils_1.sendRefreshToken)(res, (0, auth_utils_1.createRefreshToken)(user));
             return res.status(200).json(Object.assign(Object.assign({}, user), { token }));
         }
