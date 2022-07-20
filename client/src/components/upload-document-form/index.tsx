@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import UploadDocumentColumnContainer from '../../containers/upload-document-column';
 import ResultsPreviewModalContainer from '../../containers/results-preview-modal';
-import { Grid, Fab, Divider } from '@mui/material';
+import { Grid, Fab } from '@mui/material';
 import { Upload, Preview } from '@mui/icons-material';
 import { DocumentState } from '../../state/reducers/document';
 import { isSubmitButtonEnabled } from '../../utils/duplicates-table.utils';
@@ -97,7 +97,6 @@ const UploadDocumentForm = ({
             fileStructure={fileStructure1}
             unformattedData={unformattedData1}
           />
-          <Divider sx={{ marginTop: '3rem', width: '100%', borderColor: '#1976D2' }} variant="middle" />
           <UploadDocumentColumnContainer
             comparisonColumns={comparisonColumns2}
             comparisonColumnsError={comparisonColumns2Error}

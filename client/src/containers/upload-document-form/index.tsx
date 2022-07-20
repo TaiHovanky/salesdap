@@ -79,11 +79,13 @@ const UploadDocumentFormContainer = ({
     if (selectedDocument1 && selectedDocument1.name) {
       const docBlob1 = new Blob([JSON.stringify(selectedDocument1.data)], { type: 'application/json' });
       formData.append("sales_file1", docBlob1, selectedDocument1.name);
+      formData.append('allColumns1', selectedDocument1.allColumns.join(','));
     }
 
     if (selectedDocument2 && selectedDocument2.name) {
       const docBlob2 = new Blob([JSON.stringify(selectedDocument2.data)], { type: 'application/json' });
       formData.append("sales_file2", docBlob2, selectedDocument2.name);
+      formData.append('allColumns2', selectedDocument2.allColumns.join(','));
     }
 
     formData.append('comparisonColumns1', comparisonColumns1.join());

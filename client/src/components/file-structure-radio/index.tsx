@@ -27,16 +27,17 @@ const FileStructureRadio = ({ fileStructure, handleFileStructureChange, index }:
   return (
     <>
       <FormControl>
-        <FormLabel>Is your data formatted or unformatted? <IconButton onClick={handleOpenHelpModal}><Help /></IconButton></FormLabel>
+        <FormLabel>Do you want to use a spreadsheet file or copy/paste a list of accounts? <IconButton onClick={handleOpenHelpModal}><Help /></IconButton></FormLabel>
         <RadioGroup
           row
           aria-labelledby="demo-controlled-radio-buttons-group"
           name="controlled-radio-buttons-group"
           value={fileStructure}
           onChange={(event: any) => handleFileStructureChange(event, index)}
+          sx={{ margin: '0 auto' }}
         >
-          <FormControlLabel value={FORMATTED_DATA} control={<Radio />} label="Formatted" />
-          <FormControlLabel value={UNFORMATTED_DATA} control={<Radio />} label="Unformatted" />
+          <FormControlLabel value={FORMATTED_DATA} control={<Radio />} label="Use a file" />
+          <FormControlLabel value={UNFORMATTED_DATA} control={<Radio />} label="Copy/paste a list" />
         </RadioGroup>
       </FormControl>
       <FileStructureHelpModal isHelpModalOpen={isHelpModalOpen} handleOpenHelpModal={handleOpenHelpModal} />

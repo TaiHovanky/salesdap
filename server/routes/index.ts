@@ -76,7 +76,8 @@ router.use(authenticate);
 
 router.post(
   '/api/v1/uploadfile',
-  upload.fields([{ name: 'sales_file1', maxCount: 1}, { name: 'sales_file2', maxCount: 1}]),
+  upload.any(),
+    // .fields([{ name: 'sales_file1', maxCount: 1}, { name: 'sales_file2', maxCount: 1}]),
   (req: any, res: any) => {
     uploadAndCompareFiles(req, res);
   }
@@ -96,6 +97,6 @@ router.get('/api/v1/viewpinnedfile', (req: any, res: any) => {
 
 router.post('/api/v1/edit-profile', upload.none(), (req: any, res: any) => {
   editProfile(req, res);
-})
+});
 
 export default router;

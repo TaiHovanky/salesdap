@@ -1,6 +1,8 @@
 /* load 'fs' for readFile and writeFile support */
 import * as fs from 'fs';
 import AWS from 'aws-sdk';
+import db from '../db/postgres';
+import { logger } from './logger.utils';
 
 // Constants for file structure
 export const UNFORMATTED_DATA: string = 'UNFORMATTED_DATA';
@@ -103,7 +105,7 @@ const sanitizeValue = (value: any): string => {
  */
 const lookUpPropertyAndUpdateValueHash = (cellValue: string, valueHash: any, rowIndex: number) => {
   if (cellValue && !valueHash.hasOwnProperty(cellValue)) {
-    valueHash[cellValue] = rowIndex;
+    valueHash[cellValue] = rowIndex + 1;
   }
 }
 
@@ -139,7 +141,8 @@ const updateMatchedIndexesForRow = (cellValue: string, valueHash: any, matchedIn
     /* Add the rowIndex for the match to the list of matched indexes. Later, we'll
     use that list to determine how many columns of that row in file 2 match how many columns
     in file 1 */
-    matchedIndxesForRow.push(valueHash[cellValue]);
+    matchedIndxesForRow.push(valueHash[cellValue] - 1);
+    // for some reason, when the valuehash[cellval] index was 0, it failed. Prob because valueHash[cellval] would be falsy
   }
 }
 
@@ -346,3 +349,16 @@ export const readPinnedFile = (pinnedFileId: string) => new Promise((resolve, re
     return resolve(data.Body);
   });
 });
+
+export const updatePinnedFileTable = (fileMetadata: any, res: any) => {
+  return db('pinned_files')
+    .insert(fileMetadata)
+    .onConflict('pinned_file_id')
+    .merge()
+    .returning('*')
+    .then((data) => res.status(200).json(data[0]))
+    .catch((err) => {
+      logger.error(`update pinned file table error: ${err}`);
+      return res.status(400).send();
+    });
+}

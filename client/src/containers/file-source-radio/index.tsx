@@ -4,50 +4,26 @@ import { connect } from 'react-redux';
 import { selectDocument, setFileSource } from '../../state/actions/document';
 import { showError, hideError } from '../../state/actions/alert';
 import { setIsLoading } from '../../state/actions/loading';
-import { createJSONFromSpreadsheet, getPinnedFile } from '../../utils/spreadsheet.utils';
-import { UserState } from '../../state/reducers/user';
 
 interface Props {
-  showError: any;
-  hideError: any;
-  setIsLoading: any;
   selectDocument: any;
   setFileSource: any;
   fileSource: string;
-  user: UserState;
+  handleOpenFileSourceHelpModal: any;
   index: number;
 }
 
 const FileSourceRadioContainer = ({
-  showError,
-  hideError,
-  setIsLoading,
   selectDocument,
   setFileSource,
   fileSource,
-  user,
+  handleOpenFileSourceHelpModal,
   index
 }: Props) => {
 
   const handleFileTypeChange = async (event: any, index: number) => {
     setFileSource(index, event.target.value);
-    if (event.target.value === 'pinned') {
-      setIsLoading(true);
-      try {
-        const pinnedFileBlob = await getPinnedFile(user.pinnedFileId);
-        const wsDataObj: Array<any> = await createJSONFromSpreadsheet(pinnedFileBlob.data);
-        selectDocument(wsDataObj, index, user.pinnedFileId, pinnedFileBlob.data);
-        hideError();
-        setIsLoading(false);
-      } catch (err: any) {
-        console.log('err', err);
-        showError('Failed to get pinned file for user.');
-        setIsLoading(false);
-        setTimeout(() => {
-          hideError();
-        }, 5000);
-      }
-    } else {
+    if (event.target.value === 'upload') {
       selectDocument([], index, '');
     }
   }
@@ -55,6 +31,7 @@ const FileSourceRadioContainer = ({
   return (
     <FileSourceRadio
       handleFileTypeChange={handleFileTypeChange}
+      handleOpenFileSourceHelpModal={handleOpenFileSourceHelpModal}
       fileSource={fileSource}
       index={index}
     />
@@ -62,7 +39,8 @@ const FileSourceRadioContainer = ({
 }
 
 const mapStateToProps = (state: any) => ({
-  user: state.user
+  pinnedFiles: state.user.pinnedFiles,
+  selectedPinnedFileId: state.document.selectedPinnedFileId
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
@@ -70,7 +48,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   hideError: () => dispatch(hideError()),
   setIsLoading: (isLoading: boolean) => dispatch(setIsLoading(isLoading)),
   selectDocument: (wsDataObj: any, index: number, filename: string, fileBlob: any) => dispatch(selectDocument(wsDataObj, index, filename, fileBlob)),
-  setFileSource: (index: number, event: any) => dispatch(setFileSource(index, event))
+  setFileSource: (index: number, event: any) => dispatch(setFileSource(index, event)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FileSourceRadioContainer);

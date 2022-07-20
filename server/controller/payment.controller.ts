@@ -3,7 +3,6 @@ import db from '../db/postgres';
 import { logger } from '../utils/logger.utils';
 
 // const stripe = require('stripe')(process.env.STRIPE_SECRET);
-console.log('-----------------------------------testsec-----', process.env.STRIPE_TEST_SECRET);
 const stripe = require('stripe')(process.env.STRIPE_TEST_SECRET);
 
 export const createCheckoutSession = async (req: any, res: any) => {

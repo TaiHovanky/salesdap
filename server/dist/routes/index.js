@@ -70,7 +70,7 @@ router.post('/api/v1/uploadfile', upload.fields([{ name: 'sales_file1', maxCount
 router.post('/api/v1/pinfile', upload.fields([{ name: 'sales_file', maxCount: 1 }]), (req, res) => {
     (0, file_controller_1.pinFile)(req, res);
 });
-router.get('/api/v1/viewpinnedfile', (req, res) => {
+router.get('http://localhost:3001/api/v1/viewpinnedfile', (req, res) => {
     (0, file_controller_1.viewPinnedFile)(req, res);
 });
 router.post('/api/v1/edit-profile', upload.none(), (req, res) => {

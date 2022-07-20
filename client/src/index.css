@@ -27,6 +27,7 @@ code {
 .file-selection {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .dx-datagrid .dx-datagrid-table .dx-header-row > td {
@@ -54,4 +55,14 @@ code {
   display: flex;
   flex-direction: row;
   justify-content: center;
+}
+
+.column-img {
+  height: 30%;
+  width: 50%;
+}
+
+.profile-info-text {
+  margin: 0.75rem 0 !important;
+  /* padding-left: 2rem; */
 }

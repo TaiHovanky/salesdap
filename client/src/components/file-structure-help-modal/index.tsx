@@ -32,9 +32,11 @@ const FileStructureHelpModal = ({ isHelpModalOpen, handleOpenHelpModal }: Props)
         open={isHelpModalOpen}
         onClose={handleOpenHelpModal}
       >
-        <DialogTitle>Formatted vs. Unformatted Data</DialogTitle>
+        <DialogTitle>File Data vs. Copy/pasted Data</DialogTitle>
         <DialogContent dividers={true}>
-        <DialogContentText>Formatted data example:</DialogContentText>
+        <Typography variant="body2">File data comes from an Excel spreadsheet, a CSV, or a Google Sheet. There are defined columns, and each row represents an account.
+        names.</Typography>
+        <Typography variant="body2" sx={{ marginTop: '1rem' }}>Formatted data example:</Typography>
         <DataGrid
           id="formattedGridContainer"
           dataSource={formattedData}
@@ -44,9 +46,10 @@ const FileStructureHelpModal = ({ isHelpModalOpen, handleOpenHelpModal }: Props)
           width="100%"
           height="100%"
         />
-        <Typography variant="body2">Note that "formatted" here is referring to the presence of defined column
-        names.</Typography>
-        <DialogContentText sx={{ marginTop: '1.5rem' }}>Unformatted data example:</DialogContentText>
+        <Typography variant="body2" sx={{ marginTop: '1.5rem' }}>With a copy/pasted list of account data, there is a lack of defined column
+        names. If your data is being copied from a file (a non-Excel file, or a list with no defined columns), only copy/paste 1 column that you think would lead to the most
+        precise match when mapped to a column from the other file.</Typography>
+        <Typography variant="body2" sx={{ marginTop: '1rem' }}>Unformatted data example:</Typography>
         <DataGrid 
           id="unformattedGridContainer"
           dataSource={unformattedData}
@@ -58,9 +61,6 @@ const FileStructureHelpModal = ({ isHelpModalOpen, handleOpenHelpModal }: Props)
         >
           <Column caption="" calculateCellValue={(data: any) => data} />
         </DataGrid>
-        <Typography variant="body2">Note that "unformatted" here is referring to the lack of defined column
-        names. If you're uploading an unformatted file, only copy/paste 1 column that you think would lead to the most
-        precise match when mapped to a column from the other file.</Typography>
         </DialogContent>
       </Dialog>
     </>

@@ -37,7 +37,7 @@ const ProfileContainer = ({
       if (!user || !user.email) {
         setIsLoading(true);
         const query = new URLSearchParams(window.location.search);
-        const sessionId: string | null = query.get('session_id');
+        const sessionId: string | null = query.get('http://localhost:3001session_id');
         if (sessionId) {
           await updateCustomerSubscriptionInfo(sessionId);
         }
