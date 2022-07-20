@@ -32,7 +32,6 @@ const auth_utils_1 = require("../utils/auth.utils");
 const logger_utils_1 = require("../utils/logger.utils");
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
-    logger_utils_1.logger.warn('some login warning');
     try {
         const users = yield (0, postgres_1.default)('users')
             .select()
@@ -75,7 +74,6 @@ const refreshAccessToken = (req, res) => __awaiter(void 0, void 0, void 0, funct
             payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
         }
         catch (err) {
-            console.log('ref token verification failed');
             return res.status(200).send();
         }
     }

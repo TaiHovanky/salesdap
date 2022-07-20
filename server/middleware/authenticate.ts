@@ -6,15 +6,16 @@ export const authenticate = (req: any, _: any, next: any) => {
     console.log('no auth headers---------------------------------------')
     const err = new Error('Unauthenticated');
     next(err);
-  }
-  try {
-    const token = authorization.split(' ')[1];
-    const payload = verify(token, process.env.ACCESS_TOKEN_SECRET as string);
-    if (payload) {
-      return next();
+  } else {
+    try {
+      const token = authorization.split(' ')[1];
+      const payload = verify(token, process.env.ACCESS_TOKEN_SECRET as string);
+      if (payload) {
+        return next();
+      }
+    } catch (err) {
+      console.log(err);
+      next(err);
     }
-  } catch (err) {
-    console.log(err);
-    next(err);
   }
 }
