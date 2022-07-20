@@ -35,7 +35,7 @@ const FileSourceRadio = ({
         sx={{ margin: '0 auto' }}
       >
         <FormControlLabel value="upload" control={<Radio />} label="Upload a new file" />
-        <FormControlLabel value="pinned" control={<Radio />} label="Use my pinned file" />
+        <FormControlLabel value="pinned" control={<Radio />} label="Use a pinned file" />
       </RadioGroup>
     </FormControl>
   );
