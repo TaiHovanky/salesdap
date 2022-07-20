@@ -107,7 +107,6 @@ export const pinFile = async (req: any, res: any) => {
 
 export const viewPinnedFile = (req: any, res: any) => {
   const { pinnedFileId } = req.query;
-  console.log('pinned file id', pinnedFileId);
   readPinnedFile(pinnedFileId)
     .then((data: any) => {
       return res.status(200).send(data);

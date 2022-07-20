@@ -19,7 +19,7 @@ const SuccessDisplayContainer = ({
    // Check to see if this is a redirect back from Checkout
    const query = new URLSearchParams(window.location.search);
  
-   const sessionId = query.get('http://localhost:3001session_id');
+   const sessionId = query.get('session_id');
  
    useEffect(() => {
     setIsLoading(true);

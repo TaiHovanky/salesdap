@@ -29,7 +29,6 @@ const PinnedFileDropdownContainer = ({
 }: Props) => {
 
   const handlePinnedFileSelection = async (event: any) => {
-    console.log('event', event)
     const fileId: string = event.target.value;
     selectPinnedFile(fileId);
     setIsLoading(true);
