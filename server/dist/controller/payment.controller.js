@@ -16,7 +16,6 @@ exports.handleSuccessfulSubscription = exports.createCustomerPortal = exports.cr
 require("dotenv/config");
 const postgres_1 = __importDefault(require("../db/postgres"));
 const logger_utils_1 = require("../utils/logger.utils");
-console.log('-----------------------------------testsec-----', process.env.STRIPE_TEST_SECRET);
 const stripe = require('stripe')(process.env.STRIPE_TEST_SECRET);
 const createCheckoutSession = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { customerEmail, isComingFromProfilePage } = req.body;
