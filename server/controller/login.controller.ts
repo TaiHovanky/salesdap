@@ -8,7 +8,6 @@ import { logger } from '../utils/logger.utils';
 export const loginUser = async (req: any, res: any) => {
   const { email, password } = req.body;
 
-  logger.warn('some login warning')
   try {
     const users: Array<any> = await db('users')
       .select()
@@ -41,6 +40,7 @@ export const loginUser = async (req: any, res: any) => {
         ...user
       } = users[0];
       user.pinnedFiles = pinnedFiles;
+
       sendRefreshToken(res, createRefreshToken(user));
       return res.status(200).json({ ...user, token });
     } else {
@@ -62,7 +62,6 @@ export const refreshAccessToken = async (req: any, res: any) => {
     try {
       payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     } catch(err) {
-      console.log('ref token verification failed')
       return res.status(200).send();
     }
   } else {
