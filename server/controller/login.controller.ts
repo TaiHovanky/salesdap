@@ -14,7 +14,6 @@ export const loginUser = async (req: any, res: any) => {
       .select()
       .where({ email });
 
-    console.log('users ------------------------------------------------------', users);
     if (!users || !users[0]) {
       logger.warn(`login fail no user found - email: ${email}`);
       return res.status(401).send();
