@@ -5,10 +5,11 @@ import {
 } from '@mui/material';
 
 interface Props {
-  
+  users: Array<any>;
 }
 
 const UserSearchResults = ({
+  users
 }: Props) => {
   return (
     <>
@@ -28,7 +29,9 @@ const UserSearchResults = ({
             justifyContent="center"
             // alignItems="center"
           >
-            {}
+            {users.map((user) => {
+              
+            })}
           </Grid>
         </Grid>
       </Box>
