@@ -1,19 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import {
   Box,
-  Grid,
-  Typography,
-  Paper,
-  Chip,
-  Fab,
-  IconButton,
+  Grid
 } from '@mui/material';
-import { Attachment, Upload, Payment as PaymentIcon, Edit } from '@mui/icons-material';
 import { UserState } from '../../state/reducers/user';
-import InfoTooltip from '../../components/info-tooltip';
-import EditProfileFormContainer from '../../containers/edit-profile-form';
 import PinnedFileCardContainer from '../../containers/pinned-file-card';
-import EditPinnedFileModal from '../../components/edit-pinned-file-modal';
 import ProfileInfoCard from '../../components/profile-info-card';
 
 interface Props {
@@ -29,15 +20,6 @@ const Profile = ({
   handleManageSubscriptionClick,
   handleCreateCheckoutSession,
 }: Props) => {
-  const inputFileRef: any = useRef(null);
-
-  const handleFileSelectionBtnClick = () => {
-    /*Collecting node-element and performing click*/
-    if (inputFileRef&& inputFileRef.current) {
-      inputFileRef.current.click();
-    }
-  };
-
   return (
     <>
       <Box sx={{ width: '100%', marginTop: '3.5vh' }}>

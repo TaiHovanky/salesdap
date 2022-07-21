@@ -5,6 +5,7 @@ import { userReducer } from './user';
 import { emailTemplateReducer } from './email-template';
 import { alertReducer } from './alert';
 import { loadingReducer } from './loading';
+import { userSearchReducer } from './user-search';
 
 export const rootReducer = combineReducers({
   stepProgress: stepProgressReducer,
@@ -12,5 +13,6 @@ export const rootReducer = combineReducers({
   user: userReducer,
   emailTemplate: emailTemplateReducer,
   alert: alertReducer,
-  loading: loadingReducer
+  loading: loadingReducer,
+  userSearch: userSearchReducer
 });
