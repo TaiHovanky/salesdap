@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
-  Grid
+  Card,
+  CardContent,
+  Grid,
+  Typography
 } from '@mui/material';
 
 interface Props {
@@ -11,6 +14,12 @@ interface Props {
 const UserSearchResults = ({
   users
 }: Props) => {
+  console.log('user search results-----', users.map((u) => u.email));
+  // const [res, setRes] = useState<Array<any>>([]);
+  // useEffect(() => {
+  //   console.log('use effect')
+  //   setRes(users);
+  // }, [users])
   return (
     <>
       <Box sx={{ width: '100%', marginTop: '3.5vh' }}>
@@ -29,8 +38,20 @@ const UserSearchResults = ({
             justifyContent="center"
             // alignItems="center"
           >
-            {users.map((user) => {
-              
+            <Typography variant="h3">Search Results</Typography>
+            {users.map((item: any, index: number) => {
+              return (
+                <Card sx={{ minWidth: 275, margin: '0.5rem 0' }} key={index}>
+                  <CardContent>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                      {item.full_name || item.email}
+                    </Typography>
+                    <Typography variant="body2">
+                      {item.full_name ? item.email : null}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              );
             })}
           </Grid>
         </Grid>

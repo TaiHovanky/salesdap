@@ -7,14 +7,16 @@ import { updateUser } from '../../state/actions/user';
 import { showError, hideError } from '../../state/actions/alert';
 import { UserState, initialState } from '../../state/reducers/user';
 import { getAccessToken, setAccessToken } from '../../utils/access-token.utils';
+import { updateSearchResults } from '../../state/actions/user-search';
 
 interface Props {
   user: UserState;
   hideError: any;
   updateUser: any;
+  updateSearchResults: any;
 }
 
-const NavBarContainer = ({ user, hideError, updateUser }: Props) => {
+const NavBarContainer = ({ user, hideError, updateUser, updateSearchResults }: Props) => {
   const history = useHistory();
 
   const handleLogout = () => {
@@ -46,6 +48,8 @@ const NavBarContainer = ({ user, hideError, updateUser }: Props) => {
       .then((data) => {
         hideError();
         console.log('data', data);
+        updateSearchResults(data.data);
+        history.push('/user-search');
       })
       .catch((err) => {
         showError('Failed to search for users');
@@ -68,7 +72,8 @@ const NavBarContainer = ({ user, hideError, updateUser }: Props) => {
 const mapDispatchToProps = (dispatch: any) => ({
   showError: (message: string) => dispatch(showError(message)),
   hideError: () => dispatch(hideError()),
-  updateUser: (user: any) => dispatch(updateUser(user))
+  updateUser: (user: any) => dispatch(updateUser(user)),
+  updateSearchResults: (users: Array<any>) => dispatch(updateSearchResults(users))
 });
 
 export default connect(null, mapDispatchToProps)(NavBarContainer);

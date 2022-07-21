@@ -18,6 +18,7 @@ import Payment from '../../pages/payment';
 import SuccessDisplayContainer from '../../containers/payment-success';
 import ContactUs from '../../pages/contact-us';
 import LandingPage from '../../pages/landing';
+import UserSearchResultsContainer from '../../containers/user-search-results';
 
 interface Props {
   alert: AlertState;
@@ -47,6 +48,7 @@ const Routes = ({
           <Route path="/reset-password/:token" component={PasswordResetContainer} />
           <Route exact path="/contact-us" component={ContactUs} />
           <Route exact path="/landing" component={LandingPage} />
+          <Route exact path="/user-search" component={UserSearchResultsContainer} />
         </Switch>
         {alert.isOpen && <Alert
           variant="standard"

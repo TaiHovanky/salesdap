@@ -4,12 +4,14 @@ import { connect } from 'react-redux';
 import { updateSearchResults } from '../../state/actions/user-search';
 import { UserSearchState } from '../../state/reducers/user-search';
 import UserSearchResults from '../../pages/user-search-results';
+import { useHistory } from 'react-router-dom';
 
 interface Props {
   userSearch: UserSearchState;
 }
 
 const UserSearchResultsContainer = ({ userSearch }: Props) => {
+  console.log('user search ', userSearch);
   return (
     <UserSearchResults users={userSearch.users} />
   );
