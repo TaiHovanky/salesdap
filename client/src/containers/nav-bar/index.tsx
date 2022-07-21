@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { updateUser } from '../../state/actions/user';
 import { showError, hideError } from '../../state/actions/alert';
 import { UserState, initialState } from '../../state/reducers/user';
-import { setAccessToken } from '../../utils/access-token.utils';
+import { getAccessToken, setAccessToken } from '../../utils/access-token.utils';
 
 interface Props {
   user: UserState;
@@ -18,7 +18,7 @@ const NavBarContainer = ({ user, hideError, updateUser }: Props) => {
   const history = useHistory();
 
   const handleLogout = () => {
-    axios.post('/api/v1/logout')
+    axios.post('http://localhost:3001/api/v1/logout')
       .then(() => {
         hideError();
         updateUser({...initialState});
@@ -33,8 +33,35 @@ const NavBarContainer = ({ user, hideError, updateUser }: Props) => {
       });
   }
 
+  const handleSearch = (event: any, searchString: any) => {
+    event.preventDefault();
+    console.log('searching----', event, searchString);
+    const formData = new FormData();
+    formData.append('searchString', searchString);
+    axios.post('http://localhost:3001/api/v1/search-users', formData, {
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`
+      }
+    })
+      .then((data) => {
+        hideError();
+        console.log('data', data);
+      })
+      .catch((err) => {
+        showError('Failed to search for users');
+        setTimeout(() => {
+          hideError();
+        }, 5000);
+      });
+  }
+
   return (
-    <NavBar user={user} handleLogout={handleLogout} hideError={hideError} />
+    <NavBar
+      user={user}
+      handleLogout={handleLogout}
+      hideError={hideError}
+      handleSearch={handleSearch}
+    />
   );
 };
 

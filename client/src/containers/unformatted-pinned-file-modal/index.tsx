@@ -44,7 +44,7 @@ const UnformattedPinnedFileModalContainer = ({
     const unformattedDataBlob = createWorkbookBLOBFromUnformattedList(unformattedData, columnName);
     formData.append('sales_file', unformattedDataBlob, `${fileLabel}.xlsx`);
 
-    axios.post('/api/v1/pinfile', formData, {
+    axios.post('http://localhost:3001/api/v1/pinfile', formData, {
       headers: {
         Authorization: `Bearer ${getAccessToken()}`
       }

@@ -23,7 +23,7 @@ const SuccessDisplayContainer = ({
  
    useEffect(() => {
     setIsLoading(true);
-     axios.post('/api/v1/order-success', { sessionId })
+     axios.post('http://localhost:3001/api/v1/order-success', { sessionId })
        .then(() => {
          setIsLoading(false);
          hideError();
@@ -36,7 +36,7 @@ const SuccessDisplayContainer = ({
  
   const handleManageSubscriptionClick = () => {
     setIsLoading(true);
-    axios.post('/api/v1/create-portal-session', { sessionId })
+    axios.post('http://localhost:3001/api/v1/create-portal-session', { sessionId })
       .then((res: any) => {
         setIsLoading(false);
         hideError();

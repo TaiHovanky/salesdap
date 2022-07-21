@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, ChangeEvent, MouseEvent } from 'react';
 import {
   AppBar,
   Box,
@@ -7,7 +7,8 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Button
+  Button,
+  TextField
 } from '@mui/material';
 import { Handshake, AccountCircle } from '@mui/icons-material';
 import { Link, useHistory } from 'react-router-dom';
@@ -17,13 +18,20 @@ interface Props {
   user: UserState;
   handleLogout: any;
   hideError: any;
+  handleSearch: any;
 }
 
-const NavBar = ({ user, handleLogout, hideError }: Props) => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+const NavBar = ({
+  user,
+  handleLogout,
+  hideError,
+  handleSearch
+}: Props) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [searchText, setSearchText] = useState('');
   const history = useHistory();
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -40,6 +48,10 @@ const NavBar = ({ user, handleLogout, hideError }: Props) => {
   const logoutAndClose = () => {
     handleClose();
     handleLogout();
+  }
+
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchText(event.target.value);
   }
 
   return (
@@ -63,6 +75,16 @@ const NavBar = ({ user, handleLogout, hideError }: Props) => {
           </Button>
 
           {user && user.email && <>
+            <form onSubmit={(event: any) => handleSearch(event, searchText)}>
+              <TextField
+                label="Search Users"
+                name="search-users"
+                variant="standard"
+                onChange={handleSearchChange}
+                value={searchText}
+                sx={{ color: '#fff' }}
+              />
+            </form>
             <IconButton
               size="large"
               aria-label="account of current user"

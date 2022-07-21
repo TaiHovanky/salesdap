@@ -59,7 +59,7 @@ const ProfileContainer = ({
   };
 
   const handleCreateCheckoutSession = (email: string) => {
-    return axios.post('/api/v1/create-checkout-session', {
+    return axios.post('http://localhost:3001/api/v1/create-checkout-session', {
       customerEmail: email, isComingFromProfilePage: true
     })
       .then((res) => {
@@ -74,7 +74,7 @@ const ProfileContainer = ({
 
   const handleManageSubscriptionClick = () => {
     setIsLoading(true);
-    axios.post('/api/v1/create-portal-session', { email: user.email, isComingFromProfilePage: true })
+    axios.post('http://localhost:3001/api/v1/create-portal-session', { email: user.email, isComingFromProfilePage: true })
       .then((res: any) => {
         setIsLoading(false);
         hideError();
@@ -117,7 +117,7 @@ const ProfileContainer = ({
         user.email
       );
     }
-    axios.post('/api/v1/pinfile', formData, {
+    axios.post('http://localhost:3001/api/v1/pinfile', formData, {
       headers: {
         Authorization: `Bearer ${getAccessToken()}`
       }
@@ -151,14 +151,14 @@ const ProfileContainer = ({
   }
 
   const updateCustomerSubscriptionInfo = (sessionId: string | null) => {
-    return axios.post('/api/v1/order-success', { sessionId })
+    return axios.post('http://localhost:3001/api/v1/order-success', { sessionId })
       .catch(() => {
         showError('Problem with user registration');
       });
   }
 
   const refreshUserAuthStatus = () => {
-    return axios.post('/api/v1/refresh_token', null, { withCredentials: true })
+    return axios.post('http://localhost:3001/api/v1/refresh_token', null, { withCredentials: true })
       .then(handleProfileLoginSuccess)
       .catch((err: any) => handleProfileActionFailure(err, 'failed to load profile'));
   }
