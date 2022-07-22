@@ -14,11 +14,9 @@ interface Props {
 
 const PinnedFileChipContainer = ({ fileName, fileId, showError, existingPinnedFile }: Props) => {
   const handlePinnedFileClick = async (existingPinnedFile: any) => {
-    console.log('hpf click', existingPinnedFile);
     if (existingPinnedFile) {
       try {
         const pinnedFileData = await getPinnedFile(existingPinnedFile.pinned_file_id);
-        console.log('pined file data', pinnedFileData);
         createFileLink(pinnedFileData.data, existingPinnedFile.file_name);
       } catch (err: any) {
         console.log('err', err);

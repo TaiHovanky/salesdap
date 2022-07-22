@@ -14,15 +14,18 @@ interface Props {
   user: UserState;
   handleManageSubscriptionClick: any;
   handleCreateCheckoutSession: any;
+  isViewingSomeonElsesProfile: boolean;
 }
 
 const ProfileInfoCard = ({
   user,
   handleManageSubscriptionClick,
   handleCreateCheckoutSession,
+  isViewingSomeonElsesProfile
 }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
+  console.log('is view some ones profile', isViewingSomeonElsesProfile)
 
   const handleEditButtonClick = () => {
     setIsEditing(!isEditing);
@@ -36,7 +39,7 @@ const ProfileInfoCard = ({
 
   return (
     <Paper elevation={3} sx={{ width: '100%', padding: '3rem', margin: '3rem 0 0 0' }}>
-      <Typography variant="h6">User Info <IconButton onClick={handleEditButtonClick}><Edit /></IconButton></Typography>
+      <Typography variant="h6">User Info {!isViewingSomeonElsesProfile && <IconButton onClick={handleEditButtonClick}><Edit /></IconButton>}</Typography>
       <Grid
         container
         justifyContent="center"
@@ -60,7 +63,7 @@ const ProfileInfoCard = ({
             </>
           }
         </Grid>
-        <Grid
+        {!isViewingSomeonElsesProfile && <Grid
           item
           container
           xs={6}
@@ -71,8 +74,8 @@ const ProfileInfoCard = ({
         >
           <Typography variant="subtitle1" className="profile-info-text">Subscription Type: {user.subscriptionType}</Typography>
           <Typography variant="subtitle1" className="profile-info-text">Paid Subscription: {user.activeSubscription ? 'Yes' : 'No'}</Typography>
-        </Grid>
-        <Grid
+        </Grid>}
+        {!isViewingSomeonElsesProfile && <Grid
           item
           container
           xs={12}
@@ -101,7 +104,7 @@ const ProfileInfoCard = ({
               Upgrade Subscription
             </Fab>
           }
-        </Grid>
+        </Grid>}
       </Grid>
     </Paper>
   );

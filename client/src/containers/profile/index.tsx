@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Profile from '../../pages/profile';
 import {
@@ -14,6 +14,7 @@ import { setIsLoading } from '../../state/actions/loading';
 import { getAccessToken } from '../../utils/access-token.utils';
 import { updateUser } from '../../state/actions/user';
 import { setAccessToken } from '../../utils/access-token.utils';
+import { setUserForProfilePage } from '../../state/actions/profile';
 
 interface Props {
   user: UserState;
@@ -22,6 +23,8 @@ interface Props {
   hideError: any;
   pinFileSuccess: any;
   updateUser: any;
+  currentSelectedUserProfile: UserState;
+  setUserForProfilePage: any;
 }
 
 const ProfileContainer = ({
@@ -30,8 +33,12 @@ const ProfileContainer = ({
   showError,
   hideError,
   pinFileSuccess,
-  updateUser
+  updateUser,
+  currentSelectedUserProfile,
+  setUserForProfilePage
 }: Props) => {
+  const [isViewingSomeonElsesProfile, setIsViewingSomeonElsesProfile] = useState(false);
+
   useEffect(() => {
     const checkSubscriptionAndRefreshAuth = async () => {
       if (!user || !user.email) {
@@ -45,10 +52,15 @@ const ProfileContainer = ({
       }
     };
     checkSubscriptionAndRefreshAuth();
-  }, []);
+
+    if (currentSelectedUserProfile.email !== user.email) {
+      setIsViewingSomeonElsesProfile(true);
+    }
+
+    // handle reload for profile page causing update to 
+  }, [currentSelectedUserProfile]);
 
   const handlePinnedFileClick = async (pinnedFile: any) => {
-    console.log('pinned file clicked', pinnedFile)
     try {
       setIsLoading(true);
       const pinnedFileData = await getPinnedFile(pinnedFile.pinned_file_id);
@@ -148,6 +160,8 @@ const ProfileContainer = ({
 
     if (res.data && email) {
       updateUser(res.data);
+      setUserForProfilePage(res.data);
+      setIsViewingSomeonElsesProfile(false);
     }
   }
 
@@ -171,12 +185,15 @@ const ProfileContainer = ({
       handlePinnedFileClick={handlePinnedFileClick}
       handleManageSubscriptionClick={handleManageSubscriptionClick}
       handleCreateCheckoutSession={handleCreateCheckoutSession}
+      isViewingSomeonElsesProfile={isViewingSomeonElsesProfile}
+      currentSelectedUserProfile={currentSelectedUserProfile}
     />
   );
 }
 
 const mapStateToProps = (state: any) => ({
-  user: state.user
+  user: state.user,
+  currentSelectedUserProfile: state.profile.userProfile
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
@@ -184,7 +201,8 @@ const mapDispatchToProps = (dispatch: any) => ({
   hideError: () => dispatch(hideError()),
   setIsLoading: (isLoading: boolean) => dispatch(setIsLoading(isLoading)),
   pinFileSuccess: (fileMetadata: any) => dispatch(pinFileSuccess(fileMetadata)),
-  updateUser: (user: any) => dispatch(updateUser(user))
+  updateUser: (user: UserState) => dispatch(updateUser(user)),
+  setUserForProfilePage: (user: UserState) => dispatch(setUserForProfilePage(user))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileContainer);

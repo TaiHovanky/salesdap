@@ -19,13 +19,15 @@ interface Props {
   handleLogout: any;
   hideError: any;
   handleSearch: any;
+  handleProfileClick: any;
 }
 
 const NavBar = ({
   user,
   handleLogout,
   hideError,
-  handleSearch
+  handleSearch,
+  handleProfileClick
 }: Props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [searchText, setSearchText] = useState('');
@@ -39,6 +41,11 @@ const NavBar = ({
     hideError();
     setAnchorEl(null);
   };
+
+  const viewProfile = () => {
+    handleProfileClick();
+    handleClose();
+  }
 
   const handleHomeClick = () => {
     hideError();
@@ -111,7 +118,7 @@ const NavBar = ({
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={viewProfile}>
                 <Link style={{ color: 'black', textDecoration: 'none' }} to="/profile">Profile</Link>
               </MenuItem>
               <MenuItem onClick={handleClose}>

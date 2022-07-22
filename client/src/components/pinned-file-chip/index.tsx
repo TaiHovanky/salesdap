@@ -9,7 +9,6 @@ interface Props {
 }
 
 const PinnedFileChip = ({ fileName, handlePinnedFileClick, existingPinnedFile }: Props) => {
-  console.log('exisitng pinned file', existingPinnedFile)
   return (
     <>
       <Typography variant="subtitle1">Pinned File:</Typography>

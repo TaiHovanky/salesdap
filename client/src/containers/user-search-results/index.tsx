@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import { updateSearchResults } from '../../state/actions/user-search';
 import { UserSearchState } from '../../state/reducers/user-search';
@@ -14,10 +13,11 @@ interface Props {
 }
 
 const UserSearchResultsContainer = ({ userSearch, setUserForProfilePage }: Props) => {
-  console.log('user search ', userSearch);
+  const history = useHistory();
+
   const handleUserCardClick = (user: any) => {
-    console.log('card click', user);
     setUserForProfilePage(user);
+    history.push('/profile')
   };
 
   return (

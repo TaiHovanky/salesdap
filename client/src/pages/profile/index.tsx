@@ -4,7 +4,7 @@ import {
   Grid
 } from '@mui/material';
 import { UserState } from '../../state/reducers/user';
-import PinnedFileCardContainer from '../../containers/pinned-file-card';
+import PinnedFileListContainer from '../../containers/pinned-file-list';
 import ProfileInfoCard from '../../components/profile-info-card';
 
 interface Props {
@@ -13,12 +13,16 @@ interface Props {
   handlePinnedFileClick: any;
   handleManageSubscriptionClick: any;
   handleCreateCheckoutSession: any;
+  isViewingSomeonElsesProfile: boolean;
+  currentSelectedUserProfile: UserState;
 }
 
 const Profile = ({
   user,
   handleManageSubscriptionClick,
   handleCreateCheckoutSession,
+  isViewingSomeonElsesProfile,
+  currentSelectedUserProfile
 }: Props) => {
   return (
     <>
@@ -38,10 +42,18 @@ const Profile = ({
             justifyContent="center"
             // alignItems="center"
           >
-            <ProfileInfoCard user={user} handleManageSubscriptionClick={handleManageSubscriptionClick} handleCreateCheckoutSession={handleCreateCheckoutSession} />
+            <ProfileInfoCard
+              user={currentSelectedUserProfile}
+              handleManageSubscriptionClick={handleManageSubscriptionClick}
+              handleCreateCheckoutSession={handleCreateCheckoutSession}
+              isViewingSomeonElsesProfile={isViewingSomeonElsesProfile}
+            />
             {/* <Typography variant="h5" sx={{ marginBottom: '2rem' }}>Pinned Files <EditPinnedFileModal /></Typography> */}
-            <PinnedFileCardContainer pinnedFiles={user.pinnedFiles} />
-            {/* <PinnedFileCardContainer pinnedFile={{ label: 'file for Sailpoint', name: 'sailpoint-related sales accounts', id: '34wef3', pinned_filename: 'jr-sailpoint-list' }} /> */}
+            <PinnedFileListContainer
+              pinnedFiles={currentSelectedUserProfile.pinnedFiles || []}
+              isViewingSomeonElsesProfile={isViewingSomeonElsesProfile}
+            />
+            {/* <PinnedFileListContainer pinnedFile={{ label: 'file for Sailpoint', name: 'sailpoint-related sales accounts', id: '34wef3', pinned_filename: 'jr-sailpoint-list' }} /> */}
           </Grid>
         </Grid>
       </Box>

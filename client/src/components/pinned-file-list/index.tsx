@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Add, Folder, Edit } from '@mui/icons-material';
 import {
   Grid,
@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import EditPinnedFileModalContainer from '../../containers/edit-pinned-file-modal';
 
-const PinnedFileCard = ({ handlePinnedFileClick, pinnedFiles }: any) => {
+const PinnedFileList = ({ pinnedFiles, isViewingSomeonElsesProfile }: any) => {
 
   const [isOpen, setOpen] = useState(false);
   const [selectedExistingPinnedFile, setSelectedExistingPinnedFile] = useState<any>();
@@ -40,7 +40,7 @@ const PinnedFileCard = ({ handlePinnedFileClick, pinnedFiles }: any) => {
         existingPinnedFile={selectedExistingPinnedFile}
       />}
       <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
-        Pinned Files <IconButton edge="end" onClick={handleClickOpen}><Add /></IconButton>
+        Pinned Files {!isViewingSomeonElsesProfile && <IconButton edge="end" onClick={handleClickOpen}><Add /></IconButton>}
       </Typography>
       <div>
         <List dense={true}>
@@ -72,4 +72,4 @@ const PinnedFileCard = ({ handlePinnedFileClick, pinnedFiles }: any) => {
   );
 };
 
-export default PinnedFileCard;
+export default PinnedFileList;
