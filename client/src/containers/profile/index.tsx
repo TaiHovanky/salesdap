@@ -47,12 +47,13 @@ const ProfileContainer = ({
     checkSubscriptionAndRefreshAuth();
   }, []);
 
-  const handlePinnedFileClick = async () => {
+  const handlePinnedFileClick = async (pinnedFile: any) => {
+    console.log('pinned file clicked', pinnedFile)
     try {
       setIsLoading(true);
-      const pinnedFileData = await getPinnedFile(user.pinnedFileId);
+      const pinnedFileData = await getPinnedFile(pinnedFile.pinned_file_id);
       setIsLoading(false);
-      createFileLink(pinnedFileData.data, user.pinnedFileName);
+      createFileLink(pinnedFileData.data, pinnedFile.file_name);
     } catch (err: any) {
       handleProfileActionFailure(err, 'Failed to download pinned file');
     }

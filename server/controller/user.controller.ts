@@ -5,7 +5,7 @@ export const searchUsers = async (req: any, res: any) => {
   const { searchString } = req.body;
   console.log('email and name', searchString );
   const users: Array<any> = await db('users')
-    .select()
+    .select('full_name', 'email', 'company', 'userid')
     .where('full_name', 'like', `%${searchString}%`)
     .orWhere('email', 'like', `%${searchString}%`);
 

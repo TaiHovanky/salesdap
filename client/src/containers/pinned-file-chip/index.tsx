@@ -9,14 +9,17 @@ interface Props {
   showError: any;
   fileName?: string;
   fileId?: string;
+  existingPinnedFile?: any;
 }
 
-const PinnedFileChipContainer = ({ fileName, fileId, showError }: Props) => {
-  const handlePinnedFileClick = async () => {
-    if (fileId && fileName) {
+const PinnedFileChipContainer = ({ fileName, fileId, showError, existingPinnedFile }: Props) => {
+  const handlePinnedFileClick = async (existingPinnedFile: any) => {
+    console.log('hpf click', existingPinnedFile);
+    if (existingPinnedFile) {
       try {
-        const pinnedFileData = await getPinnedFile(fileId);
-        createFileLink(pinnedFileData.data, fileName);
+        const pinnedFileData = await getPinnedFile(existingPinnedFile.pinned_file_id);
+        console.log('pined file data', pinnedFileData);
+        createFileLink(pinnedFileData.data, existingPinnedFile.file_name);
       } catch (err: any) {
         console.log('err', err);
         showError('Failed to download pinned file.');
@@ -25,7 +28,11 @@ const PinnedFileChipContainer = ({ fileName, fileId, showError }: Props) => {
   };
 
   return (
-    <PinnedFileChip fileName={fileName} handlePinnedFileClick={handlePinnedFileClick} />
+    <PinnedFileChip
+      fileName={fileName}
+      handlePinnedFileClick={handlePinnedFileClick}
+      existingPinnedFile={existingPinnedFile}
+    />
   );
 };
 

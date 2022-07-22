@@ -5,13 +5,15 @@ import { Attachment } from '@mui/icons-material';
 interface Props {
   handlePinnedFileClick: any;
   fileName?: string;
+  existingPinnedFile?: any;
 }
 
-const PinnedFileChip = ({ fileName, handlePinnedFileClick }: Props) => {
+const PinnedFileChip = ({ fileName, handlePinnedFileClick, existingPinnedFile }: Props) => {
+  console.log('exisitng pinned file', existingPinnedFile)
   return (
     <>
       <Typography variant="subtitle1">Pinned File:</Typography>
-      <Chip onClick={handlePinnedFileClick} icon={<Attachment />} label={fileName} />
+      <Chip onClick={() => handlePinnedFileClick(existingPinnedFile)} icon={<Attachment />} label={fileName} />
     </>
   );
 }

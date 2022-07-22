@@ -93,6 +93,7 @@ router.post(
 );
 
 router.get('/api/v1/viewpinnedfile', (req: any, res: any) => {
+  console.log('getting pinned file ', req.body)
   viewPinnedFile(req, res);
 });
 

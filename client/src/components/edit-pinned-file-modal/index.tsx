@@ -105,6 +105,7 @@ const EditPinnedFileModal = ({
             <PinnedFileChipContainer
               fileName={pinnedFileName}
               fileId={existingPinnedFile ? existingPinnedFile.pinned_file_id : ''}
+              existingPinnedFile={existingPinnedFile}
             />
             <Fab
               variant="extended"

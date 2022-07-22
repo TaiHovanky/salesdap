@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Box,
   Card,
+  CardActionArea,
   CardContent,
   Grid,
   Typography
@@ -9,17 +10,13 @@ import {
 
 interface Props {
   users: Array<any>;
+  handleUserCardClick: any;
 }
 
 const UserSearchResults = ({
-  users
+  users,
+  handleUserCardClick
 }: Props) => {
-  console.log('user search results-----', users.map((u) => u.email));
-  // const [res, setRes] = useState<Array<any>>([]);
-  // useEffect(() => {
-  //   console.log('use effect')
-  //   setRes(users);
-  // }, [users])
   return (
     <>
       <Box sx={{ width: '100%', marginTop: '3.5vh' }}>
@@ -39,17 +36,19 @@ const UserSearchResults = ({
             // alignItems="center"
           >
             <Typography variant="h3">Search Results</Typography>
-            {users.map((item: any, index: number) => {
+            {users.map((user: any, index: number) => {
               return (
                 <Card sx={{ minWidth: 275, margin: '0.5rem 0' }} key={index}>
-                  <CardContent>
-                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                      {item.full_name || item.email}
-                    </Typography>
-                    <Typography variant="body2">
-                      {item.full_name ? item.email : null}
-                    </Typography>
-                  </CardContent>
+                  <CardActionArea onClick={() => handleUserCardClick(user)}>
+                    <CardContent>
+                      <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                        {user.full_name || user.email}
+                      </Typography>
+                      <Typography variant="body2">
+                        {user.full_name ? user.email : null}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
                 </Card>
               );
             })}
